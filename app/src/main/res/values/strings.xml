@@ -5,8 +5,10 @@
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="click_to_login">Click to Login</string>
-    <string name="click_to_register">Click to Register</string>
     <string name="logout">Logout</string>
     <string name="splash_text_one">Better Waste Management.</string>
     <string name="splash_text_two">Better Living Space.</string>
+    <string name="welcome">Welcome!</string>
+    <string name="connect">Connect</string>
+    <string name="username_or_email">Username or email</string>
 </resources>
