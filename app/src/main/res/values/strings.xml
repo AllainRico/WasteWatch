@@ -11,4 +11,6 @@
     <string name="welcome">Welcome!</string>
     <string name="connect">Connect</string>
     <string name="username_or_email">Username or email</string>
+    <string name="your_account">your account</string>
+    <string name="don_t_have_an_account_yet">Don\'t have an Account yet?</string>
 </resources>
