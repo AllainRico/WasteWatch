@@ -3,59 +3,166 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:layout_height="match_parent"
-    android:padding="15dp"
+    android:orientation="vertical"
     tools:context=".Register">
 
-    <TextView
-        android:text="@string/register"
-        android:textSize="30sp"
-        android:textStyle="bold"
+    <!-- Layout for Views or Main body-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginBottom="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp">
+
+        <TextView
+            android:text="@string/welcome"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:text="Sign Up"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:text="Form"
+            android:textSize="20sp"
+            android:layout_marginBottom="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/first_name"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fName"
+            android:hint="@string/first_name"
+            android:background="@drawable/input_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:text="@string/last_name"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/lName"
+            android:hint="@string/last_name"
+            android:background="@drawable/input_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:text="@string/username"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/username"
+            android:hint="@string/username"
+            android:background="@drawable/input_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:text="@string/email"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
             android:hint="@string/email"
+            android:background="@drawable/input_text"
             android:layout_width="match_parent"
-            android:layout_height="48dp"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginBottom="5dp"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/password"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
             android:hint="@string/password"
+            android:background="@drawable/input_text"
             android:layout_width="match_parent"
-            android:layout_height="48dp"/>
-    </com.google.android.material.textfield.TextInputLayout>
-    
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginBottom="5dp"/>
+
+
     <Button
         android:id="@+id/btn_register"
-        android:text="@string/register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:id="@+id/loginNow"
-        android:text="@string/click_to_login"
+        android:text="@string/sign_up"
+        android:textColor="@color/white"
+        android:background="@drawable/button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"/>
+
+
+        </LinearLayout>
+
+        <!-- ImageView with Shape and Logo-->
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/login_bottom">
+
+        <!-- To go back to login for now-->
+        <TextView
+            android:id="@+id/loginNow"
+            android:text="@string/click_to_login"
+            android:textColor="@color/link_blue_register"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- ProgressBar here for now-->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:paddingRight="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/splash" />
+
+    </RelativeLayout>
 
 </LinearLayout>

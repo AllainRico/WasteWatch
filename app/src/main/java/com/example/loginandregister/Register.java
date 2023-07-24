@@ -22,11 +22,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class Register extends AppCompatActivity {
 
-    TextInputEditText editTextEmail, editTextPassword;
+    TextInputEditText editTextFirstName, editTextLastName, editTextUsername, editTextEmail, editTextPassword;
     Button buttonReg;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
-    TextView  textView;
+    TextView  loginTextView;
 
     @Override
     public void onStart() {
@@ -50,12 +50,12 @@ public class Register extends AppCompatActivity {
         buttonReg = findViewById(R.id.btn_register);
         mAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar);
-        textView = findViewById(R.id.loginNow);
+        loginTextView = findViewById(R.id.loginNow);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        loginTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Login.class );
+                Intent intent = new Intent(getApplicationContext(), Barangay.class );
                 startActivity(intent);
                 finish();
             }

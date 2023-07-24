@@ -13,4 +13,44 @@
     <string name="username_or_email">Username or email</string>
     <string name="your_account">your account</string>
     <string name="don_t_have_an_account_yet">Don\'t have an Account yet?</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="username">Username</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="choose_your">Choose your</string>
+    <string name="select">Select Item</string>
+    <string name="barangay">Barangay</string>
+
+    <string-array name="barangays">
+        <item>Agus</item>
+        <item>Babag</item>
+        <item>Bankal</item>
+        <item>Baring</item>
+        <item>Basak</item>
+        <item>Buaya</item>
+        <item>Calawisan</item>
+        <item>Canjulao</item>
+        <item>Caubian</item>
+        <item>Caw‑oy</item>
+        <item>Cawhagan</item>
+        <item>Gun‑ob</item>
+        <item>Ibo</item>
+        <item>Looc</item>
+        <item>Mactan</item>
+        <item>Maribago</item>
+        <item>Marigondon</item>
+        <item>Pajac</item>
+        <item>Pajo</item>
+        <item>Pangan‑an</item>
+        <item>Poblacion</item>
+        <item>Punta Engaño</item>
+        <item>Pusok</item>
+        <item>Sabang</item>
+        <item>San Vicente</item>
+        <item>Santa Rosa</item>
+        <item>Subabasbas</item>
+        <item>Talima</item>
+        <item>Tingo</item>
+        <item>Tungasan</item>
+    </string-array>
 </resources>
