@@ -27,11 +27,6 @@ public class MainActivity extends AppCompatActivity {
         //Inputs
         logout = findViewById(R.id.logout);
 
-        user = findViewById(R.id.user_details);
-
-        user.setText("User");
-
-
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
