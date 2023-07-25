@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:gravity="center"
         android:paddingTop="45dp"
-        android:paddingBottom="10dp"
+        android:paddingBottom="15dp"
         android:paddingLeft="70dp"
         android:paddingRight="70dp">
 
@@ -50,7 +50,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fName"
-            android:hint="@string/first_name"
+            android:hint="@string/blank"
             android:background="@drawable/input_text"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -65,7 +65,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/lName"
-            android:hint="@string/last_name"
+            android:hint="@string/blank"
             android:background="@drawable/input_text"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -80,7 +80,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/username"
-            android:hint="@string/username"
+            android:hint="@string/blank"
             android:background="@drawable/input_text"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -95,7 +95,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email"
-            android:hint="@string/email"
+            android:hint="@string/blank"
             android:background="@drawable/input_text"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -110,7 +110,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
-            android:hint="@string/password"
+            android:hint="@string/blank"
             android:background="@drawable/input_text"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -132,7 +132,7 @@
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="195dp"
         android:background="@drawable/bottom_square">
 
         <!-- To go back to login for now-->
@@ -142,7 +142,8 @@
             android:textColor="@color/link_blue_register"
             android:textSize="12sp"
             android:gravity="center"
-            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <ImageView

@@ -15,7 +15,6 @@
         android:orientation="vertical"
         android:gravity="center"
         android:paddingTop="80dp"
-        android:paddingBottom="60dp"
         android:paddingLeft="70dp"
         android:paddingRight="70dp">
 
@@ -45,12 +44,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <TextView
+            android:text="Select Barangay"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <Spinner
             android:id="@+id/brgySpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/spinner"
-            android:entries="@array/barangays"/>
+            android:entries="@array/barangays"
+            android:scrollbarStyle="insideOverlay"/>
 
         <Button
             android:id="@+id/btn_bgry_signup"
@@ -70,16 +76,18 @@
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="210dp"
+        android:layout_height="255dp"
         android:background="@drawable/bottom_square">
 
+        <!-- To go back to login for now-->
         <TextView
             android:id="@+id/loginNow"
             android:text="@string/click_to_login"
             android:textColor="@color/link_blue_register"
             android:textSize="12sp"
             android:gravity="center"
-            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <ImageView
