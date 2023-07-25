@@ -22,11 +22,15 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class Register extends AppCompatActivity {
 
+    //Inputs
     TextInputEditText editTextFirstName, editTextLastName, editTextUsername, editTextEmail, editTextPassword;
     Button buttonReg;
+    TextView  loginTextView;
+
+    //Authentication
     FirebaseAuth mAuth;
     ProgressBar progressBar;
-    TextView  loginTextView;
+
 
     @Override
     public void onStart() {
@@ -45,17 +49,23 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        //Inputs
+        editTextFirstName = findViewById(R.id.fName);
+        editTextLastName = findViewById(R.id.lName);
+        editTextUsername = findViewById(R.id.username);
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         buttonReg = findViewById(R.id.btn_register);
+        loginTextView = findViewById(R.id.loginNow);
+
+        //Authentication
         mAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar);
-        loginTextView = findViewById(R.id.loginNow);
 
         loginTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Barangay.class );
+                Intent intent = new Intent(getApplicationContext(), Login.class );
                 startActivity(intent);
                 finish();
             }

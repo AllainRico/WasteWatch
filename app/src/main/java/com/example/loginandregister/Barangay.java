@@ -15,10 +15,9 @@ import android.widget.Toast;
 
 public class Barangay extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
+    //Inputs
     Button buttonBrgySignUp;
-
     TextView  loginTextView;
-
     Spinner brgySpinner;
 
     @Override
@@ -29,6 +28,7 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+        //if null
     }
 
     @Override
@@ -36,7 +36,9 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barangay);
 
-
+        //Inputs
+        loginTextView = findViewById(R.id.loginNow);
+        buttonBrgySignUp = findViewById(R.id.btn_bgry_signup);
         brgySpinner = findViewById(R.id.brgySpinner);
 
         ArrayAdapter<CharSequence>  adapter = ArrayAdapter.createFromResource(this,R.array.barangays, android.R.layout.simple_spinner_item);
@@ -50,7 +52,7 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
 
 
 
-        buttonBrgySignUp = findViewById(R.id.btn_bgry_signup);
+
 
         buttonBrgySignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +63,6 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
             }
         });
 
-        loginTextView = findViewById(R.id.loginNow);
 
         loginTextView.setOnClickListener(new View.OnClickListener() {
             @Override
