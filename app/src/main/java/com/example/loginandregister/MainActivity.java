@@ -1,5 +1,6 @@
 package com.example.loginandregister;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,23 +10,37 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    //Inputs
+    // Inputs
     Button logout;
     TextView user;
-
+    TextView usernameText;
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Inputs
+        // Inputs
         logout = findViewById(R.id.logout);
+        usernameText = findViewById(R.id.username);
+
+        // Get the username passed from the Login activity
+
+        // Retrieve the user data from the database based on the username
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference();
+
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,5 +50,9 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
     }
+
+
 }
