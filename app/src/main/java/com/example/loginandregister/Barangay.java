@@ -15,14 +15,17 @@ import android.widget.Toast;
 
 public class Barangay extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
+    //Hide Navigation bar variable
+    private View decorView;
     //Inputs
     Button buttonBrgySignUp;
     Spinner brgySpinner;
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String brgy_name = adapterView.getItemAtPosition(i).toString();
-        Toast.makeText(this, brgy_name, Toast.LENGTH_SHORT).show();
+        //To show the item selected in the toast
+        //String brgy_name = adapterView.getItemAtPosition(i).toString();
+        //Toast.makeText(this, brgy_name, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -34,6 +37,18 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barangay);
+
+        //Hide the Navigation Bar
+        decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int i) {
+                if(i == 0){
+                    decorView.setSystemUiVisibility(hideSystemBars());
+                }
+            }
+        });
+
 
         //Inputs
         buttonBrgySignUp = findViewById(R.id.btn_bgry_signup);
@@ -62,4 +77,22 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
         });
 
     }
+
+    //Hide the Navigation Bar Method
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            decorView.setSystemUiVisibility(hideSystemBars());
+        }
+    }
+    private int hideSystemBars(){
+        return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+    }
+
 }

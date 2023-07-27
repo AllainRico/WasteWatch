@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="45dp"
+        android:paddingTop="30dp"
         android:paddingBottom="15dp"
         android:paddingLeft="70dp"
         android:paddingRight="70dp">
@@ -128,22 +128,25 @@
 
         </LinearLayout>
 
-        <!-- ImageView with Shape and Logo-->
+    <!-- ImageView with Shape and Logo-->
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="195dp"
+        android:layout_height="200dp"
         android:background="@drawable/bottom_square">
+
 
         <ImageView
             android:layout_width="200dp"
             android:layout_height="150dp"
-            android:paddingRight="50dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="-13dp"
+            android:paddingEnd="50dp"
             android:scaleType="centerCrop"
             android:src="@drawable/splash" />
 
     </RelativeLayout>
+
 
 </LinearLayout>

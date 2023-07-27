@@ -16,16 +16,32 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class Login extends AppCompatActivity {
 
+    //Hide Navigation bar variable
+    private View decorView;
+
     //Inputs
-    TextInputEditText editTextEmail, editTextPassword;
-    Button buttonLogin;
-    TextView register;
+    private TextInputEditText editTextEmail, editTextPassword;
+    private Button buttonLogin;
+    private TextView register;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //Hide the Navigation Bar
+        decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int i) {
+                if(i == 0){
+                    decorView.setSystemUiVisibility(hideSystemBars());
+                }
+            }
+        });
+
+
 
         //Inputs
         editTextEmail = findViewById(R.id.email);
@@ -53,5 +69,23 @@ public class Login extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+
+    //Hide the Navigation Bar Method
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            decorView.setSystemUiVisibility(hideSystemBars());
+        }
+    }
+    private int hideSystemBars(){
+        return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
     }
 }

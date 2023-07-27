@@ -116,7 +116,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingBottom="50dp">
+        android:layout_marginBottom="45dp">
 
         <TextView
             android:text="@string/login_with"
@@ -146,16 +146,18 @@
     <!-- ImageView with Shape and Logo-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="205dp"
+        android:layout_height="200dp"
         android:background="@drawable/bottom_square">
 
 
         <ImageView
             android:layout_width="200dp"
             android:layout_height="150dp"
-            android:paddingEnd="50dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="-13dp"
+            android:paddingEnd="50dp"
             android:scaleType="centerCrop"
             android:src="@drawable/splash" />
 
