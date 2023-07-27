@@ -17,7 +17,6 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
 
     //Inputs
     Button buttonBrgySignUp;
-    TextView  loginTextView;
     Spinner brgySpinner;
 
     @Override
@@ -37,7 +36,6 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
         setContentView(R.layout.activity_barangay);
 
         //Inputs
-        loginTextView = findViewById(R.id.loginNow);
         buttonBrgySignUp = findViewById(R.id.btn_bgry_signup);
         brgySpinner = findViewById(R.id.brgySpinner);
 
@@ -62,18 +60,6 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
                 finish();
             }
         });
-
-
-        loginTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Login.class );
-                startActivity(intent);
-                finish();
-            }
-        });
-
-
 
     }
 }
