@@ -53,7 +53,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 database = FirebaseDatabase.getInstance();
-                reference = database.getReference("users");
+                reference = database.getReference("Database").child("users");
                 String firstName = editTextFirstName.getText().toString().trim();
                 String lastName = editTextLastName.getText().toString().trim();
                 String username = editTextUsername.getText().toString().trim();

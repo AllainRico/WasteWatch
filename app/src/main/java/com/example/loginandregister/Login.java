@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -89,6 +91,7 @@ public class Login extends AppCompatActivity {
 
         reference = database.getReference("Database").child("users").child(username);
 
+
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -99,9 +102,11 @@ public class Login extends AppCompatActivity {
                         editTextPassword.setError(null);
 
                         Intent intent = new Intent(Login.this, MainActivity.class);
-
+                        intent.putExtra("firstName", username); // Use "firstName" as the key
                         startActivity(intent);
-                        finish(); // Optional: Finish the login activity so the user can't go back to it after logging in
+                                finish();
+
+                      // Optional: Finish the login activity so the user can't go back to it after logging in
                     } else {
                         // Password is incorrect
                         editTextPassword.setError("Invalid password");
