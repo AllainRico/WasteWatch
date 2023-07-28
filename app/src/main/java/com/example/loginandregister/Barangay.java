@@ -13,12 +13,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Barangay extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     //Inputs
     Button buttonBrgySignUp;
     TextView  loginTextView;
     Spinner brgySpinner;
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -57,9 +62,18 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
         buttonBrgySignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Register.class );
-                startActivity(intent);
-                finish();
+                String selectedBarangay = brgySpinner.getSelectedItem().toString();
+                if (selectedBarangay != null && !selectedBarangay.isEmpty()) {
+                    database = FirebaseDatabase.getInstance();
+                    reference = database.getReference("Database").child("Barangay").child(selectedBarangay);
+                    reference.setValue(true); // Save the selected barangay to the database
+                    Toast.makeText(Barangay.this, "Successful", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), Register.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(Barangay.this, "Please select a barangay", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

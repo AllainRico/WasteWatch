@@ -8,6 +8,7 @@
     tools:context=".Login">
 
     <!-- Layout for Views or Main body-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -160,5 +161,7 @@
             android:src="@drawable/splash" />
 
     </RelativeLayout>
+
+
 
 </LinearLayout>
