@@ -10,7 +10,8 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:orientation="vertical"
-       android:id="@+id/Welcome">
+       android:id="@+id/Welcome"
+       android:layout_marginTop="50dp">
 
        <TextView
            android:text="Welcome Back!"
@@ -29,62 +30,64 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"/>
 
-   </LinearLayout>
+
 
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:orientation="vertical"
-       android:layout_marginTop="100dp">
+       android:layout_marginTop="30dp">
 
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_marginBottom="20dp">
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:layout_marginBottom="15dp">
 
-       <Button
-           android:text="Check Live \nCollection \nHere"
-           android:textSize="24sp"
-           android:textStyle="bold"
-           android:textColor="@color/white"
-           android:paddingStart="20dp"
-           android:paddingTop="20dp"
-           android:gravity="top|left"
-           android:background="@drawable/button"
-           android:id="@+id/btnMap"
-           android:layout_width="175dp"
-           android:layout_height="250dp"
-           android:layout_marginRight="15dp"/>
+           <Button
+               android:text="Check Live \nCollection \nHere"
+               android:textSize="20sp"
+               android:textStyle="bold"
+               android:textColor="@color/white"
+               android:paddingStart="20dp"
+               android:paddingTop="20dp"
+               android:gravity="top|left"
+               android:background="@drawable/button_map"
+               android:id="@+id/btnMap"
+               android:layout_width="175dp"
+               android:layout_height="250dp"
+               android:layout_margin="5dp" />
 
-       <Button
-           android:text="Manage \nProfile"
-           android:textSize="24sp"
-           android:textStyle="bold"
-           android:textColor="@color/white"
-           android:paddingStart="20dp"
-           android:paddingTop="20dp"
-           android:gravity="top|left"
-           android:background="@drawable/button"
-           android:id="@+id/btnProfile"
-           android:layout_width="175dp"
-           android:layout_height="250dp"
-           android:layout_marginLeft="6dp"
-           android:layout_toRightOf="@id/btnMap"/>
-   </RelativeLayout>
+           <Button
+               android:text="Manage \nProfile"
+               android:textSize="20sp"
+               android:textStyle="bold"
+               android:textColor="@color/white"
+               android:paddingStart="20dp"
+               android:paddingTop="20dp"
+               android:gravity="top|left"
+               android:background="@drawable/button_profile"
+               android:id="@+id/btnProfile"
+               android:layout_width="175dp"
+               android:layout_height="250dp"
+               android:layout_margin="5dp" />
+
+       </LinearLayout>
 
    <Button
        android:text="Check \nSchedule \nhere"
-       android:textSize="28sp"
+       android:textSize="24sp"
        android:textStyle="bold"
        android:textColor="@color/white"
        android:paddingStart="20dp"
        android:paddingTop="20dp"
        android:gravity="top|left"
-       android:background="@drawable/button"
+       android:background="@drawable/button_schedule"
        android:id="@+id/btnSchedule"
        android:layout_width="match_parent"
-       android:layout_height="250dp"
-       android:layout_toRightOf="@id/btnProfile"/>
+       android:layout_height="200dp"/>
+
+   </LinearLayout>
 
    </LinearLayout>
 

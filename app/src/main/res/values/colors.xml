@@ -10,5 +10,6 @@
     <color name="login_button">#00b167</color>
     <color name="bottom_nav">#00b167</color>
     <color name="input_text_gray">#d9d9d9</color>
+    <color name="text_dark_gray">#5A5A5A</color>
     <color name="spinner_gray">#d9d9d9</color>
 </resources>
