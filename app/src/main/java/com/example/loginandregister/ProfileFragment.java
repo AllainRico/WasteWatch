@@ -24,6 +24,8 @@ import com.google.firebase.ktx.Firebase;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.util.HashMap;
+
 
 public class ProfileFragment extends Fragment {
 
@@ -36,6 +38,10 @@ public class ProfileFragment extends Fragment {
     private Button buttonLogout;
     private TextView txtUsername;
 
+
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +51,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -57,6 +64,7 @@ public class ProfileFragment extends Fragment {
         editFirstName = view.findViewById(R.id.edit_first_name);
         editLastName = view.findViewById(R.id.edit_last_name);
         editEmail = view.findViewById(R.id.edit_email);
+
 
         //change profile
         //editProfile = view.findViewById(R.id.editprofile);
@@ -132,6 +140,7 @@ public class ProfileFragment extends Fragment {
         txtLastName.setText(lastName);
         txtEmail.setText(email);
         txtUsername.setText(username);
+
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
