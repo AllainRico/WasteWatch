@@ -1,0 +1,182 @@
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.application'\r\n    id 'com.google.gms.google-services'\r\n}\r\n\r\nandroid {\r\n    namespace 'com.example.loginandregister'\r\n    compileSdk 33\r\n\r\n    defaultConfig {\r\n        applicationId \"com.example.loginandregister\"\r\n        minSdk 24\r\n        targetSdk 33\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    //added in making fragments\r\n    buildFeatures{\r\n\r\n        viewBinding true;\r\n\r\n    }\r\n\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation 'androidx.appcompat:appcompat:1.6.1'\r\n    implementation 'com.google.android.material:material:1.9.0'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    implementation 'com.google.firebase:firebase-database-ktx:20.2.2'\r\n    implementation platform('com.google.firebase:firebase-bom:32.2.0')\r\n    implementation(\"com.google.firebase:firebase-database\")\r\n    testImplementation 'junit:junit:4.13.2'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.5'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision 823c54e8803b2890968721c9c12761234b65e820)
++++ b/app/build.gradle	(date 1690554096094)
+@@ -38,6 +38,7 @@
+ 
+ dependencies {
+ 
++    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+     implementation 'androidx.appcompat:appcompat:1.6.1'
+     implementation 'com.google.android.material:material:1.9.0'
+     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+@@ -47,4 +48,5 @@
+     testImplementation 'junit:junit:4.13.2'
+     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
++
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/loginandregister/MapFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.loginandregister;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\n/**\r\n * A simple {@link Fragment} subclass.\r\n * Use the {@link MapFragment#newInstance} factory method to\r\n * create an instance of this fragment.\r\n */\r\npublic class MapFragment extends Fragment {\r\n\r\n    // TODO: Rename parameter arguments, choose names that match\r\n    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER\r\n    private static final String ARG_PARAM1 = \"param1\";\r\n    private static final String ARG_PARAM2 = \"param2\";\r\n\r\n    // TODO: Rename and change types of parameters\r\n    private String mParam1;\r\n    private String mParam2;\r\n\r\n    public MapFragment() {\r\n        // Required empty public constructor\r\n    }\r\n\r\n    /**\r\n     * Use this factory method to create a new instance of\r\n     * this fragment using the provided parameters.\r\n     *\r\n     * @param param1 Parameter 1.\r\n     * @param param2 Parameter 2.\r\n     * @return A new instance of fragment MapFragment.\r\n     */\r\n    // TODO: Rename and change types and number of parameters\r\n    public static MapFragment newInstance(String param1, String param2) {\r\n        MapFragment fragment = new MapFragment();\r\n        Bundle args = new Bundle();\r\n        args.putString(ARG_PARAM1, param1);\r\n        args.putString(ARG_PARAM2, param2);\r\n        fragment.setArguments(args);\r\n        return fragment;\r\n    }\r\n\r\n    @Override\r\n    public void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        if (getArguments() != null) {\r\n            mParam1 = getArguments().getString(ARG_PARAM1);\r\n            mParam2 = getArguments().getString(ARG_PARAM2);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n        return inflater.inflate(R.layout.fragment_map, container, false);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/loginandregister/MapFragment.java b/app/src/main/java/com/example/loginandregister/MapFragment.java
+--- a/app/src/main/java/com/example/loginandregister/MapFragment.java	(revision 823c54e8803b2890968721c9c12761234b65e820)
++++ b/app/src/main/java/com/example/loginandregister/MapFragment.java	(date 1690555056248)
+@@ -2,63 +2,35 @@
+ 
+ import android.os.Bundle;
+ 
++import androidx.annotation.NonNull;
+ import androidx.fragment.app.Fragment;
+-
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+-
+-/**
+- * A simple {@link Fragment} subclass.
+- * Use the {@link MapFragment#newInstance} factory method to
+- * create an instance of this fragment.
+- */
+-public class MapFragment extends Fragment {
+-
+-    // TODO: Rename parameter arguments, choose names that match
+-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+-    private static final String ARG_PARAM1 = "param1";
+-    private static final String ARG_PARAM2 = "param2";
+-
+-    // TODO: Rename and change types of parameters
+-    private String mParam1;
+-    private String mParam2;
++import androidx.fragment.app.FragmentActivity;
+ 
+-    public MapFragment() {
+-        // Required empty public constructor
+-    }
++import com.google.android.gms.maps.GoogleMap;
++import com.google.android.gms.maps.SupportMapFragment;
++import com.google.android.gms.maps.OnMapReadyCallback;
+ 
+-    /**
+-     * Use this factory method to create a new instance of
+-     * this fragment using the provided parameters.
+-     *
+-     * @param param1 Parameter 1.
+-     * @param param2 Parameter 2.
+-     * @return A new instance of fragment MapFragment.
+-     */
+-    // TODO: Rename and change types and number of parameters
+-    public static MapFragment newInstance(String param1, String param2) {
+-        MapFragment fragment = new MapFragment();
+-        Bundle args = new Bundle();
+-        args.putString(ARG_PARAM1, param1);
+-        args.putString(ARG_PARAM2, param2);
+-        fragment.setArguments(args);
+-        return fragment;
+-    }
+-
+-    @Override
+-    public void onCreate(Bundle savedInstanceState) {
+-        super.onCreate(savedInstanceState);
+-        if (getArguments() != null) {
+-            mParam1 = getArguments().getString(ARG_PARAM1);
+-            mParam2 = getArguments().getString(ARG_PARAM2);
+-        }
+-    }
++public class MapFragment extends Fragment implements OnMapReadyCallback{
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+         // Inflate the layout for this fragment
+-        return inflater.inflate(R.layout.fragment_map, container, false);
++        View view = inflater.inflate(R.layout.fragment_map, container, false);
++
++        // Get the hosting FragmentActivity and then access the SupportMapFragment
++        FragmentActivity activity = requireActivity();
++        SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager().findFragmentById(R.id.maps);
++        mapFragment.getMapAsync(this);
++
++        return view;
+     }
+-}
+\ No newline at end of file
++
++    @Override
++    public void onMapReady(@NonNull GoogleMap googleMap) {
++
++    }
++}
+Index: app/src/main/res/layout/fragment_map.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".MapFragment\">\r\n\r\n    <!-- TODO: Update blank fragment layout -->\r\n    <TextView\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:textSize=\"100dp\"\r\n        android:layout_gravity=\"center\"\r\n        android:text=\"MAP\"/>\r\n\r\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_map.xml b/app/src/main/res/layout/fragment_map.xml
+--- a/app/src/main/res/layout/fragment_map.xml	(revision 823c54e8803b2890968721c9c12761234b65e820)
++++ b/app/src/main/res/layout/fragment_map.xml	(date 1690554697719)
+@@ -4,13 +4,24 @@
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     tools:context=".MapFragment">
++    
++    
++    <RelativeLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent">
+ 
+-    <!-- TODO: Update blank fragment layout -->
+-    <TextView
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:textSize="100dp"
+-        android:layout_gravity="center"
+-        android:text="MAP"/>
++        <androidx.fragment.app.FragmentContainerView
++            android:layout_width="0dp"
++            android:layout_height="0dp"
++            android:id="@+id/maps"
++            android:layout_centerHorizontal="true"
++            android:layout_centerVertical="true"
++            android:name="com.google.android.gms.maps.SupportMapFragment">
+ 
++
++        </androidx.fragment.app.FragmentContainerView>
++
++    </RelativeLayout>
++
++
+ </FrameLayout>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"GRADLE\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"Embedded JDK\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision 823c54e8803b2890968721c9c12761234b65e820)
++++ b/.idea/gradle.xml	(date 1690583148605)
+@@ -7,7 +7,7 @@
+         <option name="testRunner" value="GRADLE" />
+         <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-        <option name="gradleJvm" value="Embedded JDK" />
++        <option name="gradleJvm" value="jbr-11" />
+         <option name="modules">
+           <set>
+             <option value="$PROJECT_DIR$" />
