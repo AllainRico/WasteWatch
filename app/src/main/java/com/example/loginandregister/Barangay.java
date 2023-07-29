@@ -1,8 +1,10 @@
 package com.example.loginandregister;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,8 +15,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Barangay extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
@@ -78,12 +83,12 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
                 String selectedBarangay = brgySpinner.getSelectedItem().toString();
                 if (selectedBarangay != null && !selectedBarangay.isEmpty()) {
                     database = FirebaseDatabase.getInstance();
-                    reference = database.getReference("Database").child("Barangay").child(selectedBarangay);
-                    reference.setValue(true); // Save the selected barangay to the database
-                    Toast.makeText(Barangay.this, "Successful", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), Register.class);
-                    startActivity(intent);
-                    finish();
+                    SharedPreferences preferences3 = getSharedPreferences("MyPrefsBarangay", MODE_PRIVATE);
+                    preferences3.edit().putString("barangay", selectedBarangay).apply();
+                        Intent intent = new Intent(Barangay.this,Register.class);
+                        startActivity(intent);
+                        finish();
+
                 } else {
                     Toast.makeText(Barangay.this, "Please select a barangay", Toast.LENGTH_SHORT).show();
                 }

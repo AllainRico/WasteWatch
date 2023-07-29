@@ -116,17 +116,20 @@ public class Login extends AppCompatActivity {
 
                         Intent intent = new Intent(Login.this, MainActivity.class);
 
-                        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                        String name = snapshot.child("firstName").getValue(String.class);
-                        preferences.edit().putString("username", name).apply();
+                        SharedPreferences preferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
+                        String firstname = snapshot.child("firstName").getValue(String.class);
+                        preferences.edit().putString("firstname", firstname).apply();
 
-                        SharedPreferences preferences2 = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                        SharedPreferences preferences2 = getSharedPreferences("ProfileFragment", MODE_PRIVATE);
                         String firstName = snapshot.child("firstName").getValue(String.class);
                         String lastName = snapshot.child("lastName").getValue(String.class);
                         String email = snapshot.child("email").getValue(String.class);
+                        String username = snapshot.child("username").getValue(String.class);
+
                         preferences2.edit().putString("firstname", firstName).apply();
                         preferences2.edit().putString("lastname", lastName).apply();
                         preferences2.edit().putString("email", email).apply();
+                        preferences2.edit().putString("ProfileUsername", username).apply();
 
                         startActivity(intent);
                         // Optional: Finish the login activity so the user can't go back to it after logging in

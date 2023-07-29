@@ -34,6 +34,7 @@ public class ProfileFragment extends Fragment {
     private ImageView editLastName;
     private ImageView editEmail;
     private Button buttonLogout;
+    private TextView txtUsername;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class ProfileFragment extends Fragment {
         txtLastName = view.findViewById(R.id.txt_last_name);
         txtEmail = view.findViewById(R.id.txt_email);
         buttonLogout = view.findViewById(R.id.btn_logout);
+        txtUsername = view.findViewById(R.id.username);
 
         editFirstName = view.findViewById(R.id.edit_first_name);
         editLastName = view.findViewById(R.id.edit_last_name);
@@ -120,14 +122,16 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        SharedPreferences preferences2 = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
         String firstName = preferences2.getString("firstname", " ");
         String lastName = preferences2.getString("lastname", " ");
         String email = preferences2.getString("email", " ");
+        String username = preferences2.getString("ProfileUsername","");
 
         txtFirstName.setText(firstName);
         txtLastName.setText(lastName);
         txtEmail.setText(email);
+        txtUsername.setText(username);
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override

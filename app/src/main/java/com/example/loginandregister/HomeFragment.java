@@ -47,8 +47,8 @@ public class HomeFragment extends Fragment {
         usernameTxt = view.findViewById(R.id.username);
 
 
-        SharedPreferences preferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        String username = preferences.getString("username", " ");
+        SharedPreferences preferences = getActivity().getSharedPreferences("HomeFragment", Context.MODE_PRIVATE);
+        String username = preferences.getString("firstname", " ");
 
         usernameTxt.setText(username);
 
