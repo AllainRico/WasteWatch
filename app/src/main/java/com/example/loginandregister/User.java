@@ -1,15 +1,15 @@
 package com.example.loginandregister;
 
 public class User {
-    String firstName, lastName, username, email, password, barangay;
+    String firstName, lastName, username, email, password, barName;
 
-    public User(String firstName, String lastName, String username, String email, String password, String barangay) {
+    public User(String firstName, String lastName, String username, String email, String password, String barName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.barangay = barangay;
+        this.barName = barName;
     }
 
     public User() {
@@ -55,11 +55,11 @@ public class User {
         this.password = password;
     }
 
-    public String getBar() {
-        return barangay;
+    public String getBarName() {
+        return barName;
     }
 
-    public void setBar(String barangay) {
-        this.barangay = barangay;
+    public void setBarName(String barName) {
+        this.barName = barName;
     }
 }
