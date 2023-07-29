@@ -50,6 +50,7 @@ public class ProfileFragment extends Fragment {
         txtFirstName = view.findViewById(R.id.txt_first_name);
         txtLastName = view.findViewById(R.id.txt_last_name);
         txtEmail = view.findViewById(R.id.txt_email);
+        buttonLogout = view.findViewById(R.id.btn_logout);
 
         editFirstName = view.findViewById(R.id.edit_first_name);
         editLastName = view.findViewById(R.id.edit_last_name);
