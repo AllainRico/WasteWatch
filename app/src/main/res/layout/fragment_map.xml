@@ -10,18 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:id="@+id/maps"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:name="com.google.android.gms.maps.SupportMapFragment">
-
-
-        </androidx.fragment.app.FragmentContainerView>
+        <TextView
+            android:id="@+id/map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MAP"
+            android:textSize="100dp"
+            android:layout_centerInParent="true"/>
 
     </RelativeLayout>
+
+
 
 
 </FrameLayout>

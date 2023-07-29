@@ -21,10 +21,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        // Get the hosting FragmentActivity and then access the SupportMapFragment
-        FragmentActivity activity = requireActivity();
-        SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager().findFragmentById(R.id.maps);
-        mapFragment.getMapAsync(this);
 
         return view;
     }

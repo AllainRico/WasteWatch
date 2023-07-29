@@ -60,11 +60,12 @@ public class HomeFragment extends Fragment {
         buttonMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Replace the current fragment container with MapFragment
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.frameLayout, new MapFragment())
-                        .addToBackStack(null) // Optional: Add to back stack so pressing back button returns to this fragment
+                        .addToBackStack(null)
                         .commit();
+                // Set the selected item in the BottomNavigationView to the "map" item
+                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.map);
             }
         });
 
@@ -72,12 +73,12 @@ public class HomeFragment extends Fragment {
         buttonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Replace the current fragment container with ProfileFragment
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.frameLayout, new ProfileFragment())
-                        .addToBackStack(null) // Optional: Add to back stack so pressing back button returns to this fragment
+                        .addToBackStack(null)
                         .commit();
-
+                // Set the selected item in the BottomNavigationView to the "profile" item
+                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.profile);
             }
         });
 
@@ -85,17 +86,15 @@ public class HomeFragment extends Fragment {
         buttonSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Replace the current fragment container with ScheduleFragment
                 getParentFragmentManager().beginTransaction()
                         .replace(R.id.frameLayout, new ScheduleFragment())
-                        .addToBackStack(null) // Optional: Add to back stack so pressing back button returns to this fragment
+                        .addToBackStack(null)
                         .commit();
+                // Set the selected item in the BottomNavigationView to the "schedule" item
+                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
             }
         });
 
         return view;
-
-
-
     }
 }

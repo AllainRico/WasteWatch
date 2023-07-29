@@ -87,4 +87,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
     }
+
+    public void setBottomNavigationSelectedItem(int itemId) {
+        binding.bottomNavigationView.setSelectedItemId(itemId);
+    }
 }
