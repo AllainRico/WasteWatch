@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 
-
 public class ProfileFragment extends Fragment {
 
     private EditText txtFirstName;
@@ -31,8 +30,12 @@ public class ProfileFragment extends Fragment {
     private Button buttonLogout;
     private TextView txtUsername;
 
+    //Profile image
+    private ImageView editProfile;
 
-    
+    // Boolean flag to track if the EditText is in edit mode
+    private boolean isEditMode = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,13 +46,13 @@ public class ProfileFragment extends Fragment {
         txtFirstName = view.findViewById(R.id.txt_first_name);
         txtLastName = view.findViewById(R.id.txt_last_name);
         txtEmail = view.findViewById(R.id.txt_email);
-        buttonLogout = view.findViewById(R.id.btn_logout);
         txtUsername = view.findViewById(R.id.username);
 
         editFirstName = view.findViewById(R.id.edit_first_name);
         editLastName = view.findViewById(R.id.edit_last_name);
         editEmail = view.findViewById(R.id.edit_email);
 
+        buttonLogout = view.findViewById(R.id.btn_logout);
 
         //change profile
         //editProfile = view.findViewById(R.id.editprofile);
@@ -63,55 +66,21 @@ public class ProfileFragment extends Fragment {
         editFirstName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtFirstName.setInputType(InputType.TYPE_CLASS_TEXT);
-                txtFirstName.requestFocus();
-                txtFirstName.setSelection(txtFirstName.getText().length()); // Set cursor to the end
+                toggleEditMode(editFirstName, txtFirstName);
             }
         });
 
         editLastName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtLastName.setInputType(InputType.TYPE_CLASS_TEXT);
-                txtLastName.requestFocus();
-                txtLastName.setSelection(txtLastName.getText().length()); // Set cursor to the end
+                toggleEditMode(editLastName, txtLastName);
             }
         });
 
         editEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtEmail.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                txtEmail.requestFocus();
-                txtEmail.setSelection(txtEmail.getText().length()); // Set cursor to the end
-            }
-        });
-
-        // Set OnFocusChangeListener to reset input type to read-only when EditText loses focus
-        txtFirstName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    txtFirstName.setInputType(InputType.TYPE_NULL);
-                }
-            }
-        });
-
-        txtLastName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    txtLastName.setInputType(InputType.TYPE_NULL);
-                }
-            }
-        });
-
-        txtEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    txtEmail.setInputType(InputType.TYPE_NULL);
-                }
+                toggleEditMode(editEmail, txtEmail);
             }
         });
 
@@ -127,8 +96,10 @@ public class ProfileFragment extends Fragment {
         txtUsername.setText(username);
 
 
+        // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
@@ -137,5 +108,20 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void toggleEditMode(ImageView editView, EditText editText) {
+        if (isEditMode) {
+            // Set EditText to read-only mode
+            editText.setInputType(InputType.TYPE_NULL);
+            editView.setImageResource(R.drawable.ic_edit);
+        } else {
+            // Set EditText to edit mode
+            editText.setInputType(InputType.TYPE_CLASS_TEXT);
+            editText.requestFocus();
+            editText.setSelection(editText.getText().length()); // Set cursor to the end
+            editView.setImageResource(R.drawable.ic_check);
+        }
+        isEditMode = !isEditMode;
     }
 }

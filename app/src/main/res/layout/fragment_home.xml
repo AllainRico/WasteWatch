@@ -33,7 +33,7 @@
 
 
    <LinearLayout
-       android:layout_width="match_parent"
+       android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:orientation="vertical"
        android:layout_marginTop="30dp">
@@ -45,18 +45,18 @@
            android:layout_marginBottom="15dp">
 
            <Button
-               android:text="Check Live \nCollection \nHere"
-               android:textSize="20sp"
-               android:textStyle="bold"
-               android:textColor="@color/white"
+               android:id="@+id/btnMap"
+               android:layout_width="180dp"
+               android:layout_height="250dp"
+               android:background="@drawable/button_map"
+               android:gravity="top|left"
                android:paddingStart="20dp"
                android:paddingTop="20dp"
-               android:gravity="top|left"
-               android:background="@drawable/button_map"
-               android:id="@+id/btnMap"
-               android:layout_width="175dp"
-               android:layout_height="250dp"
-               android:layout_margin="5dp" />
+               android:text="Check Live \nCollection \nHere"
+               android:textColor="@color/white"
+               android:textSize="20sp"
+               android:textStyle="bold"
+               android:layout_marginRight="10dp"/>
 
            <Button
                android:text="Manage \nProfile"
@@ -68,24 +68,28 @@
                android:gravity="top|left"
                android:background="@drawable/button_profile"
                android:id="@+id/btnProfile"
-               android:layout_width="175dp"
-               android:layout_height="250dp"
-               android:layout_margin="5dp" />
+               android:layout_width="180dp"
+               android:layout_height="250dp"/>
 
        </LinearLayout>
 
-   <Button
-       android:text="Check \nSchedule \nhere"
-       android:textSize="24sp"
-       android:textStyle="bold"
-       android:textColor="@color/white"
-       android:paddingStart="20dp"
-       android:paddingTop="20dp"
-       android:gravity="top|left"
-       android:background="@drawable/button_schedule"
-       android:id="@+id/btnSchedule"
-       android:layout_width="match_parent"
-       android:layout_height="200dp"/>
+
+
+
+           <Button
+               android:text="Check \nSchedule \nhere"
+               android:textSize="24sp"
+               android:textStyle="bold"
+               android:textColor="@color/white"
+               android:paddingStart="20dp"
+               android:paddingTop="20dp"
+               android:gravity="top|left"
+               android:background="@drawable/button_schedule"
+               android:id="@+id/btnSchedule"
+               android:layout_width="match_parent"
+               android:layout_height="200dp"/>
+
+
 
    </LinearLayout>
 
