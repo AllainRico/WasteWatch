@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -130,6 +131,8 @@ public class Login extends AppCompatActivity {
                         preferences2.edit().putString("lastname", lastName).apply();
                         preferences2.edit().putString("email", email).apply();
                         preferences2.edit().putString("ProfileUsername", username).apply();
+
+
 
                         startActivity(intent);
                         // Optional: Finish the login activity so the user can't go back to it after logging in
