@@ -97,6 +97,15 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Navigate back to Login activity
+        Intent intent = new Intent(Barangay.this, Login.class);
+        startActivity(intent);
+        finish();
+    }
+
     //Hide the Navigation Bar Method
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {

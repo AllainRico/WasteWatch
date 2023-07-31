@@ -6,18 +6,10 @@
     tools:context=".MapFragment">
 
 
-    <RelativeLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="MAP"
-            android:textSize="100dp"
-            android:layout_centerInParent="true"/>
-
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:src="@drawable/fakemap"
+        android:scaleType="fitXY"/>
 
 </FrameLayout>

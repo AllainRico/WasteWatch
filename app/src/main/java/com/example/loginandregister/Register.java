@@ -81,6 +81,15 @@ public class Register extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Navigate back to Barangay activity
+        Intent intent = new Intent(Register.this, Barangay.class);
+        startActivity(intent);
+        finish();
+    }
+
     //Hide the Navigation Bar Method
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
