@@ -148,6 +148,17 @@ public class ProfileFragment extends Fragment {
 
     private void toggleEditMode(ImageView editView, EditText editText) {
         if (isEditMode) {
+
+            String first = txtFirstName.getText().toString().trim();
+            String last = txtLastName.getText().toString().trim();
+            String email = txtEmail.getText().toString().trim();
+            String user = txtUsername.getText().toString().trim();
+
+            reference = database.getInstance().getReference("Database").child("users").child(user);
+            reference.child("firstName").setValue(first);
+            reference.child("lastName").setValue(last);
+            reference.child("email").setValue(email);
+
             // Set EditText to read-only mode
             editText.setInputType(InputType.TYPE_NULL);
             editView.setImageResource(R.drawable.ic_edit);
