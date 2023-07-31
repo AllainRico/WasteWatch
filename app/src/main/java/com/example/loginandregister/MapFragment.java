@@ -13,7 +13,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback{
+public class MapFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,8 +25,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         return view;
     }
 
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-
-    }
 }
