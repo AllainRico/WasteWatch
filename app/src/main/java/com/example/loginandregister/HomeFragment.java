@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
 
     private Button buttonMap, buttonProfile, buttonSchedule;
     TextView usernameTxt;
-    FirebaseDatabase database;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
 
 
@@ -47,13 +47,52 @@ public class HomeFragment extends Fragment {
         usernameTxt = view.findViewById(R.id.username);
 
 
-        SharedPreferences preferences = getActivity().getSharedPreferences("HomeFragment", Context.MODE_PRIVATE);
-        String username = preferences.getString("firstname", " ");
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("ProfileUsername","");
+        reference = database.getReference("Database").child("users").child(username);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String first = snapshot.child("firstName").getValue(String.class);
+                usernameTxt.setText(first);
+            }
 
-        usernameTxt.setText(username);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+
+
+
+/*
+
+
+        reference = database.getInstance().getReference("Database").child("users");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                String first = snapshot.child(username).child("firstName").getValue(String.class);
+                usernameTxt.setText(first);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+
+
+
+
+ */
         // Retrieve the username from arguments
-
 
 
         buttonMap = view.findViewById(R.id.btnMap);

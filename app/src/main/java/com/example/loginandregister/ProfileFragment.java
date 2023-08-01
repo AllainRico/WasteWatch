@@ -104,17 +104,30 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
-        String firstName = preferences2.getString("firstname", " ");
-        String lastName = preferences2.getString("lastname", " ");
-        String email = preferences2.getString("email", " ");
-        String username = preferences2.getString("ProfileUsername","");
+        reference = database.getInstance().getReference("Database").child("users");
 
-        txtFirstName.setText(firstName);
-        txtLastName.setText(lastName);
-        txtEmail.setText(email);
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("ProfileUsername","");
         txtUsername.setText(username);
 
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String firstName2 = snapshot.child(username).child("firstName").getValue(String.class);
+                String lastName2 = snapshot.child(username).child("lastName").getValue(String.class);
+                String email2 = snapshot.child(username).child("email").getValue(String.class);
+                txtFirstName.setText(firstName2);
+                txtLastName.setText(lastName2);
+                txtEmail.setText(email2);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
@@ -146,18 +159,32 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+
     private void toggleEditMode(ImageView editView, EditText editText) {
         if (isEditMode) {
 
             String first = txtFirstName.getText().toString().trim();
             String last = txtLastName.getText().toString().trim();
-            String email = txtEmail.getText().toString().trim();
+            String email3 = txtEmail.getText().toString().trim();
             String user = txtUsername.getText().toString().trim();
 
             reference = database.getInstance().getReference("Database").child("users").child(user);
-            reference.child("firstName").setValue(first);
-            reference.child("lastName").setValue(last);
-            reference.child("email").setValue(email);
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    reference.child("firstName").setValue(first);
+                    reference.child("lastName").setValue(last);
+                    reference.child("email").setValue(email3);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+
 
             // Set EditText to read-only mode
             editText.setInputType(InputType.TYPE_NULL);
@@ -165,6 +192,8 @@ public class ProfileFragment extends Fragment {
             // Hide the keyboard when leaving edit mode
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
+
         } else {
             // Set EditText to edit mode
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
