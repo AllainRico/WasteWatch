@@ -75,7 +75,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateCredentials()) {
-                    loginUser();
+                        loginUser();
                 }
             }
         });
@@ -100,6 +100,7 @@ public class Login extends AppCompatActivity {
 
 
 
+
     private void loginUser() {
         final String username = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
@@ -110,31 +111,40 @@ public class Login extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+
+                    if(username.equals("admin")){
+                        String passwordFromDB = snapshot.child("password").getValue(String.class);
+                        if (passwordFromDB.equals(password)) {
+                            Intent intent1 = new Intent(Login.this, AdminMainActivity.class);
+                            startActivity(intent1);
+                        }
+                    }
                     String passwordFromDB = snapshot.child("password").getValue(String.class);
                     if (passwordFromDB.equals(password)) {
                         // Password is correct, login successful
-                        editTextPassword.setError(null);
-
-                        Intent intent = new Intent(Login.this, MainActivity.class);
-
-                        SharedPreferences preferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
-                        String firstname = snapshot.child("firstName").getValue(String.class);
-                        preferences.edit().putString("firstname", firstname).apply();
-
-                        SharedPreferences preferences2 = getSharedPreferences("ProfileFragment", MODE_PRIVATE);
-                        String firstName = snapshot.child("firstName").getValue(String.class);
-                        String lastName = snapshot.child("lastName").getValue(String.class);
-                        String email = snapshot.child("email").getValue(String.class);
-                        String username = snapshot.child("username").getValue(String.class);
-
-                        preferences2.edit().putString("firstname", firstName).apply();
-                        preferences2.edit().putString("lastname", lastName).apply();
-                        preferences2.edit().putString("email", email).apply();
-                        preferences2.edit().putString("ProfileUsername", username).apply();
 
 
+                            Intent intent = new Intent(Login.this, MainActivity.class);
 
-                        startActivity(intent);
+                            SharedPreferences preferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
+                            String firstname = snapshot.child("firstName").getValue(String.class);
+                            preferences.edit().putString("firstname", firstname).apply();
+
+                            SharedPreferences preferences2 = getSharedPreferences("ProfileFragment", MODE_PRIVATE);
+                            String firstName = snapshot.child("firstName").getValue(String.class);
+                            String lastName = snapshot.child("lastName").getValue(String.class);
+                            String email = snapshot.child("email").getValue(String.class);
+                            String username = snapshot.child("username").getValue(String.class);
+
+                            preferences2.edit().putString("firstname", firstName).apply();
+                            preferences2.edit().putString("lastname", lastName).apply();
+                            preferences2.edit().putString("email", email).apply();
+                            preferences2.edit().putString("ProfileUsername", username).apply();
+
+                            startActivity(intent);
+                            finish();
+                            editTextPassword.setError(null);
+
                         // Optional: Finish the login activity so the user can't go back to it after logging in
 
                     } else {
