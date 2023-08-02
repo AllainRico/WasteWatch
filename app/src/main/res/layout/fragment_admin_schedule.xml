@@ -46,14 +46,20 @@
 
             <TextView
                 android:id="@+id/monthYearTV"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:text="August 2023"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:paddingLeft="20dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/btnPrevious"
@@ -68,7 +74,6 @@
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="5dp"
                 android:background="@drawable/ic_down"
                 android:onClick="nextMonth"
                 android:text="@string/blank"/>
