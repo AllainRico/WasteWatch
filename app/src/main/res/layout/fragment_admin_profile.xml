@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User"
+            android:text="Admin"
             android:id="@+id/username"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -76,7 +76,7 @@
 
 
         <EditText
-            android:text="First Name"
+            android:text="@string/blank"
             android:id="@+id/txt_first_name"
             android:textSize="14sp"
             android:paddingLeft="15dp"
@@ -109,7 +109,7 @@
         </LinearLayout>
 
         <EditText
-            android:text="Last Name"
+            android:text="@string/blank"
             android:id="@+id/txt_last_name"
             android:textSize="14sp"
             android:paddingLeft="15dp"
@@ -140,7 +140,7 @@
         </LinearLayout>
 
         <EditText
-            android:text="Email"
+            android:text="@string/blank"
             android:id="@+id/txt_email"
             android:textSize="14sp"
             android:paddingLeft="15dp"

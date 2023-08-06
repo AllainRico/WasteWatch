@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="Admin Name"
+            android:text="Admin"
             android:id="@+id/admin"
             android:textSize="24sp"
             android:textStyle="bold"

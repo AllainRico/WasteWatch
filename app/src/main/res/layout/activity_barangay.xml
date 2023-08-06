@@ -82,13 +82,10 @@
         <ImageView
             android:layout_width="200dp"
             android:layout_height="150dp"
-            android:layout_alignParentStart="true"
+            android:src="@drawable/wastewatch_logo_bottom"
+            android:paddingRight="25dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginBottom="-13dp"
-            android:paddingEnd="50dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/splash" />
+            android:layout_alignParentStart="true"/>
 
     </RelativeLayout>
 
