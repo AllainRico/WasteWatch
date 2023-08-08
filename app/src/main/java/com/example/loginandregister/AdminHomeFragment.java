@@ -92,7 +92,7 @@ public class AdminHomeFragment extends Fragment {
         // Retrieve the username from arguments
 
 
-        buttonMap = view.findViewById(R.id.btnMap);
+        buttonMap = view.findViewById(R.id.admin_btnMap);
         buttonMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +105,7 @@ public class AdminHomeFragment extends Fragment {
             }
         });
 
-        buttonProfile = view.findViewById(R.id.btnProfile);
+        buttonProfile = view.findViewById(R.id.admin_btnReport);
         buttonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +118,7 @@ public class AdminHomeFragment extends Fragment {
             }
         });
 
-        buttonSchedule = view.findViewById(R.id.btnSchedule);
+        buttonSchedule = view.findViewById(R.id.admin_btnSchedule);
         buttonSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

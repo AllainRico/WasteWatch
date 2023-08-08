@@ -1,5 +1,6 @@
 package com.example.loginandregister;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,7 +94,7 @@ public class HomeFragment extends Fragment {
         // Retrieve the username from arguments
 
 
-        buttonMap = view.findViewById(R.id.btnMap);
+        buttonMap = view.findViewById(R.id.user_btnMap);
         buttonMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +107,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        buttonProfile = view.findViewById(R.id.btnProfile);
+        buttonProfile = view.findViewById(R.id.user_btnReport);
         buttonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +120,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        buttonSchedule = view.findViewById(R.id.btnSchedule);
+        buttonSchedule = view.findViewById(R.id.user_btnSchedule);
         buttonSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

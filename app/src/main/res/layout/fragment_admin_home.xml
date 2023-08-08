@@ -43,7 +43,7 @@
                 android:layout_marginBottom="15dp">
 
                 <Button
-                    android:id="@+id/btnMap"
+                    android:id="@+id/admin_btnMap"
                     android:layout_width="0dp"
                     android:layout_height="250dp"
                     android:layout_weight="1"
@@ -58,7 +58,7 @@
                     android:layout_marginEnd="5dp"/>
 
                 <Button
-                    android:id="@+id/btnProfile"
+                    android:id="@+id/admin_btnReport"
                     android:layout_width="0dp"
                     android:layout_height="250dp"
                     android:layout_weight="1"
@@ -75,6 +75,7 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/admin_btnSchedule"
                 android:text="@string/check_nschedule_nhere"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -83,7 +84,6 @@
                 android:paddingTop="20dp"
                 android:gravity="top|left"
                 android:background="@drawable/button_schedule"
-                android:id="@+id/btnSchedule"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"/>
 
