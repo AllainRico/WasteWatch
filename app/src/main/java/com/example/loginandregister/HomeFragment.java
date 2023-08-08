@@ -6,10 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +101,7 @@ public class HomeFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "map" item
-                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.map);
+                ((UserMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.map);
             }
         });
 
@@ -117,7 +114,7 @@ public class HomeFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "profile" item
-                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.profile);
+                ((UserMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.profile);
             }
         });
 
@@ -130,7 +127,7 @@ public class HomeFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "schedule" item
-                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
+                ((UserMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
             }
         });
 

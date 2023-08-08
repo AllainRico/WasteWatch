@@ -24,6 +24,10 @@
             private TextView monthYearText;
             private RecyclerView calendarRecyclerView;
             private LocalDate selectedDate;
+            private TextView dayTextView;
+            private TextView barangayTextView;
+            private TextView timeTextView;
+
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                      Bundle savedInstanceState) {
@@ -34,8 +38,12 @@
                 selectedDate = LocalDate.now();
                 setMonthView();
 
+                dayTextView = view.findViewById(R.id.day); // Initialize dayTextView
+                updateDayTextView();
+
                 Button btnPrevious = view.findViewById(R.id.btnPrevious);
                 Button btnNext = view.findViewById(R.id.btnNext);
+                dayTextView = view.findViewById(R.id.day);
                 btnPrevious.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -53,7 +61,7 @@
             }
 
             private void initWidgets(View view) {
-                calendarRecyclerView = view.findViewById(R.id.caledarRecycleView);
+                calendarRecyclerView = view.findViewById(R.id.calendarRecycleView);
                 monthYearText = view.findViewById(R.id.monthYearTV);
             }
 
@@ -100,6 +108,8 @@
             }
 
 
+
+
             public void previousMonth(View view) {
                 selectedDate = selectedDate.minusMonths(1);
                 setMonthView();
@@ -113,9 +123,26 @@
             @Override
             public void onItemClick(int position, String dayText) {
                 if (!dayText.isEmpty() && !dayText.equals("null")) {
-                    String message = "Selected Date: " + dayText + " " + monthYearFromDate(selectedDate);
+                    LocalDate clickedDate = selectedDate.withDayOfMonth(Integer.parseInt(dayText));
+                    String formattedDate = formatDateForDisplay(clickedDate);
+                    dayTextView.setText(formattedDate);
+
+                    String message = "Selected Date: " + formattedDate;
                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 }
             }
 
+            private void updateDayTextView() {
+                String currentDate = formatDateForDisplay(LocalDate.now());
+                dayTextView.setText(currentDate);
+            }
+
+            private String formatDateForDisplay(LocalDate date) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d", Locale.getDefault());
+                return date.format(formatter);
+            }
         }
+
+
+
+

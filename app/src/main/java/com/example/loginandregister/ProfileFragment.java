@@ -1,6 +1,8 @@
 package com.example.loginandregister;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -132,11 +134,9 @@ public class ProfileFragment extends Fragment {
         // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), Login.class);
-                startActivity(intent);
-                getActivity().finish();
+                showLogoutConfirmationDialog();
             }
         });
 
@@ -157,6 +157,43 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void showLogoutConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+
+        // Inflate the custom layout for the dialog content
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_logout_confirmation, null);
+        builder.setView(dialogView);
+
+        // Set the background and text color for the dialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        // Get references to the "Yes" and "No" buttons
+        Button btnYes = dialogView.findViewById(R.id.btnYes);
+        Button btnNo = dialogView.findViewById(R.id.btnNo);
+
+        // Set click listeners for the buttons
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Perform logout action here (e.g., start LoginActivity)
+                Intent intent = new Intent(getActivity(), Login.class);
+                startActivity(intent);
+                getActivity().finish();
+                alertDialog.dismiss(); // Close the dialog after clicking "Yes"
+            }
+        });
+
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss(); // Close the dialog after clicking "No"
+            }
+        });
+
+        alertDialog.show();
     }
 
 
@@ -183,16 +220,12 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
-
-
-
             // Set EditText to read-only mode
             editText.setInputType(InputType.TYPE_NULL);
             editView.setImageResource(R.drawable.ic_edit);
             // Hide the keyboard when leaving edit mode
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-
 
         } else {
             // Set EditText to edit mode
