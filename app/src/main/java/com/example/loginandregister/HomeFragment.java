@@ -121,6 +121,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         buttonSchedule = view.findViewById(R.id.btnSchedule);
         buttonSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,5 +136,8 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+
     }
+
+
 }

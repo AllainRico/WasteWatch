@@ -119,6 +119,8 @@ public class Login extends AppCompatActivity {
                             startActivity(intent1);
                         }
                     }
+
+
                     String passwordFromDB = snapshot.child("password").getValue(String.class);
                     if (passwordFromDB.equals(password)) {
                         // Password is correct, login successful
