@@ -2,10 +2,7 @@ package com.example.loginandregister;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -104,7 +100,8 @@ public class Login extends AppCompatActivity {
     private void loginUser() {
         final String username = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
-
+        Log.d("LoginActivity", "Username: " + username);
+        Log.d("LoginActivity", "Password: " + password);
         reference = database.getReference("Database").child("users").child(username);
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -117,6 +114,7 @@ public class Login extends AppCompatActivity {
                         if (passwordFromDB.equals(password)) {
                             Intent intent1 = new Intent(Login.this, AdminMainActivity.class);
                             startActivity(intent1);
+                            finish();
                         }
                     }
 
@@ -126,7 +124,7 @@ public class Login extends AppCompatActivity {
                         // Password is correct, login successful
 
 
-                            Intent intent = new Intent(Login.this, MainActivity.class);
+                            Intent intent = new Intent(Login.this, UserMainActivity.class);
 
                             SharedPreferences preferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
                             String firstname = snapshot.child("firstName").getValue(String.class);

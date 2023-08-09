@@ -5,17 +5,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.loginandregister.databinding.ActivityMainBinding;
 
 
-public class MainActivity extends AppCompatActivity {
+public class UserMainActivity extends AppCompatActivity {
     //Hide Navigation bar variable
     private View decorView;
     //Fragment
@@ -39,20 +35,20 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //Fragment shown first at startZ
-        replaceFragment(new HomeFragment());
+        //Fragment shown first at start
+        replaceUserFragment(new HomeFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
 
             int itemId = item.getItemId();
             if (itemId == R.id.home) {
-                replaceFragment(new HomeFragment());
+                replaceUserFragment(new HomeFragment());
             } else if (itemId == R.id.schedule) {
-                replaceFragment(new ScheduleFragment());
+                replaceUserFragment(new ScheduleFragment());
             } else if (itemId == R.id.map) {
-                replaceFragment(new MapFragment());
+                replaceUserFragment(new MapFragment());
             } else if (itemId == R.id.profile) {
-                replaceFragment(new ProfileFragment());
+                replaceUserFragment(new ProfileFragment());
             }
 
             return true;
@@ -77,15 +73,11 @@ public class MainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
     }
 
-    private void replaceFragment(Fragment fragment){
-
+    private void replaceUserFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =fragmentManager.beginTransaction();
-
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);
-
         fragmentTransaction.commit();
-
     }
 
     public void setBottomNavigationSelectedItem(int itemId) {

@@ -35,20 +35,20 @@ public class AdminMainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //Fragment shown first at startZ
-        replaceFragment(new HomeFragment());
+        //Fragment shown first at start
+        replaceAdminFragment(new AdminHomeFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
 
             int itemId = item.getItemId();
             if (itemId == R.id.home) {
-                replaceFragment(new AdminHomeFragment());
+                replaceAdminFragment(new AdminHomeFragment());
             } else if (itemId == R.id.schedule) {
-                replaceFragment(new AdminScheduleFragment());
+                replaceAdminFragment(new AdminScheduleFragment());
             } else if (itemId == R.id.map) {
-                replaceFragment(new AdminMapFragment());
+                replaceAdminFragment(new AdminMapFragment());
             } else if (itemId == R.id.profile) {
-                replaceFragment(new AdminProfileFragment());
+                replaceAdminFragment(new AdminReportFragment());
             }
 
             return true;
@@ -73,15 +73,11 @@ public class AdminMainActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
     }
 
-    private void replaceFragment(Fragment fragment){
-
+    private void replaceAdminFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =fragmentManager.beginTransaction();
-
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);
-
         fragmentTransaction.commit();
-
     }
 
     public void setBottomNavigationSelectedItem(int itemId) {

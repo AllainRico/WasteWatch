@@ -6,10 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AdminHomeFragment extends Fragment {
 
-    private Button buttonMap, buttonProfile, buttonSchedule;
+    private Button buttonMap, buttonReport, buttonSchedule;
     TextView adminTxt;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
@@ -95,42 +92,42 @@ public class AdminHomeFragment extends Fragment {
         // Retrieve the username from arguments
 
 
-        buttonMap = view.findViewById(R.id.btnMap);
+        buttonMap = view.findViewById(R.id.admin_btnMap);
         buttonMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, new MapFragment())
+                        .replace(R.id.frameLayout, new AdminMapFragment())
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "map" item
-                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.map);
+                ((AdminMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.map);
             }
         });
 
-        buttonProfile = view.findViewById(R.id.btnProfile);
-        buttonProfile.setOnClickListener(new View.OnClickListener() {
+        buttonReport = view.findViewById(R.id.admin_btnReport);
+        buttonReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, new ProfileFragment())
+                        .replace(R.id.frameLayout, new AdminReportFragment())
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "profile" item
-                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.profile);
+                ((AdminMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.profile);
             }
         });
 
-        buttonSchedule = view.findViewById(R.id.btnSchedule);
+        buttonSchedule = view.findViewById(R.id.admin_btnSchedule);
         buttonSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, new ScheduleFragment())
+                        .replace(R.id.frameLayout, new AdminScheduleFragment())
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "schedule" item
-                ((MainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
+                ((AdminMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
             }
         });
 

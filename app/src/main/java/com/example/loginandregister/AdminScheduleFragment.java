@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,18 +25,29 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private LocalDate selectedDate;
+    private TextView dayTextView;
+    private TextView barangayTextView;
+    private TextView timeTextView;
+
+    // Boolean flag to track if the EditText is in edit mode
+    private boolean isEditMode = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_schedule, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_schedule, container, false);
 
         initWidgets(view);
         selectedDate = LocalDate.now();
         setMonthView();
 
+        dayTextView = view.findViewById(R.id.day); // Initialize dayTextView
+        updateDayTextView();
+
         Button btnPrevious = view.findViewById(R.id.btnPrevious);
         Button btnNext = view.findViewById(R.id.btnNext);
+        dayTextView = view.findViewById(R.id.day);
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,11 +61,29 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
+        ImageView editTimeImageView = view.findViewById(R.id.edit_time);
+        editTimeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isEditMode = !isEditMode; // Toggle the edit mode
+
+                if (isEditMode) {
+                    // Enter edit mode
+                    timeTextView.setEnabled(true);
+                    timeTextView.requestFocus();
+                } else {
+                    // Exit edit mode
+                    timeTextView.setEnabled(false);
+                }
+            }
+        });
+
+
         return view;
     }
 
     private void initWidgets(View view) {
-        calendarRecyclerView = view.findViewById(R.id.caledarRecycleView);
+        calendarRecyclerView = view.findViewById(R.id.calendarRecycleView);
         monthYearText = view.findViewById(R.id.monthYearTV);
     }
 
@@ -100,6 +130,8 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     }
 
 
+
+
     public void previousMonth(View view) {
         selectedDate = selectedDate.minusMonths(1);
         setMonthView();
@@ -113,9 +145,22 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     @Override
     public void onItemClick(int position, String dayText) {
         if (!dayText.isEmpty() && !dayText.equals("null")) {
-            String message = "Selected Date: " + dayText + " " + monthYearFromDate(selectedDate);
+            LocalDate clickedDate = selectedDate.withDayOfMonth(Integer.parseInt(dayText));
+            String formattedDate = formatDateForDisplay(clickedDate);
+            dayTextView.setText(formattedDate);
+
+            String message = "Selected Date: " + formattedDate;
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
     }
 
+    private void updateDayTextView() {
+        String currentDate = formatDateForDisplay(LocalDate.now());
+        dayTextView.setText(currentDate);
+    }
+
+    private String formatDateForDisplay(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d", Locale.getDefault());
+        return date.format(formatter);
+    }
 }

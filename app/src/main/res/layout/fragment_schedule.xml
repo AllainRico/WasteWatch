@@ -165,9 +165,9 @@
             android:background="@drawable/calendar_bar" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendarRecycleView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:id="@+id/caledarRecycleView"
             android:layout_marginBottom="2dp" />
 
         <RelativeLayout

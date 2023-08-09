@@ -14,7 +14,7 @@
         android:layout_marginTop="10dp">
 
         <TextView
-            android:text="Welcome Back!"
+            android:text="@string/welcome_back"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="User"
+            android:text="@string/user"
             android:id="@+id/username"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -43,7 +43,7 @@
                 android:layout_marginBottom="15dp">
 
                 <Button
-                    android:id="@+id/btnMap"
+                    android:id="@+id/user_btnMap"
                     android:layout_width="0dp"
                     android:layout_height="250dp"
                     android:layout_weight="1"
@@ -51,31 +51,32 @@
                     android:gravity="top|left"
                     android:paddingStart="20dp"
                     android:paddingTop="20dp"
-                    android:text="Check Live \nCollection \nHere"
+                    android:text="@string/check_live_ncollection_nhere"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="20dp"
                     android:textStyle="bold"
                     android:layout_marginEnd="5dp"/>
 
                 <Button
-                    android:id="@+id/btnProfile"
+                    android:id="@+id/user_btnProfile"
                     android:layout_width="0dp"
                     android:layout_height="250dp"
+                    android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_profile"
                     android:gravity="top|left"
                     android:paddingStart="20dp"
                     android:paddingTop="20dp"
-                    android:text="Manage \nProfile"
+                    android:text="@string/manage_nprofile"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginStart="5dp"/>
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <Button
-                android:text="Check \nSchedule \nhere"
+                android:id="@+id/user_btnSchedule"
+                android:text="@string/check_nschedule_nhere"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -83,7 +84,6 @@
                 android:paddingTop="20dp"
                 android:gravity="top|left"
                 android:background="@drawable/button_schedule"
-                android:id="@+id/btnSchedule"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"/>
 

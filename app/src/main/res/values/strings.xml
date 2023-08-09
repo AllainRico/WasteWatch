@@ -62,4 +62,15 @@
     <string name="latest">Latest</string>
     <string name="schedules">Schedules</string>
     <string name="for_collection">FOR COLLECTION</string>
+    <string name="report">Report</string>
+    <string name="check_nschedule_nhere">Check \nSchedule \nhere</string>
+    <string name="check_live_ncollection_nhere">Check Live \nCollection \nHere</string>
+    <string name="admin">Admin</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="user">User</string>
+    <string name="manage_nprofile">Manage \nProfile</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="time">Time</string>
 </resources>

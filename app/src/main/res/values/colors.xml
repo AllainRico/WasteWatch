@@ -6,6 +6,7 @@
     <color name="background_green">#00b167</color>
     <color name="logo_green">#00e695</color>
     <color name="text_green">#00e695</color>
+    <color name="alert_background_green">#00b167</color>
     <color name="login_bottom">#00b167</color>
     <color name="login_button">#00b167</color>
     <color name="bottom_nav">#00b167</color>
