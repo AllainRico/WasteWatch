@@ -100,7 +100,8 @@ public class Login extends AppCompatActivity {
     private void loginUser() {
         final String username = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
-
+        Log.d("LoginActivity", "Username: " + username);
+        Log.d("LoginActivity", "Password: " + password);
         reference = database.getReference("Database").child("users").child(username);
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -113,6 +114,7 @@ public class Login extends AppCompatActivity {
                         if (passwordFromDB.equals(password)) {
                             Intent intent1 = new Intent(Login.this, AdminMainActivity.class);
                             startActivity(intent1);
+                            finish();
                         }
                     }
                     String passwordFromDB = snapshot.child("password").getValue(String.class);

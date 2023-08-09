@@ -53,14 +53,15 @@
                     android:paddingTop="20dp"
                     android:text="@string/check_live_ncollection_nhere"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="20dp"
                     android:textStyle="bold"
                     android:layout_marginEnd="5dp"/>
 
                 <Button
-                    android:id="@+id/user_btnReport"
+                    android:id="@+id/user_btnProfile"
                     android:layout_width="0dp"
                     android:layout_height="250dp"
+                    android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_profile"
                     android:gravity="top|left"
@@ -68,9 +69,8 @@
                     android:paddingTop="20dp"
                     android:text="@string/manage_nprofile"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginStart="5dp"/>
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 

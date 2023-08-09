@@ -107,7 +107,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        buttonProfile = view.findViewById(R.id.user_btnReport);
+        buttonProfile = view.findViewById(R.id.user_btnProfile);
         buttonProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AdminHomeFragment extends Fragment {
 
-    private Button buttonMap, buttonProfile, buttonSchedule;
+    private Button buttonMap, buttonReport, buttonSchedule;
     TextView adminTxt;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
@@ -97,24 +97,24 @@ public class AdminHomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, new AdminHomeFragment())
+                        .replace(R.id.frameLayout, new AdminMapFragment())
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "map" item
-                ((UserMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.map);
+                ((AdminMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.map);
             }
         });
 
-        buttonProfile = view.findViewById(R.id.admin_btnReport);
-        buttonProfile.setOnClickListener(new View.OnClickListener() {
+        buttonReport = view.findViewById(R.id.admin_btnReport);
+        buttonReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getParentFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, new AdminScheduleFragment())
+                        .replace(R.id.frameLayout, new AdminReportFragment())
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "profile" item
-                ((UserMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.profile);
+                ((AdminMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.profile);
             }
         });
 
@@ -127,7 +127,7 @@ public class AdminHomeFragment extends Fragment {
                         .addToBackStack(null)
                         .commit();
                 // Set the selected item in the BottomNavigationView to the "schedule" item
-                ((UserMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
+                ((AdminMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
             }
         });
 

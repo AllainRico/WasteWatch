@@ -48,7 +48,7 @@ public class AdminMainActivity extends AppCompatActivity {
             } else if (itemId == R.id.map) {
                 replaceAdminFragment(new AdminMapFragment());
             } else if (itemId == R.id.profile) {
-                replaceAdminFragment(new AdminProfileFragment());
+                replaceAdminFragment(new AdminReportFragment());
             }
 
             return true;
