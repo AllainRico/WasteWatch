@@ -30,7 +30,7 @@ public class Login extends AppCompatActivity {
     private TextView register;
 
     FirebaseDatabase database;
-    DatabaseReference reference;
+    DatabaseReference reference, reference2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,53 +102,61 @@ public class Login extends AppCompatActivity {
         final String password = editTextPassword.getText().toString().trim();
         Log.d("LoginActivity", "Username: " + username);
         Log.d("LoginActivity", "Password: " + password);
-        reference = database.getReference("Database").child("users").child(username);
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference = database.getReference("Database");
+
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
+                if ("admin".equals(username) && snapshot.child("collectors").child("admin").exists()) {
+                  String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
 
-                    if(username.equals("admin")){
-                        String passwordFromDB = snapshot.child("password").getValue(String.class);
-                        if (passwordFromDB.equals(password)) {
-                            Intent intent1 = new Intent(Login.this, AdminMainActivity.class);
-                            startActivity(intent1);
-                            finish();
-                        }
-                    }
+                        if(adminPasswordFromDB.equals(password)) {
+                            // Admin login successful
+                            Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
 
+                            SharedPreferences preferences2 = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
 
-                    String passwordFromDB = snapshot.child("password").getValue(String.class);
-                    if (passwordFromDB.equals(password)) {
-                        // Password is correct, login successful
+                            String username1 = snapshot.child("collectors").child(username).child("username").getValue(String.class);
 
 
-                            Intent intent = new Intent(Login.this, UserMainActivity.class);
+                            preferences2.edit().putString("adminFragment", username1).apply();
 
-                            SharedPreferences preferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
-                            String firstname = snapshot.child("firstName").getValue(String.class);
-                            preferences.edit().putString("firstname", firstname).apply();
-
-                            SharedPreferences preferences2 = getSharedPreferences("ProfileFragment", MODE_PRIVATE);
-                            String firstName = snapshot.child("firstName").getValue(String.class);
-                            String lastName = snapshot.child("lastName").getValue(String.class);
-                            String email = snapshot.child("email").getValue(String.class);
-                            String username = snapshot.child("username").getValue(String.class);
-
-                            preferences2.edit().putString("firstname", firstName).apply();
-                            preferences2.edit().putString("lastname", lastName).apply();
-                            preferences2.edit().putString("email", email).apply();
-                            preferences2.edit().putString("ProfileUsername", username).apply();
-
-                            startActivity(intent);
+                            startActivity(adminIntent);
                             finish();
                             editTextPassword.setError(null);
+                        }
 
-                        // Optional: Finish the login activity so the user can't go back to it after logging in
+                }
+                else if (snapshot.child("users").child(username).exists()) {
 
+                    // ... (existing user login logic)
+                    String passwordFromDB = snapshot.child("users").child(username).child("password").getValue(String.class);
+                    if (passwordFromDB.equals(password)) {
+                        // User login successful
+                        // ... (your existing user login code)
+                        Intent intent = new Intent(Login.this, UserMainActivity.class);
+
+                        SharedPreferences preferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
+                        String firstname = snapshot.child("firstName").getValue(String.class);
+                        preferences.edit().putString("firstname", firstname).apply();
+
+                        SharedPreferences preferences2 = getSharedPreferences("ProfileFragment", MODE_PRIVATE);
+                        String firstName = snapshot.child("users").child(username).child("firstName").getValue(String.class);
+                        String lastName = snapshot.child("users").child(username).child("lastName").getValue(String.class);
+                        String email = snapshot.child("users").child(username).child("email").getValue(String.class);
+                        String username1 = snapshot.child("users").child(username).child("username").getValue(String.class);
+
+                        preferences2.edit().putString("firstname", firstName).apply();
+                        preferences2.edit().putString("lastname", lastName).apply();
+                        preferences2.edit().putString("email", email).apply();
+                        preferences2.edit().putString("ProfileUsername", username1).apply();
+
+                        startActivity(intent);
+                        finish();
+                        editTextPassword.setError(null);
                     } else {
-                        // Password is incorrect
+                        // Incorrect user password
                         editTextPassword.setError("Invalid password");
                     }
                 } else {
@@ -163,7 +171,6 @@ public class Login extends AppCompatActivity {
                 // Handle the error if needed
             }
         });
-
     }
 
     //Hide the Navigation Bar Method

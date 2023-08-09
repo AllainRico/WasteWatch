@@ -44,13 +44,13 @@ public class AdminHomeFragment extends Fragment {
         adminTxt = view.findViewById(R.id.admin);
 
 
-        SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
-        String username = preferences2.getString("ProfileUsername","");
-        reference = database.getReference("Database").child("users").child(username);
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("adminFragment","");
+        reference = database.getReference("Database").child("collectors").child(username);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String first = snapshot.child("firstName").getValue(String.class);
+                String first = snapshot.child("username").getValue(String.class);
                 adminTxt.setText(first);
             }
 
@@ -59,6 +59,7 @@ public class AdminHomeFragment extends Fragment {
 
             }
         });
+
 
 
 
