@@ -85,8 +85,8 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     private void initWidgets(View view) {
         calendarRecyclerView = view.findViewById(R.id.calendarRecycleView);
         monthYearText = view.findViewById(R.id.monthYearTV);
+        timeTextView = view.findViewById(R.id.time);
     }
-
     private void setMonthView() {
         monthYearText.setText(monthYearFromDate((selectedDate)));
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
