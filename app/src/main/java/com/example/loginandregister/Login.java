@@ -153,8 +153,6 @@ public class Login extends AppCompatActivity {
                         preferences2.edit().putString("email", email).apply();
                         preferences2.edit().putString("ProfileUsername", username1).apply();
 
-
-
                         startActivity(intent);
                         finish();
                         editTextPassword.setError(null);

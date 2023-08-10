@@ -53,8 +53,6 @@ public class ProfileFragment extends Fragment {
     FirebaseDatabase database;
     DatabaseReference reference;
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -223,13 +221,6 @@ public class ProfileFragment extends Fragment {
 
                 }
             });
-
-            // Set EditText to read-only mode
-
-            String first = txtFirstName.getText().toString().trim();
-            String lastName = txtLastName.getText().toString().trim();
-            String email = txtEmail.getText().toString().trim();
-            String username = txtUsername.getText().toString().trim();
 
             database = FirebaseDatabase.getInstance();
             reference = database.getReference("Database").child("users");

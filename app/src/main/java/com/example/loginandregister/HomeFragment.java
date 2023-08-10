@@ -48,6 +48,7 @@ public class HomeFragment extends Fragment {
         usernameTxt = view.findViewById(R.id.username);
 
 
+        // this is the get sharedPreference for the first name from the login
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("ProfileUsername","");
         reference = database.getReference("Database").child("users").child(username);
