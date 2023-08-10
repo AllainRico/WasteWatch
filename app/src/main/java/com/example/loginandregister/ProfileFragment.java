@@ -59,9 +59,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -109,7 +106,14 @@ public class ProfileFragment extends Fragment {
         reference = database.getInstance().getReference("Database").child("users");
 
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
+        String firstName = preferences2.getString("firstname", " ");
+        String lastName = preferences2.getString("lastname", " ");
+        String email = preferences2.getString("email", " ");
         String username = preferences2.getString("ProfileUsername","");
+
+        txtFirstName.setText(firstName);
+        txtLastName.setText(lastName);
+        txtEmail.setText(email);
         txtUsername.setText(username);
 
 
@@ -221,6 +225,16 @@ public class ProfileFragment extends Fragment {
             });
 
             // Set EditText to read-only mode
+
+            String first = txtFirstName.getText().toString().trim();
+            String lastName = txtLastName.getText().toString().trim();
+            String email = txtEmail.getText().toString().trim();
+            String username = txtUsername.getText().toString().trim();
+
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference("Database").child("users");
+
+
             editText.setInputType(InputType.TYPE_NULL);
             editView.setImageResource(R.drawable.ic_edit);
             // Hide the keyboard when leaving edit mode

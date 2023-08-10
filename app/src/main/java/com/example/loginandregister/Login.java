@@ -3,6 +3,7 @@ package com.example.loginandregister;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -151,6 +152,8 @@ public class Login extends AppCompatActivity {
                         preferences2.edit().putString("lastname", lastName).apply();
                         preferences2.edit().putString("email", email).apply();
                         preferences2.edit().putString("ProfileUsername", username1).apply();
+
+
 
                         startActivity(intent);
                         finish();
