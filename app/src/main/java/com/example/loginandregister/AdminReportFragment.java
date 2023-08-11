@@ -30,7 +30,10 @@ public class AdminReportFragment extends Fragment {
 
 
     private Button buttonLogout;
-    private TextView buttonReport;
+    private TextView buttonReport, barangay;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reference;
+
 
 
 
@@ -46,6 +49,26 @@ public class AdminReportFragment extends Fragment {
 
 
         buttonLogout = view.findViewById(R.id.btn_logout);
+        barangay = view.findViewById(R.id.barangay);
+
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("adminFragment","");
+
+        reference = database.getReference("Database").child("collectors").child(username);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String barName = snapshot.child("barName").getValue(String.class);
+                barangay.setText("Barangay " + barName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
         // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
@@ -94,5 +117,7 @@ public class AdminReportFragment extends Fragment {
             }
         });
         alertDialog.show();
+
+
     }
 }

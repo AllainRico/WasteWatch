@@ -1,7 +1,10 @@
 package com.example.loginandregister;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +16,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -28,6 +37,8 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     private TextView dayTextView;
     private TextView barangayTextView;
     private TextView timeTextView;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reference;
 
     // Boolean flag to track if the EditText is in edit mode
     private boolean isEditMode = false;
@@ -37,6 +48,8 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_schedule, container, false);
+
+        barangayTextView = view.findViewById(R.id.barangay);
 
         initWidgets(view);
         selectedDate = LocalDate.now();
@@ -48,6 +61,25 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         Button btnPrevious = view.findViewById(R.id.btnPrevious);
         Button btnNext = view.findViewById(R.id.btnNext);
         dayTextView = view.findViewById(R.id.day);
+
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("adminFragment","");
+
+        reference = database.getReference("Database").child("collectors").child(username);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String barName = snapshot.child("barName").getValue(String.class);
+                barangayTextView.setText(barName+" Barangay Hall");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -117,17 +117,13 @@ public class Login extends AppCompatActivity {
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
 
                             SharedPreferences preferences2 = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
-
                             String username1 = snapshot.child("collectors").child(username).child("username").getValue(String.class);
-
-
                             preferences2.edit().putString("adminFragment", username1).apply();
 
                             startActivity(adminIntent);
                             finish();
                             editTextPassword.setError(null);
                         }
-
                 }
                 else if (snapshot.child("users").child(username).exists()) {
 
