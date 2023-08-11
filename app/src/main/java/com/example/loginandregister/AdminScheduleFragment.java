@@ -9,10 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,18 +30,22 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
-public class AdminScheduleFragment extends Fragment implements CalendarAdapter.OnItemListener{
+public class AdminScheduleFragment extends Fragment implements CalendarAdapter.OnItemListener {
 
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
-    private LocalDate selectedDate;
     private TextView dayTextView;
     private TextView barangayTextView;
     private TextView timeTextView;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
+
+    private LocalDate selectedDate; 
+    private Map<LocalDate, String> dayTimeMap = new HashMap<>();
 
     // Boolean flag to track if the EditText is in edit mode
     private boolean isEditMode = false;
@@ -52,7 +59,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         barangayTextView = view.findViewById(R.id.barangay);
 
         initWidgets(view);
-        selectedDate = LocalDate.now();
+        selectedDate = LocalDate.now(); // Initialize selectedDate only once
         setMonthView();
 
         dayTextView = view.findViewById(R.id.day); // Initialize dayTextView
@@ -79,7 +86,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
-
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,26 +99,57 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
+        EditText timeEditText = view.findViewById(R.id.time);
+        timeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_NULL) {
+                    // Toggle the edit mode when the Enter key is pressed
+                    toggleEditMode();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         ImageView editTimeImageView = view.findViewById(R.id.edit_time);
         editTimeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isEditMode = !isEditMode; // Toggle the edit mode
-
-                if (isEditMode) {
-                    // Enter edit mode
-                    timeTextView.setEnabled(true);
-                    timeTextView.requestFocus();
-                } else {
-                    // Exit edit mode
-                    timeTextView.setEnabled(false);
-                }
+                toggleEditMode();
             }
         });
 
 
         return view;
     }
+
+    private void toggleEditMode() {
+        isEditMode = !isEditMode;
+
+        if (isEditMode) {
+            // Enter edit mode
+            timeTextView.setEnabled(true);
+            timeTextView.requestFocus();
+        } else {
+            // Exit edit mode
+            timeTextView.setEnabled(false);
+
+            if (timeTextView.isEnabled()) {
+                // Get the selected day from the dayTextView
+                int selectedDay = Integer.parseInt(dayTextView.getText().toString());
+
+                // Update the selected date's day with the selected day
+                selectedDate = selectedDate.withDayOfMonth(selectedDay);
+
+                // Save the edited time for the selected day
+                String editedTime = timeTextView.getText().toString();
+                dayTimeMap.put(selectedDate, editedTime);
+            }
+        }
+    }
+
+
 
     private void initWidgets(View view) {
         calendarRecyclerView = view.findViewById(R.id.calendarRecycleView);
@@ -177,14 +214,27 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     @Override
     public void onItemClick(int position, String dayText) {
         if (!dayText.isEmpty() && !dayText.equals("null")) {
-            LocalDate clickedDate = selectedDate.withDayOfMonth(Integer.parseInt(dayText));
-            String formattedDate = formatDateForDisplay(clickedDate);
+            int clickedDay = Integer.parseInt(dayText);
+            selectedDate = selectedDate.withDayOfMonth(clickedDay); // Update the selected date
+
+            String formattedDate = formatDateForDisplay(selectedDate);
             dayTextView.setText(formattedDate);
 
             String message = "Selected Date: " + formattedDate;
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+            // Get the previously saved time for this day
+            String savedTime = dayTimeMap.get(selectedDate);
+
+            // Populate the timeTextView with the stored time, if available
+            timeTextView.setText(savedTime);
+
+            // Set the edit mode based on whether there's a saved time
+            isEditMode = savedTime != null;
+            timeTextView.setEnabled(isEditMode);
         }
     }
+
 
     private void updateDayTextView() {
         String currentDate = formatDateForDisplay(LocalDate.now());

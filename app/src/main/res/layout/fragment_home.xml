@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="@string/user"
+            android:text="@string/blank"
             android:id="@+id/username"
             android:textSize="24sp"
             android:textStyle="bold"
