@@ -147,16 +147,35 @@ public class ProfileFragment extends Fragment {
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                // Check if the root view is touched, and if in edit mode, return EditText fields to read-only mode
-                if (isEditMode) {
-                    toggleEditMode(editFirstName, txtFirstName);
-                    toggleEditMode(editLastName, txtLastName);
-                    toggleEditMode(editEmail, txtEmail);
-                    return true;
+                // Check if the root view is touched
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    // Check if any of the EditText fields are in edit mode
+                    if (txtFirstName.hasFocus()) {
+                        toggleEditMode(editFirstName, txtFirstName);
+                        return true;
+                    }
+                    else if (txtLastName.hasFocus()) {
+                        toggleEditMode(editLastName, txtLastName);
+                        return true;
+                    }
+                    else if (txtEmail.hasFocus()) {
+                        toggleEditMode(editEmail, txtEmail);
+                        return true;
+                    }
+                    else {
+
+                        txtFirstName.clearFocus();
+                        txtLastName.clearFocus();
+                        txtEmail.clearFocus();
+                        return true;
+                    }
                 }
+
                 return false;
             }
         });
+
+
 
         return view;
     }
@@ -228,16 +247,19 @@ public class ProfileFragment extends Fragment {
 
             editText.setInputType(InputType.TYPE_NULL);
             editView.setImageResource(R.drawable.ic_edit);
+
             // Hide the keyboard when leaving edit mode
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 
         } else {
+
             // Set EditText to edit mode
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
             editText.requestFocus();
             editText.setSelection(editText.getText().length()); // Set cursor to the end
             editView.setImageResource(R.drawable.ic_check);
+
             // Show the keyboard when entering edit mode
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);

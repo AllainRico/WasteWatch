@@ -2,6 +2,7 @@ package com.example.loginandregister;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,11 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +48,10 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
 
-    private LocalDate selectedDate; 
+    //image icons
+    private ImageView editTimeImageView;
+
+    private LocalDate selectedDate;
     private Map<LocalDate, String> dayTimeMap = new HashMap<>();
 
     // Boolean flag to track if the EditText is in edit mode
@@ -59,10 +66,10 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         barangayTextView = view.findViewById(R.id.barangay);
 
         initWidgets(view);
-        selectedDate = LocalDate.now(); // Initialize selectedDate only once
+        selectedDate = LocalDate.now();
         setMonthView();
 
-        dayTextView = view.findViewById(R.id.day); // Initialize dayTextView
+        dayTextView = view.findViewById(R.id.day);
         updateDayTextView();
 
         Button btnPrevious = view.findViewById(R.id.btnPrevious);
@@ -112,7 +119,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
-        ImageView editTimeImageView = view.findViewById(R.id.edit_time);
+        editTimeImageView = view.findViewById(R.id.edit_time);
         editTimeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +127,25 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
+        //when clicking outside, hides the keyboard
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Check if the keyboard is open and the touch event is outside of the EditText
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (isEditMode && timeTextView.isEnabled()) {
+                        Rect outRect = new Rect();
+                        timeTextView.getGlobalVisibleRect(outRect);
+                        if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                            // Hide the keyboard and exit edit mode
+                            hideKeyboard();
+                            toggleEditMode();
+                        }
+                    }
+                }
+                return false;
+            }
+        });
 
         return view;
     }
@@ -131,9 +157,19 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             // Enter edit mode
             timeTextView.setEnabled(true);
             timeTextView.requestFocus();
+
+            // Show the keyboard when entering edit mode
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(timeTextView, InputMethodManager.SHOW_IMPLICIT);
+
+            editTimeImageView.setImageResource(R.drawable.ic_check); // Change to check icon
         } else {
             // Exit edit mode
             timeTextView.setEnabled(false);
+
+            if (!timeTextView.getText().toString().isEmpty()) {
+                dayTimeMap.put(selectedDate, timeTextView.getText().toString());
+            }
 
             if (timeTextView.isEnabled()) {
                 // Get the selected day from the dayTextView
@@ -146,8 +182,11 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
                 String editedTime = timeTextView.getText().toString();
                 dayTimeMap.put(selectedDate, editedTime);
             }
+
+            editTimeImageView.setImageResource(R.drawable.ic_edit); // Change back to edit icon
         }
     }
+
 
 
 
@@ -186,7 +225,13 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             if (i <= 0 || i > daysInMonth) {
                 daysInMonthArray.add("");
             } else {
-                daysInMonthArray.add(String.valueOf(i));
+                LocalDate day = selectedDate.withDayOfMonth(i);
+                String savedTime = dayTimeMap.get(day);
+                if (savedTime != null) {
+                    daysInMonthArray.add(i + "\n" + savedTime);
+                } else {
+                    daysInMonthArray.add(String.valueOf(i));
+                }
             }
         }
 
@@ -223,17 +268,18 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             String message = "Selected Date: " + formattedDate;
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
 
-            // Get the previously saved time for this day
             String savedTime = dayTimeMap.get(selectedDate);
-
-            // Populate the timeTextView with the stored time, if available
             timeTextView.setText(savedTime);
+            timeTextView.setEnabled(true); // Enable the timeTextView when there's a saved time
 
             // Set the edit mode based on whether there's a saved time
             isEditMode = savedTime != null;
+            editTimeImageView.setImageResource(isEditMode ? R.drawable.ic_check : R.drawable.ic_edit);
             timeTextView.setEnabled(isEditMode);
         }
     }
+
+
 
 
     private void updateDayTextView() {
@@ -244,5 +290,10 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     private String formatDateForDisplay(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d", Locale.getDefault());
         return date.format(formatter);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(timeTextView.getWindowToken(), 0);
     }
 }
