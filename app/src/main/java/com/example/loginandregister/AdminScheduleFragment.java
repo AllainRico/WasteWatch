@@ -154,47 +154,36 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         isEditMode = !isEditMode;
 
         if (isEditMode) {
-            // Enter edit mode
-            timeTextView.setEnabled(true);
-            timeTextView.requestFocus();
+            // Check if the selected date is today or a future date
+            if (!selectedDate.isBefore(LocalDate.now())) {
+                // Enter edit mode
+                timeTextView.setEnabled(true);
+                timeTextView.requestFocus();
 
-            // Show the keyboard when entering edit mode
-            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(timeTextView, InputMethodManager.SHOW_IMPLICIT);
-
-            editTimeImageView.setImageResource(R.drawable.ic_check); // Change to check icon
+                // Show the keyboard when entering edit mode
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(timeTextView, InputMethodManager.SHOW_IMPLICIT);
+                editTimeImageView.setImageResource(R.drawable.ic_check); // Change to check icon
+            } else {
+                // If the selected date is in the past, show a message and disable editing
+                Toast.makeText(getActivity(), "Cannot edit past dates", Toast.LENGTH_SHORT).show();
+            }
         } else {
             // Exit edit mode
             timeTextView.setEnabled(false);
-
+            editTimeImageView.setImageResource(R.drawable.ic_edit); // Change back to edit icon
             if (!timeTextView.getText().toString().isEmpty()) {
                 dayTimeMap.put(selectedDate, timeTextView.getText().toString());
             }
-
-            if (timeTextView.isEnabled()) {
-                // Get the selected day from the dayTextView
-                int selectedDay = Integer.parseInt(dayTextView.getText().toString());
-
-                // Update the selected date's day with the selected day
-                selectedDate = selectedDate.withDayOfMonth(selectedDay);
-
-                // Save the edited time for the selected day
-                String editedTime = timeTextView.getText().toString();
-                dayTimeMap.put(selectedDate, editedTime);
-            }
-
-            editTimeImageView.setImageResource(R.drawable.ic_edit); // Change back to edit icon
         }
     }
-
-
-
 
     private void initWidgets(View view) {
         calendarRecyclerView = view.findViewById(R.id.calendarRecycleView);
         monthYearText = view.findViewById(R.id.monthYearTV);
         timeTextView = view.findViewById(R.id.time);
     }
+
     private void setMonthView() {
         monthYearText.setText(monthYearFromDate((selectedDate)));
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
@@ -243,9 +232,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         return daysInMonthArray;
     }
 
-
-
-
     public void previousMonth(View view) {
         selectedDate = selectedDate.minusMonths(1);
         setMonthView();
@@ -270,17 +256,13 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
 
             String savedTime = dayTimeMap.get(selectedDate);
             timeTextView.setText(savedTime);
-            timeTextView.setEnabled(true); // Enable the timeTextView when there's a saved time
+            timeTextView.setEnabled(false); // Disable the timeTextView for previous dates
 
             // Set the edit mode based on whether there's a saved time
             isEditMode = savedTime != null;
             editTimeImageView.setImageResource(isEditMode ? R.drawable.ic_check : R.drawable.ic_edit);
-            timeTextView.setEnabled(isEditMode);
         }
     }
-
-
-
 
     private void updateDayTextView() {
         String currentDate = formatDateForDisplay(LocalDate.now());
