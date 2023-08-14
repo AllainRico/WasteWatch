@@ -14,8 +14,11 @@ import android.widget.Toast;
 
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class Register extends AppCompatActivity {
@@ -59,22 +62,39 @@ public class Register extends AppCompatActivity {
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String username = editTextUsername.getText().toString().trim();
                 database = FirebaseDatabase.getInstance();
                 reference = database.getReference("Database").child("users");
-                String firstName = editTextFirstName.getText().toString().trim();
-                String lastName = editTextLastName.getText().toString().trim();
-                String username = editTextUsername.getText().toString().trim();
-                String email = editTextEmail.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
-                SharedPreferences preferences = getSharedPreferences("MyPrefsBarangay", Context.MODE_PRIVATE);
-                String barangay = preferences.getString("barangay", " ");
 
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (!snapshot.child(username).exists()) {
+                            if(username.equals("admin")){
+                                Toast.makeText(Register.this, "Choose another username", Toast.LENGTH_SHORT).show();
+                            }else{
+                                String firstName = editTextFirstName.getText().toString().trim();
+                                String lastName = editTextLastName.getText().toString().trim();
+                                String email = editTextEmail.getText().toString().trim();
+                                String password = editTextPassword.getText().toString().trim();
+                                SharedPreferences preferences = getSharedPreferences("MyPrefsBarangay", Context.MODE_PRIVATE);
+                                String barangay = preferences.getString("barangay", " ");
+                                User user = new User(firstName, lastName, username, email, password, barangay);
+                                reference.child(username).setValue(user);
+                                Toast.makeText(Register.this, "Successful", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(Register.this, Login.class);
+                                startActivity(intent);
+                            }
+                        }else{
+                            Toast.makeText(Register.this, "Username already exist", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                User user = new User(firstName, lastName, username, email, password, barangay);
-                reference.child(username).setValue(user);
-                Toast.makeText(Register.this, "Successful", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Register.this, Login.class);
-                startActivity(intent);
+                    }
+                });
+
 
             }
         });
