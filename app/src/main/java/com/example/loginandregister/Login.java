@@ -3,14 +3,19 @@ package com.example.loginandregister;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -29,7 +34,7 @@ public class Login extends AppCompatActivity {
     private TextInputEditText editTextEmail, editTextPassword;
     private Button buttonLogin;
     private TextView register;
-
+    private TextView btnLoginWith;
     FirebaseDatabase database;
     DatabaseReference reference, reference2;
 
@@ -49,21 +54,36 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
-
         //Inputs
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         buttonLogin = findViewById(R.id.btn_login);
         register = findViewById(R.id.register);
+        btnLoginWith = findViewById(R.id.btnLoginWith);
 
         database = FirebaseDatabase.getInstance();
+
+        //Making Register string to have a underline
+        SpannableString spannableString = new SpannableString(getString(R.string.register));
+        spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), 0);
+        register.setText(spannableString);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Barangay.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        // Making "Login with" string have an underline
+        SpannableString loginWithSpannable = new SpannableString(getString(R.string.login_with));
+        loginWithSpannable.setSpan(new UnderlineSpan(), 0, loginWithSpannable.length(), 0);
+        btnLoginWith.setText(loginWithSpannable);
+        btnLoginWith.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoginWithOptionsDialog();
             }
         });
 
@@ -76,6 +96,8 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     private boolean validateCredentials() {
@@ -169,6 +191,48 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
+    private void showLoginWithOptionsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_login_with, null);
+        builder.setView(dialogView);
+
+        // Set the background and text color for the dialog
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        // Set the desired width of the dialog (adjust this value as needed)
+        int dialogWidth = getResources().getDimensionPixelSize(R.dimen.login_dialog_width); // Use a dimension resource
+
+        // Set the layout parameters for the dialog's root view
+        dialogView.setLayoutParams(new ViewGroup.LayoutParams(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        ImageView btnGoogle = dialogView.findViewById(R.id.btnGoogle);
+        ImageView btnFacebook = dialogView.findViewById(R.id.btnFacebook);
+
+        // Set the click listeners for the Google and Facebook buttons
+        btnGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Google login here
+                dialog.dismiss(); // Close the dialog after selection
+            }
+        });
+
+        btnFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle Facebook login here
+                dialog.dismiss(); // Close the dialog after selection
+            }
+        });
+
+        dialog.show();
+    }
+
+
+
+
 
     //Hide the Navigation Bar Method
     @Override
