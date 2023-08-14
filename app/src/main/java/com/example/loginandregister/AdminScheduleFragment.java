@@ -163,18 +163,26 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
                 // Show the keyboard when entering edit mode
                 InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(timeTextView, InputMethodManager.SHOW_IMPLICIT);
+
                 editTimeImageView.setImageResource(R.drawable.ic_check); // Change to check icon
             } else {
                 // If the selected date is in the past, show a message and disable editing
                 Toast.makeText(getActivity(), "Cannot edit past dates", Toast.LENGTH_SHORT).show();
             }
         } else {
+
             // Exit edit mode
             timeTextView.setEnabled(false);
             editTimeImageView.setImageResource(R.drawable.ic_edit); // Change back to edit icon
             if (!timeTextView.getText().toString().isEmpty()) {
                 dayTimeMap.put(selectedDate, timeTextView.getText().toString());
             }
+
+            String day = dayTextView.getText().toString();
+            String time = timeTextView.getText().toString();
+
+            reference = database.getReference("Database").child("Barangay").child("Basak").child("Schedule").child(day);
+            reference.child("Time").setValue(time);
         }
     }
 
