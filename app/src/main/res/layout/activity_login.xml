@@ -103,7 +103,7 @@
             android:layout_marginLeft="5dp"
             android:textColor="@color/link_blue_register"
             android:textStyle="bold"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:id="@+id/register"
             android:text="@string/register"
             android:layout_width="wrap_content"
@@ -130,28 +130,13 @@
 
             <TextView
                 android:id="@+id/btnLoginWith"
+                android:textColor="@color/text_dark_gray"
                 android:text="@string/login_with"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"/>
-
-            <ImageView
-                android:id="@+id/btnGoogle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/google"/>
-
-            <ImageView
-                android:id="@+id/btnFacebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:background="@drawable/facebook"/>
-
 
         </LinearLayout>
 

@@ -213,7 +213,6 @@ public class ProfileFragment extends Fragment {
                 alertDialog.dismiss(); // Close the dialog after clicking "No"
             }
         });
-
         alertDialog.show();
     }
 

@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="link_blue_register">#0000EE</color>
+    <color name="link_blue_login_with">#0000EE</color>
     <color name="background_green">#00b167</color>
     <color name="logo_green">#00e695</color>
     <color name="text_green">#00e695</color>
