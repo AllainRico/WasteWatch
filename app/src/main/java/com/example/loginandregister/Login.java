@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -61,10 +62,19 @@ public class Login extends AppCompatActivity {
                     passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }
 
+                if (TextUtils.isEmpty(passwordEditText.getError())) {
+                    // If no error, set the standard margin
+                    updateToggleMargin(8); // 8dp standard margin
+                } else {
+                    // If there's an error, set a larger margin to avoid overlap
+                    updateToggleMargin(14); // 14dp error margin
+                }
+
                 passwordEditText.setTypeface(Typeface.DEFAULT);
                 passwordEditText.setSelection(passwordEditText.getText().length());
             }
         });
+
 
 
         //Hide the Navigation Bar
@@ -111,7 +121,6 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,9 +149,6 @@ public class Login extends AppCompatActivity {
 
         return true;
     }
-
-
-
 
     private void loginUser() {
         final String username = editTextEmail.getText().toString().trim();
@@ -254,8 +260,18 @@ public class Login extends AppCompatActivity {
         dialog.show();
     }
 
+    //Moves TogglePassword when Error occurs
+    private void updateToggleMargin(int marginDp) {
+        ImageView passwordToggle = findViewById(R.id.passwordToggle);
 
-
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) passwordToggle.getLayoutParams();
+        params.setMarginEnd(dpToPx(marginDp)); // Convert dp to pixels
+        passwordToggle.setLayoutParams(params);
+    }
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
 
 
     //Hide the Navigation Bar Method
