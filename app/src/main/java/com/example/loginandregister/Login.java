@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
@@ -50,7 +52,6 @@ public class Login extends AppCompatActivity {
         // Toggle Password
         ImageView passwordToggle = findViewById(R.id.passwordToggle);
         final TextInputEditText passwordEditText = findViewById(R.id.password);
-
         passwordToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,15 +65,33 @@ public class Login extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(passwordEditText.getError())) {
                     // If no error, set the standard margin
-                    updateToggleMargin(8); // 8dp standard margin
+                    updateToggleMargin(4);
                 } else {
                     // If there's an error, set a larger margin to avoid overlap
-                    updateToggleMargin(14); // 14dp error margin
+                    updateToggleMargin(18);
                 }
 
                 passwordEditText.setTypeface(Typeface.DEFAULT);
                 passwordEditText.setSelection(passwordEditText.getText().length());
             }
+        });
+
+        // Set a text change listener for the password EditText
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String password = charSequence.toString().trim();
+                if (!TextUtils.isEmpty(password) && TextUtils.isEmpty(editTextPassword.getError())) {
+                    // If password is not empty and no error, set the standard margin
+                    updateToggleMargin(4);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
         });
 
 
@@ -144,11 +163,17 @@ public class Login extends AppCompatActivity {
 
         if (TextUtils.isEmpty(password)) {
             editTextPassword.setError("Password is required.");
+            updateToggleMargin(18); // Increase margin for error message
             return false;
+        } else {
+            // If password is not empty and no error, set the standard margin
+            updateToggleMargin(4);
         }
 
         return true;
     }
+
+
 
     private void loginUser() {
         final String username = editTextEmail.getText().toString().trim();
@@ -207,6 +232,7 @@ public class Login extends AppCompatActivity {
                     } else {
                         // Incorrect user password
                         editTextPassword.setError("Invalid password");
+                        updateToggleMargin(18);
                     }
                 } else {
                     // User doesn't exist
@@ -231,7 +257,7 @@ public class Login extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        // Set the desired width of the dialog (adjust this value as needed)
+        // Set the desired width of the dialog
         int dialogWidth = getResources().getDimensionPixelSize(R.dimen.login_dialog_width); // Use a dimension resource
 
         // Set the layout parameters for the dialog's root view
