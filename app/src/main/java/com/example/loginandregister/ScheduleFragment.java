@@ -49,29 +49,6 @@
                 barangayTextView = view.findViewById(R.id.barangay);
                 timeTextView = view.findViewById(R.id.time);
 
-                SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
-                String username = preferences2.getString("ProfileUsername","");
-
-                reference = database.getReference("Database");
-                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
-                        barangayTextView.setText(barName + " Barangay Hall");
-                        String day = dayTextView.getText().toString();
-                        if(barName.equals("Basak")){
-                            String time = snapshot.child("Barangay").child("Basak").child("Schedule").child(day).child("Time").getValue(String.class);
-                            timeTextView.setText("Starts at: " + time);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-
                 initWidgets(view);
                 selectedDate = LocalDate.now();
                 setMonthView();
@@ -92,6 +69,29 @@
                     @Override
                     public void onClick(View v) {
                         nextMonth(v);
+                    }
+                });
+
+
+                SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
+                String username = preferences2.getString("ProfileUsername","");
+
+                reference = database.getReference("Database");
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                        barangayTextView.setText(barName + " Barangay Hall");
+                        String day = dayTextView.getText().toString();
+                        if(barName.equals("Basak")){
+                            String time = snapshot.child("Barangay").child("Basak").child("Schedule").child(day).getValue(String.class);
+                            timeTextView.setText("Starts at: " + time);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
 
@@ -161,12 +161,35 @@
             @Override
             public void onItemClick(int position, String dayText) {
                 if (!dayText.isEmpty() && !dayText.equals("null")) {
+
                     LocalDate clickedDate = selectedDate.withDayOfMonth(Integer.parseInt(dayText));
                     String formattedDate = formatDateForDisplay(clickedDate);
                     dayTextView.setText(formattedDate);
 
                     String message = "Selected Date: " + formattedDate;
                     Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+                    SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
+                    String username = preferences2.getString("ProfileUsername","");
+
+                    reference = database.getReference("Database");
+                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                            String day = dayTextView.getText().toString();
+                            if(barName.equals("Basak")){
+                                String time = snapshot.child("Barangay").child("Basak").child("Schedule").child(day).getValue(String.class);
+                                timeTextView.setText("Starts at: " + time);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
             }
 
