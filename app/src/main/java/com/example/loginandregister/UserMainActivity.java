@@ -21,6 +21,16 @@ public class UserMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
+
+        // Create a NotificationManager instance
+        ScheduleNotificationManager notificationManager = new ScheduleNotificationManager(this);
+
+        // Schedule a notification
+        String title = "Garbage Collection";
+        String message = "Make sure your garbage is ready to collect.";
+        notificationManager.showNotification(title, message);
+
+
         //Hide the Navigation Bar
         decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {

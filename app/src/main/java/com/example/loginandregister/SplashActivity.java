@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-public class SplashAcitvity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
 
     //Hide Navigation bar variable
     private View decorView;
@@ -33,7 +33,7 @@ public class SplashAcitvity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashAcitvity.this, Login.class);
+                Intent intent = new Intent(SplashActivity.this, Login.class);
                 startActivity(intent);
                 finish();
             }

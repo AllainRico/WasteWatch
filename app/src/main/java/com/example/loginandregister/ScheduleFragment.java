@@ -1,7 +1,11 @@
         package com.example.loginandregister;
 
+        import android.app.AlarmManager;
+        import android.app.PendingIntent;
         import android.content.Context;
+        import android.content.Intent;
         import android.content.SharedPreferences;
+        import android.os.Build;
         import android.os.Bundle;
 
         import androidx.annotation.NonNull;
@@ -22,7 +26,9 @@
         import com.google.firebase.database.FirebaseDatabase;
         import com.google.firebase.database.ValueEventListener;
 
+        import java.time.Duration;
         import java.time.LocalDate;
+        import java.time.LocalTime;
         import java.time.YearMonth;
         import java.time.format.DateTimeFormatter;
         import java.util.ArrayList;
@@ -38,7 +44,6 @@
             private TextView timeTextView;
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference reference;
-
 
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,11 +86,40 @@
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                        String day = dayTextView.getText().toString(); // You can set day here based on your logic
+
+                        // Update UI based on retrieved data
                         barangayTextView.setText(barName + " Barangay Hall");
-                        String day = dayTextView.getText().toString();
-                        if(barName.equals("Basak")){
-                            String time = snapshot.child("Barangay").child("Basak").child("Schedule").child(day).getValue(String.class);
-                            timeTextView.setText("Starts at: " + time);
+                        if (barName.equals("Basak")) {
+                            String timeString = snapshot.child("Barangay").child("Basak").child("Schedule").child(day).getValue(String.class);
+                            timeTextView.setText("Starts at: " + timeString);
+
+//                            // Schedule Notification
+//                            ScheduleNotificationManager notificationManager = new ScheduleNotificationManager(getContext());
+//
+//                            // Parse the time string into a LocalTime object
+//                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mma", Locale.ENGLISH);
+//                            LocalTime collectionTime = LocalTime.parse(timeString, formatter);
+//
+//                            // Calculate the time until collection in milliseconds
+//                            LocalTime currentTime = LocalTime.now();
+//                            long timeUntilCollection = Duration.between(currentTime, collectionTime).toMillis();
+//
+//                            // Create an intent for the BroadcastReceiver that will handle the notification
+//                            Intent alarmIntent = new Intent(getContext(), NotificationReceiver.class);
+//                            alarmIntent.putExtra("title", "Garbage Collection");
+//                            alarmIntent.putExtra("message", "Make sure your garbage is ready to collect!");
+//
+//                            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//                            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+//
+//                            // Schedule the notification
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeUntilCollection, pendingIntent);
+//                            } else {
+//                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeUntilCollection, pendingIntent);
+//                            }
                         }
                     }
 
