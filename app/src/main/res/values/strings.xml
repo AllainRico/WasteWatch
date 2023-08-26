@@ -57,7 +57,29 @@
         <item>Tingo</item>
         <item>Tungasan</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <string-array name="district">
+        <item>Agus</item>
+        <item>Babag</item>
+        <item>Bankal</item>
+        <item>Baring</item>
+        <item>Basak</item>
+        <item>Buaya</item>
+        <item>Calawisan</item>
+        <item>Canjulao</item>
+        <item>Caubian</item>
+        <item>Caw‑oy</item>
+        <item>Cawhagan</item>
+        <item>Gun‑ob</item>
+        <item>Ibo</item>
+        <item>Looc</item>
+        <item>Mactan</item>
+        <item>Maribago</item>
+        <item>Marigondon</item>
+    </string-array>
+
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="latest">Latest</string>
     <string name="schedules">Schedules</string>

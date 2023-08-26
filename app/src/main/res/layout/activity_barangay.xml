@@ -58,6 +58,21 @@
             android:entries="@array/barangays"
             android:scrollbarStyle="insideOverlay"/>
 
+        <TextView
+            android:text="Select District"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"/>
+
+        <Spinner
+            android:id="@+id/districtSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/spinner"
+            android:entries="@array/district"
+            android:scrollbarStyle="insideOverlay"/>
+
         <Button
             android:id="@+id/btn_bgry_signup"
             android:text="@string/sign_up"
@@ -65,9 +80,8 @@
             android:background="@drawable/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="160dp"
+            android:layout_marginTop="110dp"
             android:layout_marginBottom="35dp"/>
-
 
 
     </LinearLayout>
@@ -89,8 +103,5 @@
             android:layout_alignParentStart="true"/>
 
     </RelativeLayout>
-
-
-
 
 </RelativeLayout>

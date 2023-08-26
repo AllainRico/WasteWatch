@@ -26,8 +26,10 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
     //Hide Navigation bar variable
     private View decorView;
     //Inputs
-    Button buttonBrgySignUp;
-    Spinner brgySpinner;
+    private Button buttonBrgySignUp;
+    private Spinner brgySpinner, districtSpinner;
+
+    //database
     FirebaseDatabase database;
     DatabaseReference reference;
 
@@ -60,22 +62,18 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
         });
 
 
-        //Inputs
-        buttonBrgySignUp = findViewById(R.id.btn_bgry_signup);
-        brgySpinner = findViewById(R.id.brgySpinner);
+        //Barangay Spinner and District Spinner
+        initWidgets();
 
-        ArrayAdapter<CharSequence>  adapter = ArrayAdapter.createFromResource(this,R.array.barangays, android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        brgySpinner.setAdapter(adapter);
-
+        ArrayAdapter<CharSequence> brgyAdapter = ArrayAdapter.createFromResource(this, R.array.barangays, android.R.layout.simple_spinner_item);
+        brgyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        brgySpinner.setAdapter(brgyAdapter);
         brgySpinner.setOnItemSelectedListener(this);
 
-
-
-
-
+        ArrayAdapter<CharSequence> districtAdapter = ArrayAdapter.createFromResource(this, R.array.district, android.R.layout.simple_spinner_item);
+        districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        districtSpinner.setAdapter(districtAdapter);
+        districtSpinner.setOnItemSelectedListener(this);
 
         buttonBrgySignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +93,12 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
             }
         });
 
+    }
+
+    private void initWidgets() {
+        buttonBrgySignUp = findViewById(R.id.btn_bgry_signup);
+        brgySpinner = findViewById(R.id.brgySpinner);
+        districtSpinner = findViewById(R.id.districtSpinner);
     }
 
     @Override
