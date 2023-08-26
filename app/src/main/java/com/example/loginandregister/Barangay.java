@@ -9,10 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,78 +19,68 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class Barangay extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+import java.util.ArrayList;
 
-    //Hide Navigation bar variable
+public class Barangay extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
     private View decorView;
-    //Inputs
     private Button buttonBrgySignUp;
     private Spinner brgySpinner, districtSpinner;
 
-    //database
-    FirebaseDatabase database;
-    DatabaseReference reference;
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        //To show the item selected in the toast
-        //String brgy_name = adapterView.getItemAtPosition(i).toString();
-        //Toast.makeText(this, brgy_name, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-        //if null
-    }
+    private FirebaseDatabase database;
+    private DatabaseReference barangayRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barangay);
 
-        //Hide the Navigation Bar
         decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int i) {
-                if(i == 0){
-                    decorView.setSystemUiVisibility(hideSystemBars());
-                }
-            }
-        });
 
-
-        //Barangay Spinner and District Spinner
         initWidgets();
 
-        ArrayAdapter<CharSequence> brgyAdapter = ArrayAdapter.createFromResource(this, R.array.barangays, android.R.layout.simple_spinner_item);
-        brgyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        brgySpinner.setAdapter(brgyAdapter);
-        brgySpinner.setOnItemSelectedListener(this);
+        database = FirebaseDatabase.getInstance();
+        barangayRef = database.getReference("Database").child("Barangay");
 
-        ArrayAdapter<CharSequence> districtAdapter = ArrayAdapter.createFromResource(this, R.array.district, android.R.layout.simple_spinner_item);
-        districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        districtSpinner.setAdapter(districtAdapter);
-        districtSpinner.setOnItemSelectedListener(this);
+        ArrayList<String> barangayList = new ArrayList<>();
+        barangayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot barangaySnapshot : dataSnapshot.getChildren()) {
+                    String barangayName = barangaySnapshot.getKey();
+                    barangayList.add(barangayName);
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(Barangay.this, android.R.layout.simple_spinner_item, barangayList);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                brgySpinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(Barangay.this, "Error fetching barangays: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         buttonBrgySignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String selectedBarangay = brgySpinner.getSelectedItem().toString();
                 if (selectedBarangay != null && !selectedBarangay.isEmpty()) {
-                    database = FirebaseDatabase.getInstance();
                     SharedPreferences preferences3 = getSharedPreferences("MyPrefsBarangay", MODE_PRIVATE);
                     preferences3.edit().putString("barangay", selectedBarangay).apply();
-                        Intent intent = new Intent(Barangay.this,Register.class);
-                        startActivity(intent);
-                        finish();
-
+                    Intent intent = new Intent(Barangay.this, Register.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(Barangay.this, "Please select a barangay", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        brgySpinner.setOnItemSelectedListener(this);
+
+        onWindowFocusChanged(true);
     }
 
     private void initWidgets() {
@@ -102,23 +90,63 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
     }
 
     @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String selectedBarangay = adapterView.getItemAtPosition(i).toString();
+        if (selectedBarangay != null && !selectedBarangay.isEmpty()) {
+            populateDistrictSpinner(selectedBarangay);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        // Implement as needed
+    }
+
+    private void populateDistrictSpinner(String selectedBarangay) {
+        ArrayList<String> districtList = new ArrayList<>();
+
+        DatabaseReference districtRef = database.getReference("Database")
+                .child("Barangay")
+                .child(selectedBarangay)
+                .child("District");
+
+        districtRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot districtSnapshot : dataSnapshot.getChildren()) {
+                    String districtName = districtSnapshot.getKey();
+                    districtList.add(districtName);
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(Barangay.this, android.R.layout.simple_spinner_item, districtList);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                districtSpinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(Barangay.this, "Error fetching districts: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // Navigate back to Login activity
         Intent intent = new Intent(Barangay.this, Login.class);
         startActivity(intent);
         finish();
     }
 
-    //Hide the Navigation Bar Method
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
+        if (hasFocus) {
             decorView.setSystemUiVisibility(hideSystemBars());
         }
     }
-    private int hideSystemBars(){
+
+    private int hideSystemBars() {
         return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -126,5 +154,4 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
     }
-
 }

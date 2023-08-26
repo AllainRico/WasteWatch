@@ -26,56 +26,11 @@
     <string name="my_map_api_key">ArV1y70gcUrlZgug6hTAU2JL4mNUQpks</string>
 
     <string-array name="barangays">
-        <item>Agus</item>
-        <item>Babag</item>
-        <item>Bankal</item>
-        <item>Baring</item>
-        <item>Basak</item>
-        <item>Buaya</item>
-        <item>Calawisan</item>
-        <item>Canjulao</item>
-        <item>Caubian</item>
-        <item>Caw‑oy</item>
-        <item>Cawhagan</item>
-        <item>Gun‑ob</item>
-        <item>Ibo</item>
-        <item>Looc</item>
-        <item>Mactan</item>
-        <item>Maribago</item>
-        <item>Marigondon</item>
-        <item>Pajac</item>
-        <item>Pajo</item>
-        <item>Pangan‑an</item>
-        <item>Poblacion</item>
-        <item>Punta Engaño</item>
-        <item>Pusok</item>
-        <item>Sabang</item>
-        <item>San Vicente</item>
-        <item>Santa Rosa</item>
-        <item>Subabasbas</item>
-        <item>Talima</item>
-        <item>Tingo</item>
-        <item>Tungasan</item>
+
     </string-array>
 
     <string-array name="district">
-        <item>Agus</item>
-        <item>Babag</item>
-        <item>Bankal</item>
-        <item>Baring</item>
-        <item>Basak</item>
-        <item>Buaya</item>
-        <item>Calawisan</item>
-        <item>Canjulao</item>
-        <item>Caubian</item>
-        <item>Caw‑oy</item>
-        <item>Cawhagan</item>
-        <item>Gun‑ob</item>
-        <item>Ibo</item>
-        <item>Looc</item>
-        <item>Mactan</item>
-        <item>Maribago</item>
-        <item>Marigondon</item>
+
     </string-array>
 
 
