@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "351024211568",
+    "firebase_url": "https://wastewatch-6f984-default-rtdb.firebaseio.com",
+    "project_id": "wastewatch-6f984",
+    "storage_bucket": "wastewatch-6f984.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351024211568:android:2c7eafdad58813886536b5",
+        "android_client_info": {
+          "package_name": "com.example.loginandregister"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351024211568-r3vqick3apn5bq26c9dmed0ralvhd0sv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWUwg_XJgpPumCitjuluNtjgtiN1D6vo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351024211568-r3vqick3apn5bq26c9dmed0ralvhd0sv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

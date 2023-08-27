@@ -7,8 +7,6 @@
     android:orientation="vertical"
     tools:context=".Barangay">
 
-
-    <!--Layout for Views or Main body-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,15 +16,14 @@
         android:paddingLeft="70dp"
         android:paddingRight="70dp">
 
-
         <TextView
             android:text="@string/welcome"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"/>
+
         <TextView
             android:text="@string/choose_your"
             android:textSize="20sp"
@@ -55,7 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/spinner"
-            android:entries="@array/barangays"
             android:scrollbarStyle="insideOverlay"/>
 
         <TextView
@@ -70,8 +66,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/spinner"
-            android:entries="@array/district"
-            android:scrollbarStyle="insideOverlay"/>
+            android:scrollbarStyle="insideOverlay"
+            android:enabled="false" />
 
         <Button
             android:id="@+id/btn_bgry_signup"
@@ -80,8 +76,7 @@
             android:background="@drawable/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="35dp"/>
+            android:layout_marginTop="80dp"/>
 
 
     </LinearLayout>

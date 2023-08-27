@@ -26,7 +26,6 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
     private View decorView;
     private Button buttonBrgySignUp;
     private Spinner brgySpinner, districtSpinner;
-
     private FirebaseDatabase database;
     private DatabaseReference barangayRef;
 
@@ -50,6 +49,8 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
                     String barangayName = barangaySnapshot.getKey();
                     barangayList.add(barangayName);
                 }
+                //for default spinner value
+                barangayList.add(0, "Select a Barangay...");
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(Barangay.this, android.R.layout.simple_spinner_item, barangayList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -92,8 +93,13 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String selectedBarangay = adapterView.getItemAtPosition(i).toString();
-        if (selectedBarangay != null && !selectedBarangay.isEmpty()) {
+        if (!selectedBarangay.equals("Select a Barangay...")) {
             populateDistrictSpinner(selectedBarangay);
+            districtSpinner.setEnabled(true);
+        }
+        else{
+            // If "Select a Barangay..." is selected, disable the districtSpinner
+            districtSpinner.setEnabled(false);
         }
     }
 
