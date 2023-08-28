@@ -33,11 +33,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
 
-    //Hide Navigation bar variable
     private View decorView;
-
-    //Inputs
     private TextInputEditText editTextEmail, editTextPassword;
+    private ImageView passwordToggle;
     private Button buttonLogin;
     private TextView register;
     private TextView btnLoginWith;
@@ -49,21 +47,21 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Toggle Password
-        ImageView passwordToggle = findViewById(R.id.passwordToggle);
-        final TextInputEditText passwordEditText = findViewById(R.id.password);
+        initWidgets();
+
+
         passwordToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int inputType = passwordEditText.getInputType();
+                int inputType = editTextPassword.getInputType();
 
                 if (inputType == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
-                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 } else {
-                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }
 
-                if (TextUtils.isEmpty(passwordEditText.getError())) {
+                if (TextUtils.isEmpty(editTextPassword.getError())) {
                     // If no error, set the standard margin
                     updateToggleMargin(4);
                 } else {
@@ -71,13 +69,13 @@ public class Login extends AppCompatActivity {
                     updateToggleMargin(18);
                 }
 
-                passwordEditText.setTypeface(Typeface.DEFAULT);
-                passwordEditText.setSelection(passwordEditText.getText().length());
+                editTextPassword.setTypeface(Typeface.DEFAULT);
+                editTextPassword.setSelection(editTextPassword.getText().length());
             }
         });
 
         // Set a text change listener for the password EditText
-        passwordEditText.addTextChangedListener(new TextWatcher() {
+        editTextPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
@@ -94,8 +92,6 @@ public class Login extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {}
         });
 
-
-
         //Hide the Navigation Bar
         decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
@@ -106,13 +102,6 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-
-        //Inputs
-        editTextEmail = findViewById(R.id.email);
-        editTextPassword = findViewById(R.id.password);
-        buttonLogin = findViewById(R.id.btn_login);
-        register = findViewById(R.id.register);
-        btnLoginWith = findViewById(R.id.btnLoginWith);
 
         database = FirebaseDatabase.getInstance();
 
@@ -148,8 +137,15 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+    }
 
-
+    private void initWidgets() {
+        editTextEmail = findViewById(R.id.email);
+        editTextPassword = findViewById(R.id.password);
+        passwordToggle = findViewById(R.id.passwordToggle);
+        buttonLogin = findViewById(R.id.btn_login);
+        register = findViewById(R.id.register);
+        btnLoginWith = findViewById(R.id.btnLoginWith);
     }
 
     private boolean validateCredentials() {
