@@ -100,6 +100,11 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
         else{
             // If "Select a Barangay..." is selected, disable the districtSpinner
             districtSpinner.setEnabled(false);
+
+            // Set a default value in districtSpinner
+            ArrayAdapter<String> districtAdapter = new ArrayAdapter<>(Barangay.this, android.R.layout.simple_spinner_item, new String[]{"Select a District..."});
+            districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            districtSpinner.setAdapter(districtAdapter);
         }
     }
 
@@ -123,6 +128,8 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
                     String districtName = districtSnapshot.getKey();
                     districtList.add(districtName);
                 }
+                //for default spinner value
+                districtList.add(0, "Select a District...");
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(Barangay.this, android.R.layout.simple_spinner_item, districtList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
