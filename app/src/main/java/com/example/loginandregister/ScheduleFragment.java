@@ -90,8 +90,8 @@
 
                         // Update UI based on retrieved data
                         barangayTextView.setText(barName + " Barangay Hall");
-                        if (barName.equals("Basak")) {
-                            String timeString = snapshot.child("Barangay").child("Basak").child("Schedule").child(day).getValue(String.class);
+                        if (barName.equals("Looc")) {
+                            String timeString = snapshot.child("Barangay").child("Looc").child("Schedule").child(day).getValue(String.class);
                             timeTextView.setText("Starts at: " + timeString);
 
 //                            // Schedule Notification

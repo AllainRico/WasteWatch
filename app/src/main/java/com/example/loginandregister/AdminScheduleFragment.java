@@ -182,7 +182,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             String time = timeTextView.getText().toString();
 
 
-            reference = database.getReference("Database").child("Barangay").child("Basak").child("Schedule").child(day);
+            reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule").child(day);
             reference.setValue(time);
         }
     }

@@ -67,17 +67,24 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View view) {
                 String selectedBarangay = brgySpinner.getSelectedItem().toString();
+                String selectedDistrict = districtSpinner.getSelectedItem().toString();  // Get selected district
+
                 if (selectedBarangay != null && !selectedBarangay.isEmpty()) {
-                    SharedPreferences preferences3 = getSharedPreferences("MyPrefsBarangay", MODE_PRIVATE);
-                    preferences3.edit().putString("barangay", selectedBarangay).apply();
-                    Intent intent = new Intent(Barangay.this, Register.class);
-                    startActivity(intent);
-                    finish();
+                    if (!selectedDistrict.equals("Select a District...")) {  // Check if district is selected
+                        SharedPreferences preferences3 = getSharedPreferences("MyPrefsBarangay", MODE_PRIVATE);
+                        preferences3.edit().putString("barangay", selectedBarangay).apply();
+                        Intent intent = new Intent(Barangay.this, Register.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(Barangay.this, "Please select a district", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(Barangay.this, "Please select a barangay", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
 
         brgySpinner.setOnItemSelectedListener(this);
 
