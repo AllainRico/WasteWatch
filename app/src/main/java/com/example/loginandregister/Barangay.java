@@ -73,6 +73,8 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
                     if (!selectedDistrict.equals("Select a District...")) {  // Check if district is selected
                         SharedPreferences preferences3 = getSharedPreferences("MyPrefsBarangay", MODE_PRIVATE);
                         preferences3.edit().putString("barangay", selectedBarangay).apply();
+                        SharedPreferences preferences4 = getSharedPreferences("MyPrefsBarangayDistrict", MODE_PRIVATE);
+                        preferences4.edit().putString("district", selectedDistrict).apply();
                         Intent intent = new Intent(Barangay.this, Register.class);
                         startActivity(intent);
                         finish();

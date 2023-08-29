@@ -86,10 +86,11 @@
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                        String district = snapshot.child("users").child(username).child("district").getValue(String.class);
                         String day = dayTextView.getText().toString(); // You can set day here based on your logic
 
                         // Update UI based on retrieved data
-                        barangayTextView.setText(barName + " Barangay Hall");
+                        barangayTextView.setText(district+", "+barName + " Barangay Hall");
                         if (barName.equals("Looc")) {
                             String timeString = snapshot.child("Barangay").child("Looc").child("Schedule").child(day).getValue(String.class);
                             timeTextView.setText("Starts at: " + timeString);

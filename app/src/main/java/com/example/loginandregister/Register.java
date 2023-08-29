@@ -79,7 +79,9 @@ public class Register extends AppCompatActivity {
                                 String password = editTextPassword.getText().toString().trim();
                                 SharedPreferences preferences = getSharedPreferences("MyPrefsBarangay", Context.MODE_PRIVATE);
                                 String barangay = preferences.getString("barangay", " ");
-                                User user = new User(firstName, lastName, username, email, password, barangay);
+                                SharedPreferences preferences1 = getSharedPreferences("MyPrefsBarangayDistrict", Context.MODE_PRIVATE);
+                                String district = preferences1.getString("district", " ");
+                                User user = new User(firstName, lastName, username, email, password, barangay, district);
                                 reference.child(username).setValue(user);
                                 Toast.makeText(Register.this, "Successful", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(Register.this, Login.class);

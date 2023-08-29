@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment {
 
     // Boolean flag to track if the EditText is in edit mode
     private boolean isEditMode = false;
-    FirebaseDatabase database;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
 
     @Override
@@ -114,30 +114,10 @@ public class ProfileFragment extends Fragment {
         txtEmail.setText(email);
         txtUsername.setText(username);
 
-
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String firstName2 = snapshot.child(username).child("firstName").getValue(String.class);
-                String lastName2 = snapshot.child(username).child("lastName").getValue(String.class);
-                String email2 = snapshot.child(username).child("email").getValue(String.class);
-                txtFirstName.setText(firstName2);
-                txtLastName.setText(lastName2);
-                txtEmail.setText(email2);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
         // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), Login.class);
                 showLogoutConfirmationDialog();
             }
         });
@@ -163,7 +143,6 @@ public class ProfileFragment extends Fragment {
                         return true;
                     }
                     else {
-
                         txtFirstName.clearFocus();
                         txtLastName.clearFocus();
                         txtEmail.clearFocus();
@@ -174,8 +153,6 @@ public class ProfileFragment extends Fragment {
                 return false;
             }
         });
-
-
 
         return view;
     }
@@ -225,24 +202,6 @@ public class ProfileFragment extends Fragment {
             String email3 = txtEmail.getText().toString().trim();
             String user = txtUsername.getText().toString().trim();
 
-            reference = database.getInstance().getReference("Database").child("users").child(user);
-            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    reference.child("firstName").setValue(first);
-                    reference.child("lastName").setValue(last);
-                    reference.child("email").setValue(email3);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-            database = FirebaseDatabase.getInstance();
-            reference = database.getReference("Database").child("users");
-
 
             editText.setInputType(InputType.TYPE_NULL);
             editView.setImageResource(R.drawable.ic_edit);
@@ -250,6 +209,19 @@ public class ProfileFragment extends Fragment {
             // Hide the keyboard when leaving edit mode
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
+            reference = database.getReference("Database").child("users").child(user);
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    reference.child("firstName").setValue(first);
+                    reference.child("lastName").setValue(last);
+                    reference.child("email").setValue(email3);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
 
         } else {
 
