@@ -197,12 +197,6 @@ public class ProfileFragment extends Fragment {
     private void toggleEditMode(ImageView editView, EditText editText) {
         if (isEditMode) {
 
-            String first = txtFirstName.getText().toString().trim();
-            String last = txtLastName.getText().toString().trim();
-            String email3 = txtEmail.getText().toString().trim();
-            String user = txtUsername.getText().toString().trim();
-
-
             editText.setInputType(InputType.TYPE_NULL);
             editView.setImageResource(R.drawable.ic_edit);
 
@@ -210,18 +204,7 @@ public class ProfileFragment extends Fragment {
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 
-            reference = database.getReference("Database").child("users").child(user);
-            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    reference.child("firstName").setValue(first);
-                    reference.child("lastName").setValue(last);
-                    reference.child("email").setValue(email3);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
+
 
         } else {
 
@@ -234,7 +217,27 @@ public class ProfileFragment extends Fragment {
             // Show the keyboard when entering edit mode
             InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+
+
         }
+        String first = txtFirstName.getText().toString().trim();
+        String last = txtLastName.getText().toString().trim();
+        String email3 = txtEmail.getText().toString().trim();
+        String user = txtUsername.getText().toString().trim();
+
+        reference = database.getReference("Database").child("users").child(user);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                reference.child("firstName").setValue(first);
+                reference.child("lastName").setValue(last);
+                reference.child("email").setValue(email3);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
         isEditMode = !isEditMode;
     }
 }

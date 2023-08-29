@@ -36,7 +36,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
-
     private BroadcastReceiver broadcastReceiver = null;
     private View decorView;
     private TextInputEditText editTextEmail, editTextPassword;
@@ -161,11 +160,11 @@ public class Login extends AppCompatActivity {
         registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
     //internet
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        unregisterReceiver(broadcastReceiver);
+//    }
 
     private boolean validateCredentials() {
         String username = editTextEmail.getText().toString().trim();

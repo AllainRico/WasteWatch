@@ -180,9 +180,6 @@
                 return daysInMonthArray;
             }
 
-
-
-
             public void previousMonth(View view) {
                 selectedDate = selectedDate.minusMonths(1);
                 setMonthView();

@@ -30,15 +30,6 @@ public class HomeFragment extends Fragment {
     DatabaseReference reference;
 
 
-
-
-
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-
-    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,38 +55,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-
-
-
-/*
-
-
-        reference = database.getInstance().getReference("Database").child("users");
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                String first = snapshot.child(username).child("firstName").getValue(String.class);
-                usernameTxt.setText(first);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-
-
-
-
-
- */
-        // Retrieve the username from arguments
-
 
         buttonMap = view.findViewById(R.id.user_btnMap);
         buttonMap.setOnClickListener(new View.OnClickListener() {
