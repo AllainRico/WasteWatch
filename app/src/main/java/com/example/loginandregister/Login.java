@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -23,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.loginandregister.internet.InternetReceiver;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
 
+    private BroadcastReceiver broadcastReceiver = null;
     private View decorView;
     private TextInputEditText editTextEmail, editTextPassword;
     private ImageView passwordToggle;
@@ -49,6 +54,9 @@ public class Login extends AppCompatActivity {
 
         initWidgets();
 
+        //internet
+        broadcastReceiver = new InternetReceiver();
+        InternetStatus();
 
         passwordToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +154,17 @@ public class Login extends AppCompatActivity {
         buttonLogin = findViewById(R.id.btn_login);
         register = findViewById(R.id.register);
         btnLoginWith = findViewById(R.id.btnLoginWith);
+    }
+
+    //internet
+    public void InternetStatus(){
+        registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    //internet
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     private boolean validateCredentials() {

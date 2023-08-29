@@ -2,10 +2,17 @@ package com.example.loginandregister;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+
+import com.example.loginandregister.internet.InternetReceiver;
+
+import java.net.ConnectException;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -27,8 +34,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         });
-
-
         //Splash Screen
         new Handler().postDelayed(new Runnable() {
             @Override
