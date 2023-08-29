@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -23,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.loginandregister.internet.InternetReceiver;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -33,11 +37,10 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
 
-    //Hide Navigation bar variable
+    private BroadcastReceiver broadcastReceiver = null;
     private View decorView;
-
-    //Inputs
     private TextInputEditText editTextEmail, editTextPassword;
+    private ImageView passwordToggle;
     private Button buttonLogin;
     private TextView register;
     private TextView btnLoginWith;
@@ -49,21 +52,24 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Toggle Password
-        ImageView passwordToggle = findViewById(R.id.passwordToggle);
-        final TextInputEditText passwordEditText = findViewById(R.id.password);
+        initWidgets();
+
+        //internet
+        broadcastReceiver = new InternetReceiver();
+        InternetStatus();
+
         passwordToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int inputType = passwordEditText.getInputType();
+                int inputType = editTextPassword.getInputType();
 
                 if (inputType == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
-                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 } else {
-                    passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }
 
-                if (TextUtils.isEmpty(passwordEditText.getError())) {
+                if (TextUtils.isEmpty(editTextPassword.getError())) {
                     // If no error, set the standard margin
                     updateToggleMargin(4);
                 } else {
@@ -71,13 +77,13 @@ public class Login extends AppCompatActivity {
                     updateToggleMargin(18);
                 }
 
-                passwordEditText.setTypeface(Typeface.DEFAULT);
-                passwordEditText.setSelection(passwordEditText.getText().length());
+                editTextPassword.setTypeface(Typeface.DEFAULT);
+                editTextPassword.setSelection(editTextPassword.getText().length());
             }
         });
 
         // Set a text change listener for the password EditText
-        passwordEditText.addTextChangedListener(new TextWatcher() {
+        editTextPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
@@ -94,8 +100,6 @@ public class Login extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {}
         });
 
-
-
         //Hide the Navigation Bar
         decorView = getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
@@ -106,13 +110,6 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-
-        //Inputs
-        editTextEmail = findViewById(R.id.email);
-        editTextPassword = findViewById(R.id.password);
-        buttonLogin = findViewById(R.id.btn_login);
-        register = findViewById(R.id.register);
-        btnLoginWith = findViewById(R.id.btnLoginWith);
 
         database = FirebaseDatabase.getInstance();
 
@@ -148,8 +145,26 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    private void initWidgets() {
+        editTextEmail = findViewById(R.id.email);
+        editTextPassword = findViewById(R.id.password);
+        passwordToggle = findViewById(R.id.passwordToggle);
+        buttonLogin = findViewById(R.id.btn_login);
+        register = findViewById(R.id.register);
+        btnLoginWith = findViewById(R.id.btnLoginWith);
+    }
 
+    //internet
+    public void InternetStatus(){
+        registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    //internet
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     private boolean validateCredentials() {
