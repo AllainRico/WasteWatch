@@ -2,15 +2,18 @@ package com.example.loginandregister;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.core.app.ActivityCompat;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -26,9 +29,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.loginandregister.admin.AdminMainActivity;
 import com.example.loginandregister.internet.InternetReceiver;
+import com.example.loginandregister.user.UserMainActivity;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +41,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver = null;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private boolean isOnline = false;
     private View decorView;
     private TextInputEditText editTextEmail, editTextPassword;
     private ImageView passwordToggle;
@@ -160,11 +166,11 @@ public class Login extends AppCompatActivity {
         registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
     //internet
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        unregisterReceiver(broadcastReceiver);
-//    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
 
     private boolean validateCredentials() {
         String username = editTextEmail.getText().toString().trim();
@@ -214,6 +220,7 @@ public class Login extends AppCompatActivity {
                             startActivity(adminIntent);
                             finish();
                             editTextPassword.setError(null);
+                            requestLocationPermission();
                         }
                 }
                 else if (snapshot.child("users").child(username).exists()) {
@@ -261,6 +268,53 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
+    private void requestLocationPermission() {
+        // Check if the app has location permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // Request location permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            // Location permission already granted
+            onLocationPermissionGranted();
+        }
+    }
+
+    private void onLocationPermissionGranted() {
+        // Location permission granted, admin can proceed
+        isOnline = true;
+
+        Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
+        startActivity(adminIntent);
+        finish();
+        editTextPassword.setError(null);
+    }
+
+    private void showLocationPermissionDeniedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("WasteWatch requires location access to proceed.")
+                .setPositiveButton("Grant Permission", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Request location permission again
+                        requestLocationPermission();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Location permission denied, handle it accordingly
+                        // You may want to show a message or close the app
+                    }
+                })
+                .create()
+                .show();
+    }
+
+
 
     private void showLoginWithOptionsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

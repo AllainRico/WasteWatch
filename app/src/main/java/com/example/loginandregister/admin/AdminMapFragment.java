@@ -1,4 +1,4 @@
-package com.example.loginandregister;
+package com.example.loginandregister.admin;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.loginandregister.R;
 
 
 public class AdminMapFragment extends Fragment {

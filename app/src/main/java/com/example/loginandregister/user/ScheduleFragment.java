@@ -1,4 +1,4 @@
-        package com.example.loginandregister;
+        package com.example.loginandregister.user;
 
         import android.app.AlarmManager;
         import android.app.PendingIntent;
@@ -20,6 +20,8 @@
         import android.widget.TextView;
         import android.widget.Toast;
 
+        import com.example.loginandregister.CalendarAdapter;
+        import com.example.loginandregister.R;
         import com.google.firebase.database.DataSnapshot;
         import com.google.firebase.database.DatabaseError;
         import com.google.firebase.database.DatabaseReference;
@@ -34,7 +36,7 @@
         import java.util.ArrayList;
         import java.util.Locale;
 
-        public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItemListener{
+        public class ScheduleFragment extends Fragment implements CalendarAdapter.OnItemListener {
 
             private TextView monthYearText;
             private RecyclerView calendarRecyclerView;

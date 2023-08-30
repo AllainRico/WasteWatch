@@ -27,10 +27,10 @@
             android:name=".internet.NoInternetActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminMainActivity"
+            android:name=".admin.AdminMainActivity"
             android:exported="false" />
         <activity
-            android:name=".UserMainActivity"
+            android:name=".user.UserMainActivity"
             android:exported="false" />
         <activity
             android:name=".Barangay"

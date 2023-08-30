@@ -1,4 +1,4 @@
-package com.example.loginandregister;
+package com.example.loginandregister.user;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.loginandregister.R;
+import com.example.loginandregister.ScheduleNotificationManager;
 import com.example.loginandregister.databinding.ActivityMainBinding;
 
 

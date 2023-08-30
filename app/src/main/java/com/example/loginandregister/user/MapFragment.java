@@ -1,4 +1,4 @@
-package com.example.loginandregister;
+package com.example.loginandregister.user;
 
 import android.os.Bundle;
 
@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.loginandregister.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

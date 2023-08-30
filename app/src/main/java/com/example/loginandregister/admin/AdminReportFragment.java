@@ -1,4 +1,4 @@
-package com.example.loginandregister;
+package com.example.loginandregister.admin;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.loginandregister.Login;
+import com.example.loginandregister.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

@@ -1,4 +1,4 @@
-package com.example.loginandregister;
+package com.example.loginandregister.admin;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.loginandregister.R;
 import com.example.loginandregister.databinding.ActivityMainBinding;
 
 
@@ -16,6 +17,8 @@ public class AdminMainActivity extends AppCompatActivity {
     private View decorView;
     //Fragment
     ActivityMainBinding binding;
+
+    boolean isOnline = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
