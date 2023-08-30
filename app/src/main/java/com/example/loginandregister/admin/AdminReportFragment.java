@@ -30,18 +30,10 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AdminReportFragment extends Fragment {
 
-
     private Button buttonLogout;
     private TextView buttonReport, barangay;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
-
-
-
-
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,11 +88,9 @@ public class AdminReportFragment extends Fragment {
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        // Get references to the "Yes" and "No" buttons
         Button btnYes = dialogView.findViewById(R.id.btnYes);
         Button btnNo = dialogView.findViewById(R.id.btnNo);
 
-        // Set click listeners for the buttons
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +98,7 @@ public class AdminReportFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 getActivity().finish();
+                ((AdminMainActivity) getActivity()).setOnlineStatus(false);
                 alertDialog.dismiss(); // Close the dialog after clicking "Yes"
             }
         });

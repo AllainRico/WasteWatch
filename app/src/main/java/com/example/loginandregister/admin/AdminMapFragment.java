@@ -13,7 +13,6 @@ import com.example.loginandregister.R;
 
 public class AdminMapFragment extends Fragment {
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

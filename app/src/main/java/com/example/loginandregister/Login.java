@@ -212,6 +212,7 @@ public class Login extends AppCompatActivity {
                         if(adminPasswordFromDB.equals(password)) {
                             // Admin login successful
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
+                            adminIntent.putExtra("isOnline", true); // Set isOnline to true
 
                             SharedPreferences preferences2 = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
                             String username1 = snapshot.child("collectors").child(username).child("username").getValue(String.class);

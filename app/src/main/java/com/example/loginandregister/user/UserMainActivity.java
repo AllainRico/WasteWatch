@@ -14,9 +14,7 @@ import com.example.loginandregister.databinding.ActivityMainBinding;
 
 
 public class UserMainActivity extends AppCompatActivity {
-    //Hide Navigation bar variable
     private View decorView;
-    //Fragment
     ActivityMainBinding binding;
 
     @Override
