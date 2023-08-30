@@ -42,7 +42,7 @@ import com.google.firebase.database.ValueEventListener;
 public class Login extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver = null;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private boolean isOnline = false;
+    boolean isOnline = false;
     private View decorView;
     private TextInputEditText editTextEmail, editTextPassword;
     private ImageView passwordToggle;
