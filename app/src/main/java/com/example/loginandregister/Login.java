@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.loginandregister.admin.AdminMainActivity;
 import com.example.loginandregister.internet.InternetReceiver;
@@ -193,13 +194,11 @@ public class Login extends AppCompatActivity {
         return true;
     }
 
-
-
     private void loginUser() {
         final String username = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
-        Log.d("LoginActivity", "Username: " + username);
-        Log.d("LoginActivity", "Password: " + password);
+        //Log.d("LoginActivity", "Username: " + username);
+        //Log.d("LoginActivity", "Password: " + password);
 
         reference = database.getReference("Database");
 
@@ -207,10 +206,14 @@ public class Login extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if ("admin".equals(username) && snapshot.child("collectors").child("admin").exists()) {
-                  String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
-
+                    //Log.d("LoginActivity", "Admin login detected");
+                    String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                         if(adminPasswordFromDB.equals(password)) {
                             // Admin login successful
+                            //Log.d("LoginActivity", "Admin password is correct");
+                            // Request location permission
+                            requestLocationPermission();
+
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
                             adminIntent.putExtra("isOnline", true); // Set isOnline to true
 
@@ -221,7 +224,6 @@ public class Login extends AppCompatActivity {
                             startActivity(adminIntent);
                             finish();
                             editTextPassword.setError(null);
-                            requestLocationPermission();
                         }
                 }
                 else if (snapshot.child("users").child(username).exists()) {
@@ -271,27 +273,34 @@ public class Login extends AppCompatActivity {
     }
 
     private void requestLocationPermission() {
-        // Check if the app has location permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            // Request location permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
-        } else {
-            // Location permission already granted
-            onLocationPermissionGranted();
-        }
+        Log.d("LocationPermission", "Requesting location permission");
+        // Request location permission
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                LOCATION_PERMISSION_REQUEST_CODE);
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-    private void onLocationPermissionGranted() {
-        // Location permission granted, admin can proceed
-        isOnline = true;
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            Log.d("LocationPermission", "Location permission request result received.");
+            // Log grantResults here to see what it contains
+            for (int result : grantResults) {
+                Log.d("LocationPermission", "Grant Result: " + result);
+            }
 
-        Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
-        startActivity(adminIntent);
-        finish();
-        editTextPassword.setError(null);
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Location permission granted, admin can proceed
+                isOnline = true;
+                // Log success here
+                Log.d("LocationPermission", "Location permission granted");
+            } else {
+                // Location permission denied
+                // Log denial here
+                Log.d("LocationPermission", "Location permission denied");
+                showLocationPermissionDeniedDialog();
+            }
+        }
     }
 
     private void showLocationPermissionDeniedDialog() {
@@ -307,14 +316,12 @@ public class Login extends AppCompatActivity {
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // Location permission denied, handle it accordingly
-                        // You may want to show a message or close the app
+                        Toast.makeText(Login.this, "Location is needed", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .create()
                 .show();
     }
-
 
 
     private void showLoginWithOptionsDialog() {

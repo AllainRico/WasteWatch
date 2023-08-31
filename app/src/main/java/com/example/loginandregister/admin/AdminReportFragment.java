@@ -29,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class AdminReportFragment extends Fragment {
-
     private Button buttonLogout;
     private TextView buttonReport, barangay;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
