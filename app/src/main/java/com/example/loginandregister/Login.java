@@ -207,6 +207,7 @@ public class Login extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if ("admin".equals(username) && snapshot.child("collectors").child("admin").exists()) {
                     //Log.d("LoginActivity", "Admin login detected");
+                    requestLocationPermission();
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                         if(adminPasswordFromDB.equals(password)) {
                             // Admin login successful
