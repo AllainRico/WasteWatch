@@ -34,6 +34,9 @@ public class AdminMainActivity extends AppCompatActivity {
         // Retrieve the isOnline value from the Intent
         isOnline = getIntent().getBooleanExtra("isOnline", false);
 
+        //temp Prompt
+        showLocationPermissionDeniedDialog();
+
         // Check if the location permission is already granted
         if (isLocationPermissionGranted()) {
             // Location permission is already granted
