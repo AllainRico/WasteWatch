@@ -9,15 +9,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.loginandregister.Login;
@@ -33,6 +28,7 @@ public class AdminReportFragment extends Fragment {
     private TextView buttonReport, barangay;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +36,8 @@ public class AdminReportFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_report, container, false);
 
+        // Initialize SharedPreferences for Location Permission
+        sharedPreferences = getActivity().getSharedPreferences("LocationPermission", Context.MODE_PRIVATE);
 
         buttonLogout = view.findViewById(R.id.btn_logout);
         barangay = view.findViewById(R.id.barangay);
@@ -61,18 +59,15 @@ public class AdminReportFragment extends Fragment {
             }
         });
 
-
-
         // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearLocationPermissionStatus();
                 Intent intent = new Intent(getActivity(), Login.class);
                 showLogoutConfirmationDialog();
             }
         });
-
-
         return view;
     }
 
@@ -109,7 +104,25 @@ public class AdminReportFragment extends Fragment {
             }
         });
         alertDialog.show();
+    }
 
+    private void clearLocationPermissionStatus() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("location_permission_granted", false);
+        editor.apply();
+    }
 
+    // Check if location permission needs to be requested
+    private boolean shouldRequestLocationPermission() {
+        // Check the location permission status in SharedPreferences
+        return !sharedPreferences.getBoolean("location_permission_granted", false);
+    }
+
+    // Method to request location permission
+    private void requestLocationPermission() {
+        if (shouldRequestLocationPermission()) {
+            // Request location permission
+            // Your existing code for requesting location permission
+        }
     }
 }

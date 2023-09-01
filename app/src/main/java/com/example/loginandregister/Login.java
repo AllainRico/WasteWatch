@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
-import android.os.Build;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -207,13 +207,13 @@ public class Login extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if ("admin".equals(username) && snapshot.child("collectors").child("admin").exists()) {
                     //Log.d("LoginActivity", "Admin login detected");
-                    requestLocationPermission();
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                         if(adminPasswordFromDB.equals(password)) {
                             // Admin login successful
                             //Log.d("LoginActivity", "Admin password is correct");
                             // Request location permission
                             requestLocationPermission();
+                            //showLocationPermissionDeniedDialog();
 
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
                             adminIntent.putExtra("isOnline", true); // Set isOnline to true
@@ -318,12 +318,12 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(Login.this, "Location is needed", Toast.LENGTH_SHORT).show();
+                        //Intent intent = new Intent(Login.this, Login.class);
                     }
                 })
                 .create()
                 .show();
     }
-
 
     private void showLoginWithOptionsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
