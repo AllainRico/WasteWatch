@@ -47,16 +47,13 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     private TextView dayTextView;
     private TextView barangayTextView;
     private TextView timeTextView;
+    private EditText timeEditText;
+    private Button btnPrevious, btnNext;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
-
-    //image icons
     private ImageView editTimeImageView;
-
     private LocalDate selectedDate;
     private Map<LocalDate, String> dayTimeMap = new HashMap<>();
-
-    // Boolean flag to track if the EditText is in edit mode
     private boolean isEditMode = false;
 
     @Override
@@ -65,18 +62,12 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_schedule, container, false);
 
-        barangayTextView = view.findViewById(R.id.barangay);
-
         initWidgets(view);
+
         selectedDate = LocalDate.now();
         setMonthView();
 
-        dayTextView = view.findViewById(R.id.day);
         updateDayTextView();
-
-        Button btnPrevious = view.findViewById(R.id.btnPrevious);
-        Button btnNext = view.findViewById(R.id.btnNext);
-        dayTextView = view.findViewById(R.id.day);
 
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
@@ -108,7 +99,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
-        EditText timeEditText = view.findViewById(R.id.time);
         timeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -121,7 +111,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
-        editTimeImageView = view.findViewById(R.id.edit_time);
         editTimeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +118,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
-        //when clicking outside, hides the keyboard
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -193,6 +181,12 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         calendarRecyclerView = view.findViewById(R.id.calendarRecycleView);
         monthYearText = view.findViewById(R.id.monthYearTV);
         timeTextView = view.findViewById(R.id.time);
+        barangayTextView = view.findViewById(R.id.barangay);
+        dayTextView = view.findViewById(R.id.day);
+        btnPrevious = view.findViewById(R.id.btnPrevious);
+        btnNext = view.findViewById(R.id.btnNext);
+        editTimeImageView = view.findViewById(R.id.edit_time);
+        timeEditText = view.findViewById(R.id.time);
     }
 
     private void setMonthView() {
