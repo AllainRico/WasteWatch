@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.Fragment;
@@ -21,11 +23,11 @@ import com.google.android.gms.maps.internal.ICameraUpdateFactoryDelegate;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-//implements OnMapReadyCallback
 public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     private GoogleMap gMap;
-//    private FrameLayout map;
+    private ProgressBar progressBar;
+    private ImageView mapPlaceholder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +35,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-//        map = view.findViewById(R.id.map);
+        progressBar = view.findViewById(R.id.progressBar);
+        mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
 
         SupportMapFragment mapFragment = (SupportMapFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -42,10 +45,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        this.gMap = googleMap;
+        double latitude, longitude;
+        String barangay;
 
-        LatLng mapLooc = new LatLng(10.3023,123.9469);
-        this.gMap.addMarker(new MarkerOptions().position(mapLooc).title("Looc"));
-        this.gMap.moveCamera(CameraUpdateFactory.newLatLng(mapLooc));
+        barangay = "Looc";
+        latitude = 10.3023;
+        longitude = 123.9469;
+
+        this.gMap = googleMap;
+        LatLng brgyMap = new LatLng(latitude,longitude);
+        this.gMap.addMarker(new MarkerOptions().position(brgyMap).title(barangay));
+        this.gMap.moveCamera(CameraUpdateFactory.newLatLng(brgyMap));
+    }
+
+    public void onMapLoaded() {
+        progressBar.setVisibility(View.GONE);
+        mapPlaceholder.setVisibility(View.GONE);
     }
 }

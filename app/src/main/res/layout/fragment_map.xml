@@ -5,20 +5,25 @@
     android:layout_height="match_parent"
     tools:context=".user.MapFragment">
 
-
     <ImageView
+        android:id="@+id/mapPlaceholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/placeholdermap2"
-        android:scaleType="fitXY"/>
+        android:src="@drawable/placeholdermap"
+        android:scaleType="centerCrop" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible" />
 
     <fragment
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:id="@+id/map"
-android:name="com.google.android.gms.maps.SupportMapFragment"
-tools:context=".MapFragment"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        tools:layout="@layout/fragment_admin_map"/>
 
 </FrameLayout>
