@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     private GoogleMap gMap;
+    private FrameLayout map;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
 
@@ -38,8 +39,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         progressBar = view.findViewById(R.id.progressBar);
         mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.map);
+        map = view.findViewById(R.id.map);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
         return view;
     }
 
@@ -52,10 +59,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         latitude = 10.3023;
         longitude = 123.9469;
 
-        this.gMap = googleMap;
-        LatLng brgyMap = new LatLng(latitude,longitude);
-        this.gMap.addMarker(new MarkerOptions().position(brgyMap).title(barangay));
-        this.gMap.moveCamera(CameraUpdateFactory.newLatLng(brgyMap));
+            this.gMap = googleMap;
+            LatLng brgyMap = new LatLng(latitude,longitude);
+            this.gMap.addMarker(new MarkerOptions().position(brgyMap).title(barangay));
+            this.gMap.moveCamera(CameraUpdateFactory.newLatLng(brgyMap));
+
+        onMapLoaded();
     }
 
     public void onMapLoaded() {
