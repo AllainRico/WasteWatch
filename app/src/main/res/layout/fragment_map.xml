@@ -11,8 +11,6 @@
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
-        <!--tools:layout="@layout/fragment_admin_map"-->
-
     <ImageView
         android:id="@+id/mapPlaceholder"
         android:layout_width="match_parent"

@@ -41,35 +41,38 @@
                         double latitude, longitude;
                         String barangay;
 
-
                         barangay = "Looc";
-                        latitude = 10.3023;
-                        longitude = 123.9469;
+                        latitude = 10.305712;
+                        longitude = 123.941780;
 
                         LatLng brgyMap = new LatLng(latitude, longitude);
 
                         googleMap.addMarker(new MarkerOptions().position(brgyMap).title(barangay));
 
-                        float zoomLevel = 15;
+                        float zoomLevel = 15.3f;
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+
+                        googleMap.getUiSettings().setZoomControlsEnabled(false);
+                        googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                        googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                         onMapLoaded();
                         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                             @Override
                             public void onMapClick(LatLng latLng) {
-                                // When clicked on map
-                                // Initialize marker options
-                                MarkerOptions markerOptions=new MarkerOptions();
-                                // Set position of marker
-                                markerOptions.position(latLng);
-                                // Set title of marker
-                                markerOptions.title(latLng.latitude+" : "+latLng.longitude);
-                                // Remove all marker
-                                googleMap.clear();
-                                // Animating to zoom the marker
-                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
-                                // Add marker on map
-                                googleMap.addMarker(markerOptions);
+//                                // When clicked on map
+//                                // Initialize marker options
+//                                MarkerOptions markerOptions=new MarkerOptions();
+//                                // Set position of marker
+//                                markerOptions.position(latLng);
+//                                // Set title of marker
+//                                markerOptions.title(latLng.latitude+" : "+latLng.longitude);
+//                                // Remove all marker
+//                                googleMap.clear();
+//                                // Animating to zoom the marker
+//                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+//                                // Add marker on map
+//                                googleMap.addMarker(markerOptions);
                             }
                         });
                     }
