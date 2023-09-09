@@ -132,6 +132,7 @@
         // Initialize location service
         private void initializeLocationService() {
             if (isLocationPermissionGranted()) {
+
                 FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -145,14 +146,11 @@
                                         double adminLatitude = location.getLatitude();
                                         double adminLongitude = location.getLongitude();
 
-                                        // Now, pass these values to AdminMapFragment
+                                        // Now, you can pass this adminLatitude and adminLongitude
+                                        // to your AdminMapFragment to display on the map
                                         AdminMapFragment adminMapFragment = (AdminMapFragment) getSupportFragmentManager()
                                                 .findFragmentById(R.id.map);
-                                        adminMapFragment.setAdminLatitude(adminLatitude);
-                                        adminMapFragment.setAdminLongitude(adminLongitude);
-
-                                        // Also, update the admin location on the map
-                                        adminMapFragment.displayAdminLocation();
+                                        adminMapFragment.updateAdminLocation(adminLatitude, adminLongitude);
                                     } else {
                                         // Handle the case where the location is not available
                                         // You might want to display a message or use a default location
@@ -166,7 +164,6 @@
                 requestLocationPermission();
             }
         }
-
 
 
 

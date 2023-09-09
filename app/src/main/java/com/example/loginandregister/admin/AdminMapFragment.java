@@ -84,17 +84,10 @@ public class AdminMapFragment extends Fragment {
         mapPlaceholder.setVisibility(View.GONE);
     }
 
-    public void setAdminLatitude(double latitude) {
-        adminLatitude = latitude;
-    }
-
-    public void setAdminLongitude(double longitude) {
-        adminLongitude = longitude;
-    }
     public void displayAdminLocation() {
         if (googleMap != null) {
-            adminLatitude = 10.305627;
-            adminLongitude = 123.946517;
+//            adminLatitude = 10.305627;
+//            adminLongitude = 123.946517;
 
             LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
 
