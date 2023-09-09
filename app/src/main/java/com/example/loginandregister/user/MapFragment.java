@@ -50,7 +50,6 @@
                 supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        // ... (Other code)
 
                         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
                         String username = preferences2.getString("ProfileUsername", "");

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,10 @@ public class AdminMapFragment extends Fragment {
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
 
+    private GoogleMap googleMap;
+    private double adminLatitude;
+    private double adminLongitude;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,9 +43,13 @@ public class AdminMapFragment extends Fragment {
 
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
+            public void onMapReady(GoogleMap map) {
+                googleMap = map;
+
                 double latitude, longitude;
                 String barangay;
+
+                float zoomLevel = 15.3f;
 
                 barangay = "Looc";
                 latitude = 10.305712;
@@ -49,9 +58,9 @@ public class AdminMapFragment extends Fragment {
                 LatLng brgyMap = new LatLng(latitude, longitude);
 
                 googleMap.addMarker(new MarkerOptions().position(brgyMap).title(barangay));
-
-                float zoomLevel = 15.3f;
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+
+                displayAdminLocation();
 
                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
@@ -64,6 +73,7 @@ public class AdminMapFragment extends Fragment {
                         // Do nothing when clicked on map, effectively disabling any action
                     }
                 });
+
             }
         });
 
@@ -73,4 +83,36 @@ public class AdminMapFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         mapPlaceholder.setVisibility(View.GONE);
     }
+
+    public void setAdminLatitude(double latitude) {
+        adminLatitude = latitude;
+    }
+
+    public void setAdminLongitude(double longitude) {
+        adminLongitude = longitude;
+    }
+    public void displayAdminLocation() {
+        if (googleMap != null) {
+            adminLatitude = 10.305627;
+            adminLongitude = 123.946517;
+
+            LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
+
+            googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
+        }
+    }
+
+    public void updateAdminLocation(double latitude, double longitude) {
+        if (googleMap != null) {
+            LatLng adminLocation = new LatLng(latitude, longitude);
+
+            // Clear previous marker (if any) and add a new one
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
+
+            // Move the camera to the new location
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(adminLocation));
+        }
+    }
+
 }
