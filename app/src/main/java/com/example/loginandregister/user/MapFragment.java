@@ -44,43 +44,36 @@
 
                 progressBar = view.findViewById(R.id.progressBar);
                 mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
-
-                SupportMapFragment supportMapFragment=(SupportMapFragment)
+                SupportMapFragment supportMapFragment = (SupportMapFragment)
                         getChildFragmentManager().findFragmentById(R.id.map);
 
                 supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        double latitude, longitude;
-                        String barangay;
+                        // ... (Other code)
 
-                        barangay = "Looc";
-                        latitude = 10.305712;
-                        longitude = 123.941780;
                         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
-                        String username = preferences2.getString("ProfileUsername","");
+                        String username = preferences2.getString("ProfileUsername", "");
 
-
-
-                        LatLng brgyMap = new LatLng(latitude, longitude);
-
-                        googleMap.addMarker(new MarkerOptions().position(brgyMap).title(barangay));
-
-                        float zoomLevel = 15.3f;
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-
-                        googleMap.getUiSettings().setZoomControlsEnabled(false);
-                        googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                        googleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                        reference = database.getReference("Database").child("users").child(username);
+                        reference = database.getReference("Database");
                         reference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String bar = snapshot.child("barName").getValue(String.class);
-                                if(bar == "Looc"){
-                                    saveLocationToFirebaseLooc(latitude, longitude);
+                                String bar = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                                if ("Looc".equals(bar)) { // Compare strings using .equals()
+                                    Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
+                                    Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
 
+                                    if (lat != null && longi != null) {
+                                        LatLng brgyMap = new LatLng(lat, longi);
+                                        googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
+                                        float zoomLevel = 15.3f;
+                                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+
+                                        googleMap.getUiSettings().setZoomControlsEnabled(false);
+                                        googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                                        googleMap.getUiSettings().setAllGesturesEnabled(false);
+                                    }
                                 }
                             }
 
@@ -127,7 +120,17 @@
                 DatabaseReference loocReference = databaseReference.child("Database").child("Barangay").child("Looc");
 
                 // Update the latitude and longitude
-                loocReference.child("Map").child("Latitude").setValue(latitude);
-                loocReference.child("Map").child("Longitude").setValue(longitude);
+              loocReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                  @Override
+                  public void onDataChange(@NonNull DataSnapshot snapshot) {
+                      String lat = snapshot.child("Latitude").getValue(String.class);
+                      String longi = snapshot.child("Longitude").getValue(String.class);
+                  }
+
+                  @Override
+                  public void onCancelled(@NonNull DatabaseError error) {
+
+                  }
+              });
             }
         }
