@@ -86,8 +86,9 @@ public class AdminMapFragment extends Fragment {
 
     public void displayAdminLocation() {
         if (googleMap != null) {
-//            adminLatitude = 10.305627;
-//            adminLongitude = 123.946517;
+            //Temp
+            adminLatitude = 10.305627;
+            adminLongitude = 123.946517;
 
             LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
 
@@ -99,11 +100,9 @@ public class AdminMapFragment extends Fragment {
         if (googleMap != null) {
             LatLng adminLocation = new LatLng(latitude, longitude);
 
-            // Clear previous marker (if any) and add a new one
             googleMap.clear();
             googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
 
-            // Move the camera to the new location
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(adminLocation));
         }
     }

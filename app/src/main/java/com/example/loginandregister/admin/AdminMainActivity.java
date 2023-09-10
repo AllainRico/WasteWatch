@@ -38,16 +38,10 @@
             // Retrieve the isOnline value from the Intent
             isOnline = getIntent().getBooleanExtra("isOnline", false);
 
-            //temp Prompt
-            //showLocationPermissionDeniedDialog();
-
-            // Check if the location permission is already granted
             if (isLocationPermissionGranted()) {
-                // Location permission is already granted
-                // You can use location services because the user is online
+                Log.d("AdminLocation", "Initializing location service");
                 initializeLocationService();
             } else {
-                // Location permission is not granted, request it
                 requestLocationPermission();
             }
 
@@ -101,12 +95,10 @@
         // Request location permission
         private void requestLocationPermission() {
             Log.d("LocationPermission", "Requesting location permission");
-            // Request location permission
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
 
-        // Handle the result of location permission request
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -117,13 +109,10 @@
                 for (int result : grantResults) {
                     Log.d("LocationPermission", "Grant Result: " + result);
                 }
-
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Location permission granted, initialize location service
                     initializeLocationService();
                 } else {
-                    // Location permission denied
-                    // You might want to show a message or restrict access to GPS features
                     showLocationPermissionDeniedDialog();
                 }
             }
@@ -146,14 +135,28 @@
                                         double adminLatitude = location.getLatitude();
                                         double adminLongitude = location.getLongitude();
 
-                                        // Now, you can pass this adminLatitude and adminLongitude
-                                        // to your AdminMapFragment to display on the map
+                                        Log.d("AdminLocation", "Latitude: " + adminLatitude);
+                                        Log.d("AdminLocation", "Longitude: " + adminLongitude);
+
+                                        // Pass the adminLatitude and adminLongitude to your AdminMapFragment to display on the map
                                         AdminMapFragment adminMapFragment = (AdminMapFragment) getSupportFragmentManager()
                                                 .findFragmentById(R.id.map);
                                         adminMapFragment.updateAdminLocation(adminLatitude, adminLongitude);
                                     } else {
-                                        // Handle the case where the location is not available
-                                        // You might want to display a message or use a default location
+                                        Toast.makeText(AdminMainActivity.this, "Location is not available", Toast.LENGTH_SHORT).show();
+
+                                        double defaultLatitude = 10.305627;
+                                        double defaultLongitude = 123.946517;
+
+                                        AdminMapFragment adminMapFragment = (AdminMapFragment) getSupportFragmentManager()
+                                                .findFragmentById(R.id.map);
+
+                                        if (adminMapFragment != null) {
+                                            adminMapFragment.updateAdminLocation(defaultLatitude, defaultLongitude);
+                                        } else {
+                                            // Handle the case where the fragment is null
+                                            Toast.makeText(AdminMainActivity.this, "Map fragment not found", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
                             });

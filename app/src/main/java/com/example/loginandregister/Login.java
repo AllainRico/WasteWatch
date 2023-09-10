@@ -50,8 +50,9 @@ public class Login extends AppCompatActivity {
     private Button buttonLogin;
     private TextView register;
     private TextView btnLoginWith;
+    private boolean isReceiverRegistered = false;
     FirebaseDatabase database;
-    DatabaseReference reference, reference2;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,11 +167,23 @@ public class Login extends AppCompatActivity {
     public void InternetStatus(){
         registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
-    //internet
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Register the receiver if it's not already registered
+        if (!isReceiverRegistered) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            isReceiverRegistered = true;
+        }
+    }
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(broadcastReceiver);
+        // Unregister the receiver if it's registered
+        if (isReceiverRegistered) {
+            unregisterReceiver(broadcastReceiver);
+            isReceiverRegistered = false;
+        }
     }
 
     private boolean validateCredentials() {
@@ -197,8 +210,6 @@ public class Login extends AppCompatActivity {
     private void loginUser() {
         final String username = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
-        //Log.d("LoginActivity", "Username: " + username);
-        //Log.d("LoginActivity", "Password: " + password);
 
         reference = database.getReference("Database");
 
@@ -356,7 +367,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle Facebook login here
-                dialog.dismiss(); // Close the dialog after selection
+                dialog.dismiss();
             }
         });
 
