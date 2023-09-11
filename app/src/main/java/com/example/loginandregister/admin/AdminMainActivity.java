@@ -131,6 +131,7 @@
                             .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                                 @Override
                                 public void onSuccess(Location location) {
+
                                     if (location != null) {
                                         double adminLatitude = location.getLatitude();
                                         double adminLongitude = location.getLongitude();
@@ -141,7 +142,7 @@
                                         // Pass the adminLatitude and adminLongitude to your AdminMapFragment to display on the map
                                         AdminMapFragment adminMapFragment = (AdminMapFragment) getSupportFragmentManager()
                                                 .findFragmentById(R.id.map);
-                                        adminMapFragment.updateAdminLocation(adminLatitude, adminLongitude);
+                                     //   adminMapFragment.updateAdminLocation(adminLatitude, adminLongitude);
                                     } else {
                                         Toast.makeText(AdminMainActivity.this, "Location is not available", Toast.LENGTH_SHORT).show();
 
@@ -152,7 +153,7 @@
                                                 .findFragmentById(R.id.map);
 
                                         if (adminMapFragment != null) {
-                                            adminMapFragment.updateAdminLocation(defaultLatitude, defaultLongitude);
+                                        //    adminMapFragment.updateAdminLocation(defaultLatitude, defaultLongitude);
                                         } else {
                                             // Handle the case where the fragment is null
                                             Toast.makeText(AdminMainActivity.this, "Map fragment not found", Toast.LENGTH_SHORT).show();
