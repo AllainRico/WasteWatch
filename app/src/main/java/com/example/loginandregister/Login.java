@@ -221,6 +221,7 @@ public class Login extends AppCompatActivity {
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                         if(adminPasswordFromDB.equals(password)) {
                             // Admin login successful
+                            // Admin login successful
                             //Log.d("LoginActivity", "Admin password is correct");
                             // Request location permission
                             requestLocationPermission();
