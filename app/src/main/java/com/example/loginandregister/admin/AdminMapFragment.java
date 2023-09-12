@@ -1,14 +1,10 @@
 package com.example.loginandregister.admin;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -19,16 +15,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.loginandregister.R;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,23 +66,26 @@ public class AdminMapFragment extends Fragment {
                 String username = preferences2.getString("ProfileUsername", "");
 
                 reference = database.getReference("Database");
+
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String bar = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                        String bar = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
                         if ("Looc".equals(bar)) { // Compare strings using .equals()
-                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
+                            Double lat = snapshot.child("Barangay").child("Looc").child("Map").child("Latitude").getValue(Double.class);
+                            Double longi = snapshot.child("Barangay").child("Looc").child("Map").child("Longitude").getValue(Double.class);
 
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 15.3f;
+                                float zoomLevel = 16.3f;
                                 googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
+
+                                onMapLoaded();
                             }
                         }
                     }
@@ -111,8 +106,10 @@ public class AdminMapFragment extends Fragment {
                         // Do nothing when clicked on map, effectively disabling any action
                     }
                 });
+
             }
         });
+
         return view;
     }
 
@@ -161,6 +158,8 @@ public class AdminMapFragment extends Fragment {
 
             googleMap.clear();
             googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(adminLocation));
         }
     }
 

@@ -105,6 +105,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_NULL) {
                     // Toggle the edit mode when the Enter key is pressed
                     toggleEditMode();
+
                     return true;
                 }
                 return false;
@@ -145,6 +146,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
 
         if (isEditMode) {
             // Check if the selected date is today or a future date
+
             if (!selectedDate.isBefore(LocalDate.now())) {
                 // Enter edit mode
                 timeTextView.setEnabled(true);
@@ -166,15 +168,25 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             editTimeImageView.setImageResource(R.drawable.ic_edit); // Change back to edit icon
             if (!timeTextView.getText().toString().isEmpty()) {
                 dayTimeMap.put(selectedDate, timeTextView.getText().toString());
+
+                reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule");
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String day = dayTextView.getText().toString();
+                        String time = timeTextView.getText().toString();
+                        reference.child(day).setValue(time);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
-            String day = dayTextView.getText().toString();
-            String time = timeTextView.getText().toString();
-
-
-            reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule").child(day);
-            reference.setValue(time);
         }
+
     }
 
     private void initWidgets(View view) {
