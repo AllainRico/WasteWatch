@@ -52,9 +52,6 @@ public class AdminMapFragment extends Fragment {
 
         initWidgets(view);
 
-//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
-//        getAdminLastLocation();
-
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.adminMap);
 
@@ -78,7 +75,7 @@ public class AdminMapFragment extends Fragment {
 
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 16.3f;
+                                float zoomLevel = 15.3f;
                                 googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
@@ -94,7 +91,7 @@ public class AdminMapFragment extends Fragment {
 
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 16.3f;
+                                float zoomLevel = 15.3f;
                                 googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
@@ -130,25 +127,6 @@ public class AdminMapFragment extends Fragment {
         return view;
     }
 
-//    private void getAdminLastLocation() {
-//        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
-//            return;
-//        }
-//        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-//            task.addOnSuccessListener(new OnSuccessListener<Location>() {
-//                @Override
-//                public void onSuccess(Location location) {
-//                    if (location != null){
-//                        adminCurrentLocation = location;
-//
-//                        SupportMapFragment supportMapFragment = (SupportMapFragment)
-//                                getChildFragmentManager().findFragmentById(R.id.adminMap);
-//                    }
-//                }
-//            });
-//    }
-
     public void displayAdminLocation() {
         if (googleMap != null) {
             //Temp
@@ -160,14 +138,6 @@ public class AdminMapFragment extends Fragment {
             googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
         }
     }
-
-//    public void updateAdminLocation(double latitude, double longitude) {
-//        adminLatitude = latitude;
-//        adminLongitude = longitude;
-//
-//        googleMap.clear();
-//        displayAdminLocation();
-//    }
 
     public void updateAdminLocation(double latitude, double longitude) {
         if (googleMap != null) {
