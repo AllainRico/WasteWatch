@@ -56,8 +56,8 @@ public class AdminMapFragment extends Fragment {
             public void onMapReady(GoogleMap map) {
                 googleMap = map;
 
-                SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
-                String username = preferences2.getString("ProfileUsername", "");
+                SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+                String username = preferences2.getString("adminFragment", "");
 
                 reference = database.getReference("Database");
 
@@ -79,7 +79,23 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                                onMapLoaded();
+
+                            }
+                        }else   if ("Basak".equals(bar)) { // Compare strings using .equals()
+                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
+                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
+
+                            if (lat != null && longi != null) {
+                                LatLng brgyMap = new LatLng(lat, longi);
+                                float zoomLevel = 16.3f;
+                                googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+
+                                googleMap.getUiSettings().setZoomControlsEnabled(false);
+                                googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                                googleMap.getUiSettings().setAllGesturesEnabled(false);
+
+
                             }
                         }
                     }
@@ -90,6 +106,7 @@ public class AdminMapFragment extends Fragment {
                     }
                 });
 
+                onMapLoaded();
 
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override

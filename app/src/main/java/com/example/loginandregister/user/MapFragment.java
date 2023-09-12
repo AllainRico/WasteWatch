@@ -72,6 +72,7 @@
                                         googleMap.getUiSettings().setZoomControlsEnabled(false);
                                         googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                         googleMap.getUiSettings().setAllGesturesEnabled(false);
+                                        onMapLoaded();
                                     }
                                 }else  if ("Basak".equals(bar)) { // Compare strings using .equals()
                                     Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
@@ -86,6 +87,7 @@
                                         googleMap.getUiSettings().setZoomControlsEnabled(false);
                                         googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                         googleMap.getUiSettings().setAllGesturesEnabled(false);
+                                        onMapLoaded();
                                     }
                                 }
                             }
@@ -96,7 +98,7 @@
                             }
                         });
 
-                        onMapLoaded();
+
                         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                             @Override
                             public void onMapClick(LatLng latLng) {
