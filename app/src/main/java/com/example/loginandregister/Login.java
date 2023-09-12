@@ -61,7 +61,6 @@ public class Login extends AppCompatActivity {
 
         initWidgets();
 
-        //internet
         broadcastReceiver = new InternetReceiver();
         InternetStatus();
 
@@ -217,14 +216,10 @@ public class Login extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if ("admin".equals(username) && snapshot.child("collectors").child("admin").exists()) {
-                    //Log.d("LoginActivity", "Admin login detected");
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                         if(adminPasswordFromDB.equals(password)) {
-                            // Admin login successful
-                            //Log.d("LoginActivity", "Admin password is correct");
-                            // Request location permission
-                            requestLocationPermission();
-                            //showLocationPermissionDeniedDialog();
+
+//                            requestLocationPermission();
 
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
                             adminIntent.putExtra("isOnline", true); // Set isOnline to true
@@ -266,12 +261,10 @@ public class Login extends AppCompatActivity {
                         finish();
                         editTextPassword.setError(null);
                     } else {
-                        // Incorrect user password
                         editTextPassword.setError("Invalid password");
                         updateToggleMargin(18);
                     }
                 } else {
-                    // User doesn't exist
                     editTextEmail.setError("User doesn't exist");
                 }
             }
@@ -286,17 +279,16 @@ public class Login extends AppCompatActivity {
 
     private void requestLocationPermission() {
         Log.d("LocationPermission", "Requesting location permission");
-        // Request location permission
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 LOCATION_PERMISSION_REQUEST_CODE);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             Log.d("LocationPermission", "Location permission request result received.");
-            // Log grantResults here to see what it contains
             for (int result : grantResults) {
                 Log.d("LocationPermission", "Grant Result: " + result);
             }
@@ -307,8 +299,6 @@ public class Login extends AppCompatActivity {
                 // Log success here
                 Log.d("LocationPermission", "Location permission granted");
             } else {
-                // Location permission denied
-                // Log denial here
                 Log.d("LocationPermission", "Location permission denied");
                 showLocationPermissionDeniedDialog();
             }
@@ -329,7 +319,6 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(Login.this, "Location is needed", Toast.LENGTH_SHORT).show();
-                        //Intent intent = new Intent(Login.this, Login.class);
                     }
                 })
                 .create()
@@ -387,8 +376,6 @@ public class Login extends AppCompatActivity {
         return Math.round(dp * density);
     }
 
-
-    //Hide the Navigation Bar Method
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

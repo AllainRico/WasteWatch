@@ -17,6 +17,9 @@
     import android.widget.Toast;
 
     import com.google.android.gms.location.FusedLocationProviderClient;
+    import com.google.android.gms.location.LocationCallback;
+    import com.google.android.gms.location.LocationRequest;
+    import com.google.android.gms.location.LocationResult;
     import com.google.android.gms.location.LocationServices;
 
     import com.example.loginandregister.R;
@@ -33,13 +36,13 @@
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            //setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_admin_main);
 
             // Retrieve the isOnline value from the Intent
             isOnline = getIntent().getBooleanExtra("isOnline", false);
 
             if (isLocationPermissionGranted()) {
-                Log.d("AdminLocation", "Initializing location service");
+                //Log.d("AdminLocation", "Initializing location service");
                 initializeLocationService();
             } else {
                 requestLocationPermission();
@@ -73,20 +76,18 @@
                 } else if (itemId == R.id.profile) {
                     replaceAdminFragment(new AdminReportFragment());
                 }
-
                 return true;
             });
 
-            if (isOnline) {
-                // Access GPS here
-                // You can use location services because the user is online
-            } else {
-                // User is not online, handle this case accordingly
-                // You might want to show a message or restrict access to GPS features
-            }
+//            if (isOnline) {
+//                // Access GPS here
+//                // You can use location services because the user is online
+//            } else {
+//                // User is not online, handle this case accordingly
+//                // You might want to show a message or restrict access to GPS features
+//            }
         }
 
-        // Check if the location permission is granted
         private boolean isLocationPermissionGranted() {
             return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED;
@@ -118,7 +119,7 @@
             }
         }
 
-        // Initialize location service
+         //Initialize location service
         private void initializeLocationService() {
             if (isLocationPermissionGranted()) {
 
@@ -139,10 +140,15 @@
                                         Log.d("AdminLocation", "Latitude: " + adminLatitude);
                                         Log.d("AdminLocation", "Longitude: " + adminLongitude);
 
-                                        // Pass the adminLatitude and adminLongitude to your AdminMapFragment to display on the map
                                         AdminMapFragment adminMapFragment = (AdminMapFragment) getSupportFragmentManager()
-                                                .findFragmentById(R.id.map);
-                                     //   adminMapFragment.updateAdminLocation(adminLatitude, adminLongitude);
+                                                .findFragmentById(R.id.adminMap);
+                                        if (adminMapFragment != null) {
+                                            adminMapFragment.updateAdminLocation(adminLatitude,adminLongitude);
+                                        }
+                                        else{
+                                            Log.e("AdminMainActivity", "AdminMapFragment not found");
+                                        }
+
                                     } else {
                                         Toast.makeText(AdminMainActivity.this, "Location is not available", Toast.LENGTH_SHORT).show();
 
@@ -150,13 +156,13 @@
                                         double defaultLongitude = 123.946517;
 
                                         AdminMapFragment adminMapFragment = (AdminMapFragment) getSupportFragmentManager()
-                                                .findFragmentById(R.id.map);
+                                                .findFragmentById(R.id.adminMap);
 
                                         if (adminMapFragment != null) {
-                                        //    adminMapFragment.updateAdminLocation(defaultLatitude, defaultLongitude);
-                                        } else {
-                                            // Handle the case where the fragment is null
-                                            Toast.makeText(AdminMainActivity.this, "Map fragment not found", Toast.LENGTH_SHORT).show();
+                                            adminMapFragment.updateAdminLocation(defaultLatitude,defaultLongitude);
+                                        }
+                                        else {
+                                            Log.e("AdminMainActivity", "AdminMapFragment not found");
                                         }
                                     }
                                 }
@@ -169,15 +175,12 @@
             }
         }
 
-
-
         private void showLocationPermissionDeniedDialog() {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("WasteWatch requires location access to proceed.")
                     .setPositiveButton("Grant Permission", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            // Request location permission again
                             requestLocationPermission();
                         }
                     })

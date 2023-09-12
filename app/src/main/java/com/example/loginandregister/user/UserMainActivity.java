@@ -20,7 +20,7 @@ public class UserMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         // Create a NotificationManager instance
         ScheduleNotificationManager notificationManager = new ScheduleNotificationManager(this);
@@ -45,7 +45,6 @@ public class UserMainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //Fragment shown first at start
         replaceUserFragment(new HomeFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {

@@ -33,6 +33,7 @@
 
             private ProgressBar progressBar;
             private ImageView mapPlaceholder;
+            private GoogleMap googleMap;
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference reference;
 
@@ -44,12 +45,14 @@
 
                 progressBar = view.findViewById(R.id.progressBar);
                 mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
+
                 SupportMapFragment supportMapFragment = (SupportMapFragment)
-                        getChildFragmentManager().findFragmentById(R.id.map);
+                        getChildFragmentManager().findFragmentById(R.id.userMap);
 
                 supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
-                    public void onMapReady(GoogleMap googleMap) {
+                    public void onMapReady(GoogleMap map) {
+                        googleMap = map;
 
                         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
                         String username = preferences2.getString("ProfileUsername", "");
@@ -86,19 +89,7 @@
                         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                             @Override
                             public void onMapClick(LatLng latLng) {
-//                                // When clicked on map
-//                                // Initialize marker options
-//                                MarkerOptions markerOptions=new MarkerOptions();
-//                                // Set position of marker
-//                                markerOptions.position(latLng);
-//                                // Set title of marker
-//                                markerOptions.title(latLng.latitude+" : "+latLng.longitude);
-//                                // Remove all marker
-//                                googleMap.clear();
-//                                // Animating to zoom the marker
-//                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
-//                                // Add marker on map
-//                                googleMap.addMarker(markerOptions);
+                                // Do nothing when clicked on map, effectively disabling any action
                             }
                         });
                     }

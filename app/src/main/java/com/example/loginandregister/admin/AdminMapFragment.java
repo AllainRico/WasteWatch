@@ -1,10 +1,14 @@
 package com.example.loginandregister.admin;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -15,12 +19,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.loginandregister.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,10 +40,14 @@ public class AdminMapFragment extends Fragment {
 
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
-
     private GoogleMap googleMap;
-    private double adminLatitude;
-    private double adminLongitude;
+
+//    private final int FINE_PERMISSION_CODE = 1;
+//    Location adminCurrentLocation;
+//    FusedLocationProviderClient fusedLocationProviderClient;
+
+    public double adminLatitude;
+    public double adminLongitude;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
 
@@ -45,11 +57,13 @@ public class AdminMapFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_map, container, false);
 
-        progressBar = view.findViewById(R.id.progressBar);
-        mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
+        initWidgets(view);
 
-        SupportMapFragment supportMapFragment=(SupportMapFragment)
-                getChildFragmentManager().findFragmentById(R.id.map);
+//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+//        getAdminLastLocation();
+
+        SupportMapFragment supportMapFragment = (SupportMapFragment)
+                getChildFragmentManager().findFragmentById(R.id.adminMap);
 
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -60,7 +74,6 @@ public class AdminMapFragment extends Fragment {
                 String username = preferences2.getString("ProfileUsername", "");
 
                 reference = database.getReference("Database");
-
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -78,8 +91,6 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                                onMapLoaded();
                             }
                         }
                     }
@@ -90,23 +101,59 @@ public class AdminMapFragment extends Fragment {
                     }
                 });
 
+                displayAdminLocation();
+
+                onMapLoaded();
+
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
                         // Do nothing when clicked on map, effectively disabling any action
                     }
                 });
-
             }
         });
-
         return view;
     }
-    public void onMapLoaded() {
-        progressBar.setVisibility(View.GONE);
-        mapPlaceholder.setVisibility(View.GONE);
+
+//    private void getAdminLastLocation() {
+//        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
+//            return;
+//        }
+//        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+//            task.addOnSuccessListener(new OnSuccessListener<Location>() {
+//                @Override
+//                public void onSuccess(Location location) {
+//                    if (location != null){
+//                        adminCurrentLocation = location;
+//
+//                        SupportMapFragment supportMapFragment = (SupportMapFragment)
+//                                getChildFragmentManager().findFragmentById(R.id.adminMap);
+//                    }
+//                }
+//            });
+//    }
+
+    public void displayAdminLocation() {
+        if (googleMap != null) {
+            //Temp
+            adminLatitude = 10.305627;
+            adminLongitude = 123.946517;
+
+            LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
+
+            googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
+        }
     }
 
+//    public void updateAdminLocation(double latitude, double longitude) {
+//        adminLatitude = latitude;
+//        adminLongitude = longitude;
+//
+//        googleMap.clear();
+//        displayAdminLocation();
+//    }
 
     public void updateAdminLocation(double latitude, double longitude) {
         if (googleMap != null) {
@@ -114,11 +161,16 @@ public class AdminMapFragment extends Fragment {
 
             googleMap.clear();
             googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(adminLocation));
         }
     }
 
-
+    private void initWidgets(View view) {
+        progressBar = view.findViewById(R.id.progressBar);
+        mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
+    }
+    public void onMapLoaded() {
+        progressBar.setVisibility(View.GONE);
+        mapPlaceholder.setVisibility(View.GONE);
+    }
 
 }
