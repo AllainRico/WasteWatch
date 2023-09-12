@@ -64,14 +64,14 @@ public class AdminMapFragment extends Fragment {
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String bar = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                        String bar = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
                         if ("Looc".equals(bar)) { // Compare strings using .equals()
-                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
+                            Double lat = snapshot.child("Barangay").child("Looc").child("Map").child("Latitude").getValue(Double.class);
+                            Double longi = snapshot.child("Barangay").child("Looc").child("Map").child("Longitude").getValue(Double.class);
 
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 15.3f;
+                                float zoomLevel = 16.3f;
                                 googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
@@ -89,6 +89,7 @@ public class AdminMapFragment extends Fragment {
 
                     }
                 });
+
 
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override

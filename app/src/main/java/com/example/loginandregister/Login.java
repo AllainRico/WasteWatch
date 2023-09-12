@@ -238,6 +238,27 @@ public class Login extends AppCompatActivity {
                             finish();
                             editTextPassword.setError(null);
                         }
+                }else if("basakAdmin".equals(username) && snapshot.child("collectors").child("basakAdmin").exists()){
+                    String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
+                    if(adminPasswordFromDB.equals(password)){
+                        // Admin login successful
+                        // Admin login successful
+                        //Log.d("LoginActivity", "Admin password is correct");
+                        // Request location permission
+                        requestLocationPermission();
+                        //showLocationPermissionDeniedDialog();
+
+                        Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
+                        adminIntent.putExtra("isOnline", true); // Set isOnline to true
+
+                        SharedPreferences preferences2 = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
+                        String username1 = snapshot.child("collectors").child(username).child("username").getValue(String.class);
+                        preferences2.edit().putString("adminFragment", username1).apply();
+
+                        startActivity(adminIntent);
+                        finish();
+                        editTextPassword.setError(null);
+                    }
                 }
                 else if (snapshot.child("users").child(username).exists()) {
 

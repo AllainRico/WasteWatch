@@ -73,6 +73,20 @@
                                         googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                         googleMap.getUiSettings().setAllGesturesEnabled(false);
                                     }
+                                }else  if ("Basak".equals(bar)) { // Compare strings using .equals()
+                                    Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
+                                    Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
+
+                                    if (lat != null && longi != null) {
+                                        LatLng brgyMap = new LatLng(lat, longi);
+                                        googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
+                                        float zoomLevel = 15.3f;
+                                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+
+                                        googleMap.getUiSettings().setZoomControlsEnabled(false);
+                                        googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                                        googleMap.getUiSettings().setAllGesturesEnabled(false);
+                                    }
                                 }
                             }
 
