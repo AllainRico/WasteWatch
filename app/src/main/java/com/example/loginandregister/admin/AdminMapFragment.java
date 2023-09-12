@@ -76,7 +76,7 @@ public class AdminMapFragment extends Fragment {
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
                                 float zoomLevel = 15.3f;
-                                googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
+                                //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -92,7 +92,7 @@ public class AdminMapFragment extends Fragment {
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
                                 float zoomLevel = 15.3f;
-                                googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
+                                //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -130,8 +130,8 @@ public class AdminMapFragment extends Fragment {
     public void displayAdminLocation() {
         if (googleMap != null) {
             //Temp
-            adminLatitude = 10.305627;
-            adminLongitude = 123.946517;
+//            adminLatitude = 10.305627;
+//            adminLongitude = 123.946517;
 
             LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
 

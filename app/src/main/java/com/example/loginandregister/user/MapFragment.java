@@ -68,8 +68,8 @@
 
                                     if (lat != null && longi != null) {
                                         LatLng brgyMap = new LatLng(lat, longi);
-                                        googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                         float zoomLevel = 15.3f;
+                                        //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
                                         googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -83,8 +83,8 @@
 
                                     if (lat != null && longi != null) {
                                         LatLng brgyMap = new LatLng(lat, longi);
-                                        googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                         float zoomLevel = 15.3f;
+                                        //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
                                         googleMap.getUiSettings().setZoomControlsEnabled(false);
