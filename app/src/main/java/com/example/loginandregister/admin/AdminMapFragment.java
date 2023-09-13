@@ -32,15 +32,9 @@ public class AdminMapFragment extends Fragment {
 
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
-
     private GoogleMap googleMap;
-
-//    private final int FINE_PERMISSION_CODE = 1;
-//    Location adminCurrentLocation;
-//    FusedLocationProviderClient fusedLocationProviderClient;
-
-    public double adminLatitude;
-    public double adminLongitude;
+    double adminLatitude = LocationData.getInstance().getAdminLatitude();
+    double adminLongitude = LocationData.getInstance().getAdminLongitude();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
 
@@ -83,7 +77,9 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
+                                displayAdminLocation();
 
+                                onMapLoaded();
                             }
                         }else   if ("Basak".equals(bar)) { // Compare strings using .equals()
                             Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
@@ -92,27 +88,24 @@ public class AdminMapFragment extends Fragment {
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
                                 float zoomLevel = 15.3f;
-                                //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
+
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
+                                displayAdminLocation();
 
+                                onMapLoaded();
                             }
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
-
-                displayAdminLocation();
-
-                onMapLoaded();
 
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
@@ -123,15 +116,11 @@ public class AdminMapFragment extends Fragment {
 
             }
         });
-
         return view;
     }
 
     public void displayAdminLocation() {
         if (googleMap != null) {
-            //Temp
-//            adminLatitude = 10.305627;
-//            adminLongitude = 123.946517;
 
             LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
 
@@ -139,18 +128,18 @@ public class AdminMapFragment extends Fragment {
         }
     }
 
-    public void updateAdminLocation(double latitude, double longitude) {
-        if (googleMap != null) {
-            LatLng adminLocation = new LatLng(latitude, longitude);
+//    public void updateAdminLocation(double latitude, double longitude) {
+//        if (googleMap != null) {
+//            LatLng adminLocation = new LatLng(latitude, longitude);
+//
+//            googleMap.clear();
+//            googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
+//
+//            googleMap.moveCamera(CameraUpdateFactory.newLatLng(adminLocation));
+//        }
+//    }
 
-            googleMap.clear();
-            googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(adminLocation));
-        }
-    }
-
-    private void initWidgets(View view) {
+    private void initWidgets(@NonNull View view) {
         progressBar = view.findViewById(R.id.progressBar);
         mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
     }

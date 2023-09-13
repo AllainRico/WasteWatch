@@ -6,7 +6,7 @@
     tools:context=".admin.AdminMapFragment"
     android:id="@+id/fragment_admin_map">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/adminMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/placeholdermap"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/map_place_holder"/>
 
     <ProgressBar
         android:id="@+id/progressBar"

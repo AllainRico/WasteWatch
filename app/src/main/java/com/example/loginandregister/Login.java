@@ -102,7 +102,6 @@ public class Login extends AppCompatActivity {
                     updateToggleMargin(4);
                 }
             }
-
             @Override
             public void afterTextChanged(Editable editable) {}
         });
@@ -217,17 +216,14 @@ public class Login extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if ("admin".equals(username) && snapshot.child("collectors").child("admin").exists()) {
-                    //Log.d("LoginActivity", "Admin login detected");
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                         if(adminPasswordFromDB.equals(password)) {
-                            // Admin login successful
-                            // Admin login successful
-                            //Log.d("LoginActivity", "Admin password is correct");
+
                             // Request location permission
                             requestLocationPermission();
-                            //showLocationPermissionDeniedDialog();
 
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
+
                             adminIntent.putExtra("isOnline", true); // Set isOnline to true
 
                             SharedPreferences preferences2 = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
@@ -241,12 +237,9 @@ public class Login extends AppCompatActivity {
                 }else if("basakAdmin".equals(username) && snapshot.child("collectors").child("basakAdmin").exists()){
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                     if(adminPasswordFromDB.equals(password)){
-                        // Admin login successful
-                        // Admin login successful
-                        //Log.d("LoginActivity", "Admin password is correct");
+
                         // Request location permission
                         requestLocationPermission();
-                        //showLocationPermissionDeniedDialog();
 
                         Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
                         adminIntent.putExtra("isOnline", true); // Set isOnline to true
@@ -297,7 +290,6 @@ public class Login extends AppCompatActivity {
                     editTextEmail.setError("User doesn't exist");
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Error: " + error.getMessage());
@@ -326,11 +318,8 @@ public class Login extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Location permission granted, admin can proceed
                 isOnline = true;
-                // Log success here
                 Log.d("LocationPermission", "Location permission granted");
             } else {
-                // Location permission denied
-                // Log denial here
                 Log.d("LocationPermission", "Location permission denied");
                 showLocationPermissionDeniedDialog();
             }
@@ -351,7 +340,6 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(Login.this, "Location is needed", Toast.LENGTH_SHORT).show();
-                        //Intent intent = new Intent(Login.this, Login.class);
                     }
                 })
                 .create()
@@ -363,25 +351,23 @@ public class Login extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_login_with, null);
         builder.setView(dialogView);
 
-        // Set the background and text color for the dialog
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        // Set the desired width of the dialog
-        int dialogWidth = getResources().getDimensionPixelSize(R.dimen.login_dialog_width); // Use a dimension resource
+        int dialogWidth = getResources().getDimensionPixelSize(R.dimen.login_dialog_width);
 
-        // Set the layout parameters for the dialog's root view
+
         dialogView.setLayoutParams(new ViewGroup.LayoutParams(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         ImageView btnGoogle = dialogView.findViewById(R.id.btnGoogle);
         ImageView btnFacebook = dialogView.findViewById(R.id.btnFacebook);
 
-        // Set the click listeners for the Google and Facebook buttons
+
         btnGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Handle Google login here
-                dialog.dismiss(); // Close the dialog after selection
+                dialog.dismiss();
             }
         });
 
@@ -409,8 +395,6 @@ public class Login extends AppCompatActivity {
         return Math.round(dp * density);
     }
 
-
-    //Hide the Navigation Bar Method
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

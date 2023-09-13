@@ -17,9 +17,6 @@
     import android.widget.Toast;
 
     import com.google.android.gms.location.FusedLocationProviderClient;
-    import com.google.android.gms.location.LocationCallback;
-    import com.google.android.gms.location.LocationRequest;
-    import com.google.android.gms.location.LocationResult;
     import com.google.android.gms.location.LocationServices;
 
     import com.example.loginandregister.R;
@@ -79,13 +76,14 @@
                 return true;
             });
 
-//            if (isOnline) {
-//                // Access GPS here
-//                // You can use location services because the user is online
-//            } else {
-//                // User is not online, handle this case accordingly
-//                // You might want to show a message or restrict access to GPS features
-//            }
+            if (isOnline) {
+                // Access GPS here
+                // You can use location services because the user is online
+            } else {
+                // User is not online, handle this case accordingly
+                // You might want to show a message or restrict access to GPS features
+                showLocationPermissionDeniedDialog();
+            }
         }
 
         private boolean isLocationPermissionGranted() {
@@ -93,7 +91,6 @@
                     == PackageManager.PERMISSION_GRANTED;
         }
 
-        // Request location permission
         private void requestLocationPermission() {
             Log.d("LocationPermission", "Requesting location permission");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -106,7 +103,6 @@
 
             if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
                 Log.d("LocationPermission", "Location permission request result received.");
-                // Log grantResults here to see what it contains
                 for (int result : grantResults) {
                     Log.d("LocationPermission", "Grant Result: " + result);
                 }
@@ -119,7 +115,6 @@
             }
         }
 
-         //Initialize location service
         private void initializeLocationService() {
             if (isLocationPermissionGranted()) {
 
@@ -137,33 +132,19 @@
                                         double adminLatitude = location.getLatitude();
                                         double adminLongitude = location.getLongitude();
 
+                                        LocationData.getInstance().setAdminLatitude(adminLatitude);
+                                        LocationData.getInstance().setAdminLongitude(adminLongitude);
+
                                         Log.d("AdminLocation", "Latitude: " + adminLatitude);
                                         Log.d("AdminLocation", "Longitude: " + adminLongitude);
-
-                                        AdminMapFragment adminMapFragment = (AdminMapFragment) getSupportFragmentManager()
-                                                .findFragmentById(R.id.adminMap);
-                                        if (adminMapFragment != null) {
-                                            adminMapFragment.updateAdminLocation(adminLatitude,adminLongitude);
-                                        }
-                                        else{
-                                            Log.e("AdminMainActivity", "AdminMapFragment not found");
-                                        }
-
                                     } else {
                                         Toast.makeText(AdminMainActivity.this, "Location is not available", Toast.LENGTH_SHORT).show();
 
                                         double defaultLatitude = 10.305627;
                                         double defaultLongitude = 123.946517;
 
-                                        AdminMapFragment adminMapFragment = (AdminMapFragment) getSupportFragmentManager()
-                                                .findFragmentById(R.id.adminMap);
-
-                                        if (adminMapFragment != null) {
-                                            adminMapFragment.updateAdminLocation(defaultLatitude,defaultLongitude);
-                                        }
-                                        else {
-                                            Log.e("AdminMainActivity", "AdminMapFragment not found");
-                                        }
+                                        LocationData.getInstance().setAdminLatitude(defaultLatitude);
+                                        LocationData.getInstance().setAdminLongitude(defaultLongitude);
                                     }
                                 }
                             });
