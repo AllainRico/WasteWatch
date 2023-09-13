@@ -1,6 +1,7 @@
 package com.example.loginandregister;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
@@ -39,6 +40,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class Login extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver = null;
@@ -215,7 +221,7 @@ public class Login extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if ("admin".equals(username) && snapshot.child("collectors").child("admin").exists()) {
+                if (username.toLowerCase().contains("admin") && snapshot.child("collectors").child(username).exists()) {
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                         if(adminPasswordFromDB.equals(password)) {
 
@@ -223,7 +229,6 @@ public class Login extends AppCompatActivity {
                             requestLocationPermission();
 
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
-
                             adminIntent.putExtra("isOnline", true); // Set isOnline to true
 
                             SharedPreferences preferences2 = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
@@ -234,24 +239,6 @@ public class Login extends AppCompatActivity {
                             finish();
                             editTextPassword.setError(null);
                         }
-                }else if("basakAdmin".equals(username) && snapshot.child("collectors").child("basakAdmin").exists()){
-                    String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
-                    if(adminPasswordFromDB.equals(password)){
-
-                        // Request location permission
-                        requestLocationPermission();
-
-                        Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
-                        adminIntent.putExtra("isOnline", true); // Set isOnline to true
-
-                        SharedPreferences preferences2 = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
-                        String username1 = snapshot.child("collectors").child(username).child("username").getValue(String.class);
-                        preferences2.edit().putString("adminFragment", username1).apply();
-
-                        startActivity(adminIntent);
-                        finish();
-                        editTextPassword.setError(null);
-                    }
                 }
                 else if (snapshot.child("users").child(username).exists()) {
 
@@ -290,6 +277,7 @@ public class Login extends AppCompatActivity {
                     editTextEmail.setError("User doesn't exist");
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Error: " + error.getMessage());
@@ -354,9 +342,10 @@ public class Login extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        int dialogWidth = getResources().getDimensionPixelSize(R.dimen.login_dialog_width);
+        // Set the desired width of the dialog
+        int dialogWidth = getResources().getDimensionPixelSize(R.dimen.login_dialog_width); // Use a dimension resource
 
-
+        // Set the layout parameters for the dialog's root view
         dialogView.setLayoutParams(new ViewGroup.LayoutParams(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         ImageView btnGoogle = dialogView.findViewById(R.id.btnGoogle);
