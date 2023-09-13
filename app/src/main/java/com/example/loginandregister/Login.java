@@ -1,6 +1,7 @@
 package com.example.loginandregister;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
@@ -39,6 +40,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class Login extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver = null;
@@ -216,7 +222,7 @@ public class Login extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if ("admin".equals(username) && snapshot.child("collectors").child("admin").exists()) {
+                if (username.toLowerCase().contains("admin") && snapshot.child("collectors").child(username).exists()) {
                     //Log.d("LoginActivity", "Admin login detected");
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                         if(adminPasswordFromDB.equals(password)) {
@@ -238,27 +244,6 @@ public class Login extends AppCompatActivity {
                             finish();
                             editTextPassword.setError(null);
                         }
-                }else if("basakAdmin".equals(username) && snapshot.child("collectors").child("basakAdmin").exists()){
-                    String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
-                    if(adminPasswordFromDB.equals(password)){
-                        // Admin login successful
-                        // Admin login successful
-                        //Log.d("LoginActivity", "Admin password is correct");
-                        // Request location permission
-                        requestLocationPermission();
-                        //showLocationPermissionDeniedDialog();
-
-                        Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
-                        adminIntent.putExtra("isOnline", true); // Set isOnline to true
-
-                        SharedPreferences preferences2 = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
-                        String username1 = snapshot.child("collectors").child(username).child("username").getValue(String.class);
-                        preferences2.edit().putString("adminFragment", username1).apply();
-
-                        startActivity(adminIntent);
-                        finish();
-                        editTextPassword.setError(null);
-                    }
                 }
                 else if (snapshot.child("users").child(username).exists()) {
 
