@@ -79,6 +79,7 @@ public class AdminMapFragment extends Fragment {
                                 //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
+
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
