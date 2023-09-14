@@ -50,4 +50,6 @@
     <string name="yes">Yes</string>
     <string name="time">Time</string>
     <string name="map_place_holder">Map Place holder</string>
+    <string name="add_garbage_bin">Add Garbage Bin</string>
+    <string name="bin_status">Bin Status</string>
 </resources>

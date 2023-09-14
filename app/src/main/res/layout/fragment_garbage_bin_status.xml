@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".garbageBin.GarbageBinStatus"
+    android:id="@+id/fragment_garbage_bin_status"
     android:paddingRight="30dp"
     android:paddingLeft="30dp">
 
@@ -22,7 +23,7 @@
             android:id="@+id/binStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bin Status"
+            android:text="@string/bin_status"
             android:textSize="32dp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -42,10 +43,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="100dp"
             android:backgroundTint="@color/background_green"
             android:src="@drawable/ic_add"
-            android:contentDescription="Add Garbage Bin"/>
+            android:contentDescription="@string/add_garbage_bin"/>
 
     </RelativeLayout>
 

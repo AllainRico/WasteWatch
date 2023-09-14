@@ -3,6 +3,7 @@ package com.example.loginandregister.garbageBin;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +33,19 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         GarbageBinStatusModel item = binStatusModel.get(position);
         holder.bin.setText(item.getBin());
         holder.place.setText(item.getPlace());
-        holder.fillLevel.setText(item.getStatus());
+
+        int fillLevel = item.getStatus();
+
+        int fillLevelImageResource = 0;
+        if (fillLevel == 0) {
+            fillLevelImageResource = R.drawable.ic_error; // empty
+        } else if (fillLevel >= 1 && fillLevel <= 49) {
+            fillLevelImageResource = R.drawable.ic_error; // half-full
+        } else {
+            fillLevelImageResource = R.drawable.ic_error; // full
+        }
+
+        holder.fillLevel.setImageResource(fillLevelImageResource);
     }
 
     @Override
@@ -46,7 +59,8 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView bin, place, fillLevel;
+        TextView bin, place;
+        ImageView fillLevel;
 
         ViewHolder(View view){
             super(view);

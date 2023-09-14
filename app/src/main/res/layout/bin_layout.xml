@@ -36,7 +36,6 @@
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:padding="10dp"
-            android:src="@drawable/ic_error"
             app:tint="@color/logo_green" />
 
     </RelativeLayout>
