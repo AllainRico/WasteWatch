@@ -11,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.loginandregister.R;
+import com.example.loginandregister.garbageBin.GarbageBinStatus;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AdminMapFragment extends Fragment {
 
+    private Button garbageBinStatusButton;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
     private GoogleMap googleMap;
@@ -45,6 +48,18 @@ public class AdminMapFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_map, container, false);
 
         initWidgets(view);
+
+        garbageBinStatusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GarbageBinStatus garbageBinStatusFragment = new GarbageBinStatus();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameLayout, garbageBinStatusFragment)
+                        .addToBackStack(null) // This allows the user to navigate back to the previous fragment
+                        .commit();
+            }
+        });
 
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.adminMap);
@@ -141,6 +156,7 @@ public class AdminMapFragment extends Fragment {
 //    }
 
     private void initWidgets(@NonNull View view) {
+        garbageBinStatusButton = view.findViewById(R.id.garbageBinStatusButton);
         progressBar = view.findViewById(R.id.progressBar);
         mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
     }
