@@ -11,6 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:background="@drawable/button"
+        android:textColor="@color/white"
+        android:padding="5dp"
         android:text="Garbage Bin Status"/>
 
     <androidx.fragment.app.FragmentContainerView

@@ -17,6 +17,12 @@
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/binStatus"
+            android:textColor="@color/white"
+            android:background="@drawable/button"
+            android:padding="5dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="115dp"
             android:text="Back"/>
 
         <TextView

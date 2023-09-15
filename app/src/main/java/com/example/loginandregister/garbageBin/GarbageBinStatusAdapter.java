@@ -37,12 +37,13 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         int fillLevel = item.getStatus();
 
         int fillLevelImageResource = 0;
+
         if (fillLevel == 0) {
-            fillLevelImageResource = R.drawable.ic_error; // empty
+            fillLevelImageResource = R.drawable.empty; // empty
         } else if (fillLevel >= 1 && fillLevel <= 49) {
-            fillLevelImageResource = R.drawable.ic_error; // half-full
+            fillLevelImageResource = R.drawable.half; // half-full
         } else {
-            fillLevelImageResource = R.drawable.ic_error; // full
+            fillLevelImageResource = R.drawable.full; // full
         }
 
         holder.fillLevel.setImageResource(fillLevelImageResource);
