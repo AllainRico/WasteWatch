@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.LoginAndRegister" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
 </resources>

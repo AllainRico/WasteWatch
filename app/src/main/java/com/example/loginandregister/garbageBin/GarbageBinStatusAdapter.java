@@ -34,9 +34,9 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         holder.bin.setText(item.getBin());
         holder.place.setText(item.getPlace());
 
-        int fillLevel = item.getStatus();
+        int fillLevel = item.getStatus(); //fill Level to image
 
-        int fillLevelImageResource = 0;
+        int fillLevelImageResource;
 
         if (fillLevel == 0) {
             fillLevelImageResource = R.drawable.empty; // empty

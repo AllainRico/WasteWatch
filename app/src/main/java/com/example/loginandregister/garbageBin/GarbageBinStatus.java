@@ -41,7 +41,7 @@ public class GarbageBinStatus extends Fragment {
         GarbageBinStatusModel model = new GarbageBinStatusModel();
         model.setBin("Test Bin");
         model.setPlace("Test Place");
-        model.setStatus(100);
+        model.setStatus(0);
 
         garbageBinList.add(model);
 
