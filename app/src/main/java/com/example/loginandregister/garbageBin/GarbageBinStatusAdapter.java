@@ -1,5 +1,6 @@
 package com.example.loginandregister.garbageBin;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +40,11 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         int fillLevelImageResource;
 
         if (fillLevel == 0) {
-            fillLevelImageResource = R.drawable.empty; // empty
+            fillLevelImageResource = R.drawable.empty;
         } else if (fillLevel >= 1 && fillLevel <= 49) {
-            fillLevelImageResource = R.drawable.half; // half-full
+            fillLevelImageResource = R.drawable.half;
         } else {
-            fillLevelImageResource = R.drawable.full; // full
+            fillLevelImageResource = R.drawable.full;
         }
 
         holder.fillLevel.setImageResource(fillLevelImageResource);
@@ -55,10 +56,19 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
     }
 
     public void setBin(List<GarbageBinStatusModel> binStatusModel){
-        this.binStatusModel = binStatusModel;
+            this.binStatusModel = binStatusModel;
         notifyDataSetChanged();
     }
-
+    public void editItem(int position) {
+        GarbageBinStatusModel item = binStatusModel.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putString("Bin", item.getBin());
+        bundle.putString("Place", item.getPlace());
+        bundle.putInt("Status", item.getStatus());
+        AddNewGarbageBin fragment = new AddNewGarbageBin();
+        fragment.setArguments(bundle);
+        fragment.show(fragment.getParentFragmentManager(), AddNewGarbageBin.TAG);
+    }
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView bin, place;
         ImageView fillLevel;

@@ -1,5 +1,6 @@
 package com.example.loginandregister.garbageBin;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,14 +13,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.loginandregister.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
-public class GarbageBinStatus extends Fragment {
+public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
     private Button backButton;
+    private FloatingActionButton addGarbageBin;
     private RecyclerView garbageBinRecyclerView;
     private GarbageBinStatusAdapter garbageBinAdapter;
     private List<GarbageBinStatusModel> garbageBinList;
@@ -37,17 +42,40 @@ public class GarbageBinStatus extends Fragment {
         garbageBinAdapter = new GarbageBinStatusAdapter(this);
         garbageBinRecyclerView.setAdapter(garbageBinAdapter);
 
+        //garbageBinList = db.getAllTask();
+        Collections.reverse(garbageBinList);
+        garbageBinAdapter.setBin(garbageBinList);
+
         //dummy
         GarbageBinStatusModel model = new GarbageBinStatusModel();
         model.setBin("Test Bin");
         model.setPlace("Test Place");
         model.setStatus(0);
 
+        GarbageBinStatusModel model2 = new GarbageBinStatusModel();
+        model.setBin("Test Bin");
+        model.setPlace("Test Place");
+        model.setStatus(49);
+
+        GarbageBinStatusModel model3 = new GarbageBinStatusModel();
+        model.setBin("Test Bin");
+        model.setPlace("Test Place");
+        model.setStatus(100);
+
         garbageBinList.add(model);
+        garbageBinList.add(model2);
+        garbageBinList.add(model3);
 
         garbageBinAdapter.setBin(garbageBinList);
 
-        Button backButton = view.findViewById(R.id.backButton);
+        addGarbageBin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddNewGarbageBin.newInstance().show(getParentFragmentManager(), AddNewGarbageBin.TAG);
+            }
+        });
+
+        backButton = view.findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,6 +90,15 @@ public class GarbageBinStatus extends Fragment {
     private void initWidgets(View view){
         backButton = view.findViewById(R.id.backButton);
         garbageBinRecyclerView = view.findViewById(R.id.garbageBinRecyclerView);
+        addGarbageBin = view.findViewById(R.id.addGarbageBin);
     }
 
+    @Override
+    public void handleDialogClose(DialogInterface dialog) {
+        //garbageBinList = db.getAllTask(); sa sqlite nasad ni 21:00
+
+        Collections.reverse(garbageBinList);
+        garbageBinAdapter.setBin(garbageBinList);
+        garbageBinAdapter.notifyDataSetChanged();
+    }
 }
