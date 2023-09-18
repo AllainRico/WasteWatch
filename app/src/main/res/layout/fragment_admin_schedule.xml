@@ -217,6 +217,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="8dp"
                     android:enabled="false"
+                    android:inputType="text"
+                    android:maxLines="1"
                     android:hint="@string/time"
                     android:textSize="16sp" />
 
@@ -227,6 +229,12 @@
                         android:id="@+id/edit_time"
                         android:src="@drawable/ic_edit"
                         app:tint="@color/text_dark_gray" />
+
+<!--                <Button-->
+<!--                    android:id="@+id/edit_time_button"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="48dp"-->
+<!--                    android:text="X"/>-->
 
             </LinearLayout>
 

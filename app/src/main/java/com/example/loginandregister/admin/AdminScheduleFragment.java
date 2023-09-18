@@ -46,9 +46,9 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     private RecyclerView calendarRecyclerView;
     private TextView dayTextView;
     private TextView barangayTextView;
-    private TextView timeTextView;
-    private EditText timeEditText;
+    private EditText timeTextView;
     private Button btnPrevious, btnNext;
+    //private Button btnEditTime;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
     private ImageView editTimeImageView;
@@ -99,7 +99,8 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
-        timeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        timeTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_NULL) {
@@ -112,10 +113,32 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
+//        btnEditTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule");
+//                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        String day = dayTextView.getText().toString();
+//                        String time = timeTextView.getText().toString();
+//                        reference.child(day).setValue(time);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//            }
+//        });
+
         editTimeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleEditMode();
+//              Toast.makeText(getContext(), "Testing with no Firebase", Toast.LENGTH_LONG).show();
+//              Toast.makeText(getActivity(), "Testing with no Firebase", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -146,12 +169,10 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
 
         if (isEditMode) {
             // Check if the selected date is today or a future date
-
             if (!selectedDate.isBefore(LocalDate.now())) {
                 // Enter edit mode
                 timeTextView.setEnabled(true);
                 timeTextView.requestFocus();
-
                 // Show the keyboard when entering edit mode
                 InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(timeTextView, InputMethodManager.SHOW_IMPLICIT);
@@ -162,31 +183,28 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
                 Toast.makeText(getActivity(), "Cannot edit past dates", Toast.LENGTH_SHORT).show();
             }
         } else {
-
             // Exit edit mode
             timeTextView.setEnabled(false);
             editTimeImageView.setImageResource(R.drawable.ic_edit); // Change back to edit icon
             if (!timeTextView.getText().toString().isEmpty()) {
                 dayTimeMap.put(selectedDate, timeTextView.getText().toString());
 
-                reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule");
-                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String day = dayTextView.getText().toString();
-                        String time = timeTextView.getText().toString();
-                        reference.child(day).setValue(time);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+//                reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule");
+//                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        String day = dayTextView.getText().toString();
+//                        String time = timeTextView.getText().toString();
+//                        reference.child(day).setValue(time);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
             }
-
         }
-
     }
 
     private void initWidgets(View view) {
@@ -198,7 +216,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         btnPrevious = view.findViewById(R.id.btnPrevious);
         btnNext = view.findViewById(R.id.btnNext);
         editTimeImageView = view.findViewById(R.id.edit_time);
-        timeEditText = view.findViewById(R.id.time);
+        //btnEditTime = view.findViewById(R.id.edit_time_button);
     }
 
     private void setMonthView() {
