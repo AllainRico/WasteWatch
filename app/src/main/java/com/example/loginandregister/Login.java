@@ -296,20 +296,17 @@ public class Login extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            Log.d("LocationPermission", "Location permission request result received.");
-            // Log grantResults here to see what it contains
-            for (int result : grantResults) {
-                Log.d("LocationPermission", "Grant Result: " + result);
-            }
-
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Location permission granted, admin can proceed
-                isOnline = true;
-                Log.d("LocationPermission", "Location permission granted");
-            } else {
-                Log.d("LocationPermission", "Location permission denied");
-                showLocationPermissionDeniedDialog();
+        if (!isFinishing()) {
+            if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+                // Handle permission results
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Location permission granted
+                    isOnline = true;
+                    Log.d("LocationPermission", "Location permission granted");
+                } else {
+                    Log.d("LocationPermission", "Location permission denied");
+                    showLocationPermissionDeniedDialog();
+                }
             }
         }
     }

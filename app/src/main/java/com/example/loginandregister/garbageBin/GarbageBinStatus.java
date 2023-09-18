@@ -53,14 +53,14 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         model.setStatus(0);
 
         GarbageBinStatusModel model2 = new GarbageBinStatusModel();
-        model.setBin("Test Bin");
-        model.setPlace("Test Place");
-        model.setStatus(49);
+        model2.setBin("Test Bin");
+        model2.setPlace("Test Place");
+        model2.setStatus(49);
 
         GarbageBinStatusModel model3 = new GarbageBinStatusModel();
-        model.setBin("Test Bin");
-        model.setPlace("Test Place");
-        model.setStatus(100);
+        model3.setBin("Test Bin");
+        model3.setPlace("Test Place");
+        model3.setStatus(90);
 
         garbageBinList.add(model);
         garbageBinList.add(model2);
