@@ -102,18 +102,20 @@ public class AdminReportFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ArrayList<String> iotdatastring = new ArrayList<>();
-                iotdatareference =  database.getReference("Database").child("Barangay").child(barrangayName).child("Bins");
+                iotdatareference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
                 iotdatareference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         iotdatastring.clear();
                             for(DataSnapshot snapshot1: snapshot.getChildren())
                             {
-                                iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
+                                String binName = snapshot1.getKey();
+                                iotdatastring.add(binName);
+                                //iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
                             }
                         Log.d("FirebaseData", String.valueOf(iotdatastring));
                         try {
-                            createPdf(barrangayName, currentDate);
+                            createPdf(barrangayName, currentDate, iotdatastring);
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }
@@ -186,9 +188,10 @@ public class AdminReportFragment extends Fragment {
     }
 
     //createpdf
-    private void createPdf(String barName, String currentDate) throws FileNotFoundException {
+    private void createPdf(String barName, String currentDate, ArrayList iotdatastring ) throws FileNotFoundException {
         String barangayName = barName;
         String date = currentDate;
+        ArrayList binsList = iotdatastring;
         //lets create a WasteWatchReports directory to hold all the reports
         File directory = new File(this.getActivity().getExternalFilesDir("/WasteWatchReports").getPath());
         if (!directory.exists()) {
@@ -209,7 +212,7 @@ public class AdminReportFragment extends Fragment {
         paint.setTextSize(5.5f);
         canvas.drawText("Waste Watch - Garbage Management System", 20, 47, paint);
         canvas.drawText("Barangay: "+barangayName, 20, 65, paint);
-        canvas.drawText("Date: "+date, 20, 75, paint);
+        canvas.drawText("Date:     "+date, 20, 75, paint);
 
         forLinePaint.setStyle(Paint.Style.STROKE);
         forLinePaint.setPathEffect(new DashPathEffect(new float[]{2,2}, 0));
@@ -230,10 +233,16 @@ public class AdminReportFragment extends Fragment {
 
 
         //data from the bins
-        canvas.drawText("Date: ", 20, 75, paint);
+        double lastspace;
+        for (int i = 0; i < binsList.size(); i++) {
+            String binName = (String) binsList.get(i);
+            canvas.drawText("" + binName, 20, 126 + i * 17, paint);
+            lastspace = 126 + i * 17;
+        }
+
 
         mypdfdoc.finishPage(myPage);
-        File file = new File(directory, "WeeklyReport.pdf");
+        File file = new File(directory, "" + currentDate + "_Weekly_Report.pdf");
 
         try {
             mypdfdoc.writeTo(new FileOutputStream(file));
