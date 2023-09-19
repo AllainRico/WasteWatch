@@ -188,20 +188,20 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             if (!timeTextView.getText().toString().isEmpty()) {
                 dayTimeMap.put(selectedDate, timeTextView.getText().toString());
 
-//                reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule");
-//                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        String day = dayTextView.getText().toString();
-//                        String time = timeTextView.getText().toString();
-//                        reference.child(day).setValue(time);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
+                reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule");
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String day = dayTextView.getText().toString();
+                        String time = timeTextView.getText().toString();
+                        reference.child(day).setValue(time);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         }
     }
