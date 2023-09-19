@@ -71,12 +71,21 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
 
-        reference = database.getReference("Database").child("collectors").child(username);
+        reference = database.getReference("Database");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String barName = snapshot.child("barName").getValue(String.class);
-                barangayTextView.setText(barName+" Barangay Hall");
+                String day = dayTextView.getText().toString();
+                String time = timeTextView.getText().toString();
+                String barName = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
+                String readTime = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
+                barangayTextView.setText(barName+" Barangay Hall cc");
+                if(barName.equals("Looc")){
+                    timeTextView.setText(readTime);
+                }else if(barName.equals("Basak")){
+                    timeTextView.setText(readTime);
+                }
+
             }
 
             @Override
@@ -188,20 +197,23 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             if (!timeTextView.getText().toString().isEmpty()) {
                 dayTimeMap.put(selectedDate, timeTextView.getText().toString());
 
-//                reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule");
-//                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        String day = dayTextView.getText().toString();
-//                        String time = timeTextView.getText().toString();
-//                        reference.child(day).setValue(time);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
+                reference = database.getReference("Database");
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+                        String username = preferences2.getString("adminFragment","");
+                        String day = dayTextView.getText().toString();
+                        String time = timeTextView.getText().toString();
+                        String barName = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
+                        reference.child("Barangay").child(barName).child("Schedule").child(day).setValue(time);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         }
     }

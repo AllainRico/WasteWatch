@@ -87,38 +87,11 @@
 
                         // Update UI based on retrieved data
                         barangayTextView.setText(district+", "+barName + " Barangay Hall");
-                        if (barName.equals("Looc")) {
-                            String timeString = snapshot.child("Barangay").child("Looc").child("Schedule").child(day).getValue(String.class);
+
+                            String timeString = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
                             timeTextView.setText("Starts at: " + timeString);
 
-//                            // Schedule Notification
-//                            ScheduleNotificationManager notificationManager = new ScheduleNotificationManager(getContext());
-//
-//                            // Parse the time string into a LocalTime object
-//                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mma", Locale.ENGLISH);
-//                            LocalTime collectionTime = LocalTime.parse(timeString, formatter);
-//
-//                            // Calculate the time until collection in milliseconds
-//                            LocalTime currentTime = LocalTime.now();
-//                            long timeUntilCollection = Duration.between(currentTime, collectionTime).toMillis();
-//
-//                            // Create an intent for the BroadcastReceiver that will handle the notification
-//                            Intent alarmIntent = new Intent(getContext(), NotificationReceiver.class);
-//                            alarmIntent.putExtra("title", "Garbage Collection");
-//                            alarmIntent.putExtra("message", "Make sure your garbage is ready to collect!");
-//
-//                            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//                            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-//
-//                            // Schedule the notification
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeUntilCollection, pendingIntent);
-//                            } else {
-//                                alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeUntilCollection, pendingIntent);
-//                            }
                         }
-                    }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
@@ -205,11 +178,15 @@
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
-                            String day = dayTextView.getText().toString();
-                            if(barName.equals("Basak")){
-                                String time = snapshot.child("Barangay").child("Basak").child("Schedule").child(day).getValue(String.class);
-                                timeTextView.setText("Starts at: " + time);
-                            }
+                            String district = snapshot.child("users").child(username).child("district").getValue(String.class);
+                            String day = dayTextView.getText().toString(); // You can set day here based on your logic
+
+                            // Update UI based on retrieved data
+                            barangayTextView.setText(district+", "+barName + " Barangay Hall");
+
+                            String timeString = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
+                            timeTextView.setText("Starts at: " + timeString);
+
                         }
 
                         @Override
