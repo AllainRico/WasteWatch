@@ -4,17 +4,24 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.loginandregister.Login;
 import com.example.loginandregister.R;
@@ -24,6 +31,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class AdminReportFragment extends Fragment {
@@ -88,9 +100,14 @@ public class AdminReportFragment extends Fragment {
                         iotdatastring.clear();
                             for(DataSnapshot snapshot1: snapshot.getChildren())
                             {
-                                iotdatastring.add(snapshot.getValue().toString());
+                                iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
                             }
                         Log.d("FirebaseData", String.valueOf(iotdatastring));
+                        try {
+                            createPdf();
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
 
                     @Override
@@ -158,4 +175,51 @@ public class AdminReportFragment extends Fragment {
             // Your existing code for requesting location permission
         }
     }
+
+    //createpdf
+    private void createPdf() throws FileNotFoundException {
+
+        //lets create a WasteWatchReports directory to hold all the reports
+        File directory = new File(this.getActivity().getExternalFilesDir("/WasteWatchReports").getPath());
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        PdfDocument mypdfdoc = new PdfDocument();
+        Paint paint = new Paint();
+        Paint forLinePaint = new Paint(); //for the lines brov
+        PdfDocument.PageInfo mypageinfo = new PdfDocument.PageInfo.Builder(250,350,1).create();
+        PdfDocument.Page myPage = mypdfdoc.startPage(mypageinfo);
+        Canvas canvas = myPage.getCanvas();
+
+        paint.setTextSize(14f);
+        paint.setColor(Color.rgb(0,50,250));
+        canvas.drawText("WEEKLY REPORT", 20, 40, paint);
+
+        paint.setTextSize(5.5f);
+        canvas.drawText("Waste Watch - Garbage Management System", 20, 47, paint);
+        canvas.drawText("Barangay: ", 20, 65, paint);
+        canvas.drawText("Date: ", 20, 75, paint);
+        forLinePaint.setStyle(Paint.Style.STROKE);
+        forLinePaint.setPathEffect(new DashPathEffect(new float[]{5,5}, 0));
+        forLinePaint.setStrokeWidth(1);
+        canvas.drawLine(20, 85, 230, 85, forLinePaint);
+
+        mypdfdoc.finishPage(myPage);
+        File file = new File(directory, "WeeklyReport.pdf");
+
+        try {
+            mypdfdoc.writeTo(new FileOutputStream(file));
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getActivity(), "PDF saved", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }finally {
+            mypdfdoc.close();
+        }
+    }
+
 }
