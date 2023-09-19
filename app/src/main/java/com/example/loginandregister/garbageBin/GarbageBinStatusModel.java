@@ -1,15 +1,34 @@
 package com.example.loginandregister.garbageBin;
 
 public class GarbageBinStatusModel {
-    private int status;
+
+    private int fillLevel;
+    private int latitude, longitude;
     private String bin, place;
 
-    public int getStatus() {
-        return status;
+
+    public int getFillLevel() {
+        return fillLevel;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setFillLevel(int fillLevel) {
+        this.fillLevel = fillLevel;
+    }
+
+    public int getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(int latitude) {
+        this.latitude = latitude;
+    }
+
+    public int getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(int longitude) {
+        this.longitude = longitude;
     }
 
     public String getBin() {

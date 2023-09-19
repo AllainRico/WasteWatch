@@ -103,7 +103,7 @@ public class AddNewGarbageBin extends BottomSheetDialogFragment {
                         GarbageBinStatusModel bin = new GarbageBinStatusModel();
                         bin.setBin(text);
                         bin.setPlace(text); //dummy
-                        bin.setStatus(0);
+                        bin.setFillLevel(0);
                     }
                     dismiss();
                 }

@@ -35,7 +35,10 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         holder.bin.setText(item.getBin());
         holder.place.setText(item.getPlace());
 
-        int fillLevel = item.getStatus(); //fill Level to image
+        int latitude = item.getFillLevel();
+        int longitude = item.getFillLevel();
+
+        int fillLevel = item.getFillLevel(); //fill Level to image
 
         int fillLevelImageResource;
 
@@ -43,6 +46,8 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
             fillLevelImageResource = R.drawable.empty;
         } else if (fillLevel >= 1 && fillLevel <= 49) {
             fillLevelImageResource = R.drawable.half;
+        } else if (fillLevel >= 50 && fillLevel <= 100){
+            fillLevelImageResource = R.drawable.full;
         } else {
             fillLevelImageResource = R.drawable.full;
         }
@@ -64,11 +69,12 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         Bundle bundle = new Bundle();
         bundle.putString("Bin", item.getBin());
         bundle.putString("Place", item.getPlace());
-        bundle.putInt("Status", item.getStatus());
+        bundle.putInt("Status", item.getFillLevel());
         AddNewGarbageBin fragment = new AddNewGarbageBin();
         fragment.setArguments(bundle);
         fragment.show(fragment.getParentFragmentManager(), AddNewGarbageBin.TAG);
     }
+
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView bin, place;
         ImageView fillLevel;
