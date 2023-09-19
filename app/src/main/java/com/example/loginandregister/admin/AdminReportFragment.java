@@ -200,10 +200,24 @@ public class AdminReportFragment extends Fragment {
         canvas.drawText("Waste Watch - Garbage Management System", 20, 47, paint);
         canvas.drawText("Barangay: ", 20, 65, paint);
         canvas.drawText("Date: ", 20, 75, paint);
+
         forLinePaint.setStyle(Paint.Style.STROKE);
-        forLinePaint.setPathEffect(new DashPathEffect(new float[]{5,5}, 0));
+        forLinePaint.setPathEffect(new DashPathEffect(new float[]{2,2}, 0));
         forLinePaint.setStrokeWidth(1);
+        forLinePaint.setColor(Color.rgb(0, 50, 250));
         canvas.drawLine(20, 85, 230, 85, forLinePaint);
+
+        canvas.drawText("Bin fill level Report ", 20, 92, paint);
+        //make the days
+        canvas.drawText("MON", 67, 109, paint);
+        canvas.drawText("TUE", 87, 109, paint);
+        canvas.drawText("WED", 107, 109, paint);
+        canvas.drawText("THU", 127, 109, paint);
+        canvas.drawText("FRI", 147, 109, paint);
+        canvas.drawText("SAT", 167, 109, paint);
+        canvas.drawText("SUN", 187, 109, paint);
+        canvas.drawText("Average", 207, 109, paint);
+
 
         mypdfdoc.finishPage(myPage);
         File file = new File(directory, "WeeklyReport.pdf");
