@@ -14,7 +14,7 @@
         android:background="@drawable/button"
         android:textColor="@color/white"
         android:padding="5dp"
-        android:text="Garbage Bin Status"/>
+        android:text="@string/garbage_bin_status"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/adminMap"

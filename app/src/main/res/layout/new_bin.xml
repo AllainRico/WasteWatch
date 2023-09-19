@@ -21,6 +21,6 @@
         android:backgroundTint="@color/background_green"
         android:textColor="@color/white"
         android:textSize="16dp"
-        android:text="Save"/>
+        android:text="@string/save"/>
 
 </RelativeLayout>

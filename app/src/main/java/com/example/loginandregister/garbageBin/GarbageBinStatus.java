@@ -22,7 +22,7 @@ import java.util.List;
 
 
 public class GarbageBinStatus extends Fragment implements DialogCloseListener {
-
+    
     private Button backButton;
     private FloatingActionButton addGarbageBin;
     private RecyclerView garbageBinRecyclerView;
