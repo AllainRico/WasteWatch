@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class AdminReportFragment extends Fragment {
     private Button buttonLogout;
+    private Button reportbtn;
     private TextView buttonReport, barangay;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
+    DatabaseReference iotdatareference;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -39,6 +44,7 @@ public class AdminReportFragment extends Fragment {
         // Initialize SharedPreferences for Location Permission
         sharedPreferences = getActivity().getSharedPreferences("LocationPermission", Context.MODE_PRIVATE);
 
+        reportbtn = view.findViewById(R.id.btn_report);
         buttonLogout = view.findViewById(R.id.btn_logout);
         barangay = view.findViewById(R.id.barangay);
 
@@ -68,6 +74,33 @@ public class AdminReportFragment extends Fragment {
                 showLogoutConfirmationDialog();
             }
         });
+
+        //set the button report
+
+        reportbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<String> iotdatastring = new ArrayList<>();
+                iotdatareference =  database.getReference("Database").child("Barangay").child("Looc").child("Bins");
+                iotdatareference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        iotdatastring.clear();
+                            for(DataSnapshot snapshot1: snapshot.getChildren())
+                            {
+                                iotdatastring.add(snapshot.getValue().toString());
+                            }
+                        Log.d("FirebaseData", String.valueOf(iotdatastring));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
         return view;
     }
 
