@@ -1,8 +1,10 @@
-package com.example.loginandregister;
+package com.example.loginandregister.schedule;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.example.loginandregister.schedule.ScheduleNotificationManager;
 
 public class NotificationReceiver extends BroadcastReceiver {
     @Override

@@ -1,11 +1,7 @@
         package com.example.loginandregister.user;
 
-        import android.app.AlarmManager;
-        import android.app.PendingIntent;
         import android.content.Context;
-        import android.content.Intent;
         import android.content.SharedPreferences;
-        import android.os.Build;
         import android.os.Bundle;
 
         import androidx.annotation.NonNull;
@@ -20,7 +16,7 @@
         import android.widget.TextView;
         import android.widget.Toast;
 
-        import com.example.loginandregister.CalendarAdapter;
+        import com.example.loginandregister.schedule.CalendarAdapter;
         import com.example.loginandregister.R;
         import com.google.firebase.database.DataSnapshot;
         import com.google.firebase.database.DatabaseError;
@@ -28,9 +24,7 @@
         import com.google.firebase.database.FirebaseDatabase;
         import com.google.firebase.database.ValueEventListener;
 
-        import java.time.Duration;
         import java.time.LocalDate;
-        import java.time.LocalTime;
         import java.time.YearMonth;
         import java.time.format.DateTimeFormatter;
         import java.util.ArrayList;

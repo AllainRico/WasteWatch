@@ -56,7 +56,7 @@
         </activity>
 
         <receiver
-            android:name=".NotificationReceiver"
+            android:name=".schedule.NotificationReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
