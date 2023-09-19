@@ -36,7 +36,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AdminReportFragment extends Fragment {
     private Button buttonLogout;
@@ -46,6 +48,10 @@ public class AdminReportFragment extends Fragment {
     DatabaseReference reference;
     DatabaseReference iotdatareference;
     private SharedPreferences sharedPreferences;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private String currentDate = sdf.format(new Date());
+
+    private String barrangayName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +66,8 @@ public class AdminReportFragment extends Fragment {
         buttonLogout = view.findViewById(R.id.btn_logout);
         barangay = view.findViewById(R.id.barangay);
 
+
+
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
 
@@ -68,6 +76,7 @@ public class AdminReportFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String barName = snapshot.child("barName").getValue(String.class);
+                barrangayName = barName;
                 barangay.setText("Barangay " + barName);
             }
 
@@ -104,7 +113,7 @@ public class AdminReportFragment extends Fragment {
                             }
                         Log.d("FirebaseData", String.valueOf(iotdatastring));
                         try {
-                            createPdf();
+                            createPdf(barrangayName, currentDate);
                         } catch (FileNotFoundException e) {
                             throw new RuntimeException(e);
                         }
@@ -177,8 +186,9 @@ public class AdminReportFragment extends Fragment {
     }
 
     //createpdf
-    private void createPdf() throws FileNotFoundException {
-
+    private void createPdf(String barName, String currentDate) throws FileNotFoundException {
+        String barangayName = barName;
+        String date = currentDate;
         //lets create a WasteWatchReports directory to hold all the reports
         File directory = new File(this.getActivity().getExternalFilesDir("/WasteWatchReports").getPath());
         if (!directory.exists()) {
@@ -198,8 +208,8 @@ public class AdminReportFragment extends Fragment {
 
         paint.setTextSize(5.5f);
         canvas.drawText("Waste Watch - Garbage Management System", 20, 47, paint);
-        canvas.drawText("Barangay: ", 20, 65, paint);
-        canvas.drawText("Date: ", 20, 75, paint);
+        canvas.drawText("Barangay: "+barangayName, 20, 65, paint);
+        canvas.drawText("Date: "+date, 20, 75, paint);
 
         forLinePaint.setStyle(Paint.Style.STROKE);
         forLinePaint.setPathEffect(new DashPathEffect(new float[]{2,2}, 0));
@@ -218,6 +228,9 @@ public class AdminReportFragment extends Fragment {
         canvas.drawText("SUN", 187, 109, paint);
         canvas.drawText("Average", 207, 109, paint);
 
+
+        //data from the bins
+        canvas.drawText("Date: ", 20, 75, paint);
 
         mypdfdoc.finishPage(myPage);
         File file = new File(directory, "WeeklyReport.pdf");
