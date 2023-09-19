@@ -82,12 +82,12 @@ public class AdminHomeFragment extends Fragment {
         buttonSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.frameLayout, new AdminScheduleFragment())
-                        .addToBackStack(null)
-                        .commit();
-                // Set the selected item in the BottomNavigationView to the "schedule" item
-                ((AdminMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.frameLayout, new AdminScheduleFragment())
+                            .addToBackStack(null)
+                            .commit();
+                    // Set the selected item in the BottomNavigationView to the "schedule" item
+                    ((AdminMainActivity) requireActivity()).setBottomNavigationSelectedItem(R.id.schedule);
             }
         });
 

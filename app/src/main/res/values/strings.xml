@@ -52,4 +52,20 @@
     <string name="map_place_holder">Map Place holder</string>
     <string name="add_garbage_bin">Add Garbage Bin</string>
     <string name="bin_status">Bin Status</string>
+    <string name="generate_report">Generate Report</string>
+    <string name="select_district">Select District</string>
+    <string name="show_password">Show Password</string>
+    <string name="form">Form</string>
+    <string name="garbage_bin_status">Garbage Bin Status</string>
+    <string name="su">Su</string>
+    <string name="mo">Mo</string>
+    <string name="tu">Tu</string>
+    <string name="th">Th</string>
+    <string name="fr">Fr</string>
+    <string name="sa">Sa</string>
+    <string name="weekdays_month_day">Weekdays, Month Day</string>
+    <string name="back">Back</string>
+    <string name="we">We</string>
+    <string name="starts_at_mm_ss_am_pm">Starts at MM:SS AM/PM</string>
+    <string name="save">Save</string>
 </resources>

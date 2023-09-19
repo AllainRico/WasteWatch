@@ -10,17 +10,26 @@
         android:background="@null"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:hint="Bin Name"/>
+
+    <EditText
+        android:id="@+id/newPlaceText"
+        android:layout_below="@id/newBinText"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@null"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:hint="Bin Place"/>
     
     <Button
         android:id="@+id/newBinButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/newBinText"
+        android:layout_below="@+id/newPlaceText"
         android:layout_alignParentEnd="true"
         android:textAllCaps="false"
         android:backgroundTint="@color/background_green"
         android:textColor="@color/white"
         android:textSize="16dp"
-        android:text="Save"/>
+        android:text="@string/save"/>
 
 </RelativeLayout>

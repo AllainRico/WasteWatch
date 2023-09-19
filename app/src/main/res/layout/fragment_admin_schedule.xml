@@ -92,7 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Su"
+                android:text="@string/su"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -102,7 +102,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Mo"
+                android:text="@string/mo"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -112,7 +112,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Tu"
+                android:text="@string/tu"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -122,7 +122,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="We"
+                android:text="@string/we"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -132,7 +132,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Th"
+                android:text="@string/th"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -142,7 +142,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Fr"
+                android:text="@string/fr"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -152,7 +152,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sa"
+                android:text="@string/sa"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -181,7 +181,7 @@
                 android:id="@+id/day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Monday, August 1"
+                android:text="@string/weekdays_month_day"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -192,7 +192,7 @@
                 android:id="@+id/barangay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Looc Barangay Hall"
+                android:text="@string/barangay"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -200,11 +200,11 @@
                 android:layout_alignParentStart="true" />
 
             <LinearLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:layout_below="@id/barangay"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="13dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -213,28 +213,26 @@
                     android:id="@+id/time"
                     android:layout_width="150dp"
                     android:layout_height="48dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginStart="8dp"
                     android:enabled="false"
+                    android:hint="@string/time"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:hint="@string/time"
                     android:textSize="16sp" />
 
                 <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginLeft="5dp"
-                        android:id="@+id/edit_time"
-                        android:src="@drawable/ic_edit"
-                        app:tint="@color/text_dark_gray" />
+                    android:id="@+id/edit_time"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="5dp"
+                    android:src="@drawable/ic_edit"
+                    app:tint="@color/text_dark_gray" />
 
-<!--                <Button-->
-<!--                    android:id="@+id/edit_time_button"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="48dp"-->
-<!--                    android:text="X"/>-->
+                <!--                <Button-->
+                <!--                    android:id="@+id/edit_time_button"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="48dp"-->
+                <!--                    android:text="X"/>-->
 
             </LinearLayout>
 
