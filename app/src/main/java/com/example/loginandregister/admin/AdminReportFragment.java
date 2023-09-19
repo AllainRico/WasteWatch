@@ -102,7 +102,7 @@ public class AdminReportFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ArrayList<String> iotdatastring = new ArrayList<>();
-                iotdatareference =  database.getReference("Database").child("Barangay").child("Looc").child("Bins");
+                iotdatareference =  database.getReference("Database").child("Barangay").child(barrangayName).child("Bins");
                 iotdatareference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
