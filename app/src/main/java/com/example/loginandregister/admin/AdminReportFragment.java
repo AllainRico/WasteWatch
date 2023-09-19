@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class AdminReportFragment extends Fragment {
@@ -46,7 +47,8 @@ public class AdminReportFragment extends Fragment {
     private TextView buttonReport, barangay;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
-    DatabaseReference iotdatareference;
+    DatabaseReference binNamesReference;
+    DatabaseReference fillLevelReference;
     private SharedPreferences sharedPreferences;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private String currentDate = sdf.format(new Date());
@@ -102,8 +104,8 @@ public class AdminReportFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ArrayList<String> iotdatastring = new ArrayList<>();
-                iotdatareference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
-                iotdatareference.addValueEventListener(new ValueEventListener() {
+                binNamesReference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
+                binNamesReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         iotdatastring.clear();
@@ -188,10 +190,14 @@ public class AdminReportFragment extends Fragment {
     }
 
     //createpdf
-    private void createPdf(String barName, String currentDate, ArrayList iotdatastring ) throws FileNotFoundException {
+    private void createPdf(String barName, String currentDate, ArrayList iotdatastring) throws FileNotFoundException {
         String barangayName = barName;
         String date = currentDate;
         ArrayList binsList = iotdatastring;
+
+        //fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/2023/09/19");
+        fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/" + getYear()+ "/" + getMonth() + "/" +getDate());
+
         //lets create a WasteWatchReports directory to hold all the reports
         File directory = new File(this.getActivity().getExternalFilesDir("/WasteWatchReports").getPath());
         if (!directory.exists()) {
@@ -258,4 +264,46 @@ public class AdminReportFragment extends Fragment {
         }
     }
 
+    private int getYear(){
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+
+        return year;
+    }
+
+    private int getMonth(){
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH);
+
+        return month;
+    }
+
+    private int getDate(){
+        Calendar calendar = Calendar.getInstance();
+        int date = calendar.get(Calendar.DATE);
+        return date;
+    }
+    private String getDayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (dayOfWeek) {
+            case Calendar.SUNDAY:
+                return "Sunday";
+            case Calendar.MONDAY:
+                return "Monday";
+            case Calendar.TUESDAY:
+                return "Tuesday";
+            case Calendar.WEDNESDAY:
+                return "Wednesday";
+            case Calendar.THURSDAY:
+                return "Thursday";
+            case Calendar.FRIDAY:
+                return "Friday";
+            case Calendar.SATURDAY:
+                return "Saturday";
+            default:
+                return "Invalid Day";
+        }
+    }
 }
