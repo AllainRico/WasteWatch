@@ -44,7 +44,7 @@ import java.util.Date;
 public class AdminReportFragment extends Fragment {
     private Button buttonLogout;
     private Button reportbtn;
-    private TextView buttonReport, barangay;
+    private TextView barangay;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
     DatabaseReference binNamesReference;
@@ -52,7 +52,6 @@ public class AdminReportFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private String currentDate = sdf.format(new Date());
-
     private String barrangayName;
 
     @Override
@@ -173,20 +172,6 @@ public class AdminReportFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("location_permission_granted", false);
         editor.apply();
-    }
-
-    // Check if location permission needs to be requested
-    private boolean shouldRequestLocationPermission() {
-        // Check the location permission status in SharedPreferences
-        return !sharedPreferences.getBoolean("location_permission_granted", false);
-    }
-
-    // Method to request location permission
-    private void requestLocationPermission() {
-        if (shouldRequestLocationPermission()) {
-            // Request location permission
-            // Your existing code for requesting location permission
-        }
     }
 
     //createpdf

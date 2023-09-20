@@ -208,7 +208,6 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-
                 <EditText
                     android:id="@+id/time"
                     android:layout_width="150dp"
@@ -228,18 +227,10 @@
                     android:src="@drawable/ic_edit"
                     app:tint="@color/text_dark_gray" />
 
-                <!--                <Button-->
-                <!--                    android:id="@+id/edit_time_button"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="48dp"-->
-                <!--                    android:text="X"/>-->
-
             </LinearLayout>
 
         </RelativeLayout>
 
-
     </LinearLayout>
-
 
 </FrameLayout>

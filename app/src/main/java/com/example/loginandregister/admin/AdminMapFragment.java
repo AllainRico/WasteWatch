@@ -31,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class AdminMapFragment extends Fragment {
-
     private Button garbageBinStatusButton;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
