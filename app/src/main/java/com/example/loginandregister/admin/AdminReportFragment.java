@@ -248,7 +248,7 @@ public class AdminReportFragment extends Fragment {
 
 
         mypdfdoc.finishPage(myPage);
-        File file = new File(directory, "" + currentDate + "_Weekly_Report.pdf");
+        File file = new File(directory, "Weekly_Report.pdf");
 
         try {
             mypdfdoc.writeTo(new FileOutputStream(file));
