@@ -89,8 +89,11 @@
                         barangayTextView.setText(district+", "+barName + " Barangay Hall");
 
                             String timeString = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
+                        if (timeString != null && !timeString.isEmpty()) {
                             timeTextView.setText("Starts at: " + timeString);
-
+                        } else {
+                            timeTextView.setText("No Schedule");
+                        }
                         }
 
                     @Override
@@ -180,13 +183,15 @@
                             String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
                             String district = snapshot.child("users").child(username).child("district").getValue(String.class);
                             String day = dayTextView.getText().toString(); // You can set day here based on your logic
-
                             // Update UI based on retrieved data
                             barangayTextView.setText(district+", "+barName + " Barangay Hall");
 
                             String timeString = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
-                            timeTextView.setText("Starts at: " + timeString);
-
+                            if (timeString != null && !timeString.isEmpty()) {
+                                timeTextView.setText("Starts at: " + timeString);
+                            } else {
+                                timeTextView.setText("No Schedule");
+                            }
                         }
 
                         @Override

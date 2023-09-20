@@ -76,14 +76,13 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String day = dayTextView.getText().toString();
-                String time = timeTextView.getText().toString();
                 String barName = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
-                String readTime = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
+                String timeString = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
                 barangayTextView.setText(barName+" Barangay Hall cc");
-                if(barName.equals("Looc")){
-                    timeTextView.setText(readTime);
-                }else if(barName.equals("Basak")){
-                    timeTextView.setText(readTime);
+                if (timeString != null && !timeString.isEmpty()) {
+                    timeTextView.setText("Starts at: " + timeString);
+                } else {
+                    timeTextView.setText("No Schedule");
                 }
 
             }
@@ -303,6 +302,31 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             String savedTime = dayTimeMap.get(selectedDate);
             timeTextView.setText(savedTime);
             timeTextView.setEnabled(false); // Disable the timeTextView for previous dates
+
+            SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+            String username = preferences2.getString("adminFragment","");
+
+            reference = database.getReference("Database");
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String day = dayTextView.getText().toString();
+                    String barName = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
+                    String timeString = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
+                    barangayTextView.setText(barName+" Barangay Hall cc");
+                    if (timeString != null && !timeString.isEmpty()) {
+                        timeTextView.setText("Starts at: " + timeString);
+                    } else {
+                        timeTextView.setText("No Schedule");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
 
             // Set the edit mode based on whether there's a saved time
             isEditMode = savedTime != null;
