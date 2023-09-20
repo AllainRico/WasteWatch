@@ -199,7 +199,7 @@ public class AdminReportFragment extends Fragment {
         fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/" + getYear()+ "/" + getMonth() + "/" +getDate());
 
         //lets create a WasteWatchReports directory to hold all the reports
-        File directory = new File(this.getActivity().getExternalFilesDir("/WasteWatchReports").getPath());
+        File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "WasteWatchReports");
         if (!directory.exists()) {
             directory.mkdirs();
         }
