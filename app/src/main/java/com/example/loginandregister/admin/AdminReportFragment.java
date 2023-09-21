@@ -36,10 +36,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class AdminReportFragment extends Fragment {
     private Button buttonLogout;
@@ -49,6 +51,7 @@ public class AdminReportFragment extends Fragment {
     DatabaseReference reference;
     DatabaseReference binNamesReference;
     DatabaseReference fillLevelReference;
+    DatabaseReference binDataReference;
     private SharedPreferences sharedPreferences;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private String currentDate = sdf.format(new Date());
@@ -104,7 +107,9 @@ public class AdminReportFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ArrayList<String> iotdatastring = new ArrayList<>();
-                binNamesReference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
+
+                String binNamesDBPath = "/Database/Barangay/"+ barrangayName +"/Bins";
+                binNamesReference =  FirebaseDatabase.getInstance().getReference(binNamesDBPath);
                 binNamesReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -115,7 +120,8 @@ public class AdminReportFragment extends Fragment {
                                 iotdatastring.add(binName);
                                 //iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
                             }
-                        Log.d("FirebaseData", String.valueOf(iotdatastring));
+                        Log.d("Bin names", String.valueOf(iotdatastring));
+                            getBinNames(iotdatastring);
                         try {
                             createPdf(barrangayName, currentDate, iotdatastring);
                         } catch (FileNotFoundException e) {
@@ -132,6 +138,36 @@ public class AdminReportFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void getBinNames(ArrayList iotdatastring) {
+        ArrayList<String> binDataList = new ArrayList<>();
+        for(int i=0; i<iotdatastring.size(); i++)
+        {
+            String currentBin = (String) iotdatastring.get(i);
+            String binDataPath = "/Database/Barangay/"+ barrangayName +"/Bins/"+ currentBin + "/" + getYear() + "/"+ getMonth() + "/" +getDate() + "/FillLevel";
+            Log.d("path",binDataPath);
+            binDataReference =  FirebaseDatabase.getInstance().getReference(binDataPath);
+            binDataReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Object fillLevelValue = snapshot.getValue();
+
+                    binDataList.add(fillLevelValue.toString());
+
+                    if (binDataList.size() == iotdatastring.size()) {
+                        Log.d("FillLevelValue", String.valueOf(binDataList));
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("FirebaseError", "Error fetching data: " + error.getMessage());
+                }
+            });
+        }
+
     }
 
     private void showLogoutConfirmationDialog() {
@@ -275,7 +311,7 @@ public class AdminReportFragment extends Fragment {
 
     private int getMonth(){
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
 
         return month;
     }
