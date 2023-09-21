@@ -138,54 +138,67 @@ public class AdminReportFragment extends Fragment {
 
     private void getBinNames(ArrayList iotdatastring) {
         ArrayList<String> binDataList = new ArrayList<>();
-        for(int i=0; i<iotdatastring.size(); i++)
-        {
+        ArrayList<Integer> weekDates = getWeekDates();
+        int numBins = iotdatastring.size();
+
+        for(int i = 0; i < numBins; i++) {
             String currentBin = (String) iotdatastring.get(i);
-            String binDataPath = "/Database/Barangay/"+ barrangayName +"/Bins/"+ currentBin + "/" + getYear() + "/"+ getMonth() + "/" +getDate() + "/FillLevel";
-            Log.d("path",binDataPath);
-            binDataReference =  FirebaseDatabase.getInstance().getReference(binDataPath);
-            binDataReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Object fillLevelValue = snapshot.getValue();
+            for (int ii = 0; ii < 7; ii++) {
+                String binDataPath = "/Database/Barangay/"+ barrangayName +"/Bins/"+ currentBin + "/" + getYear() + "/"+ getMonth() + "/" + weekDates.get(ii) + "/FillLevel";
+                Log.d("path", binDataPath);
+                int finalI = i;
+                int finalIi = ii;
 
-                    binDataList.add(fillLevelValue.toString());
+                binDataReference =  FirebaseDatabase.getInstance().getReference(binDataPath);
 
-                    if (binDataList.size() == iotdatastring.size()) {
-                        Log.d("FillLevelValue", String.valueOf(binDataList));
+                binDataReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Object fillLevelValue = snapshot.getValue();
 
-                        Log.d("FillLevelValue", String.valueOf(getWeekDates()));
+                        if (fillLevelValue == null) {
+                            binDataList.add("No Data");
+                        } else {
+                            binDataList.add(fillLevelValue.toString());
+                        }
 
-                        try {
-                            createPdf(barrangayName, currentDate, iotdatastring);
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
+                        if (binDataList.size() == numBins * 7) {
+                            Log.d("FillLevelValue", String.valueOf(binDataList));
+
+                            Log.d("FillLevelValue", String.valueOf(weekDates));
+
+                            try {
+                                createPdf(barrangayName, currentDate, iotdatastring);
+                            } catch (FileNotFoundException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("FirebaseError", "Error fetching data: " + error.getMessage());
-                }
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("FirebaseError", "Error fetching data: " + error.getMessage());
+                    }
+                });
+            }
         }
-
     }
 
-    public static ArrayList<Date> getWeekDates() {
-        ArrayList<Date> weekDates = new ArrayList<>();
+
+    public static ArrayList<Integer> getWeekDates() {
+        ArrayList<Integer> dayNumbers = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // Start with Sunday
 
         for (int i = 0; i < 7; i++) {
-            weekDates.add(calendar.getTime());
+            dayNumbers.add(calendar.get(Calendar.DAY_OF_MONTH));
             calendar.add(Calendar.DAY_OF_WEEK, 1); // Move to the next day
         }
 
-        return weekDates;
+        return dayNumbers;
     }
+
 
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
