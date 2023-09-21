@@ -122,11 +122,7 @@ public class AdminReportFragment extends Fragment {
                             }
                         Log.d("Bin names", String.valueOf(iotdatastring));
                             getBinNames(iotdatastring);
-                        try {
-                            createPdf(barrangayName, currentDate, iotdatastring);
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
+
                     }
 
                     @Override
@@ -158,6 +154,11 @@ public class AdminReportFragment extends Fragment {
                     if (binDataList.size() == iotdatastring.size()) {
                         Log.d("FillLevelValue", String.valueOf(binDataList));
 
+                        try {
+                            createPdf(barrangayName, currentDate, iotdatastring);
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
 
