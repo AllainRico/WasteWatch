@@ -95,6 +95,7 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation();
+                                displayBinLocation();
 
                                 onMapLoaded();
                             }
@@ -113,6 +114,7 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation();
+                                displayBinLocation();
 
                                 onMapLoaded();
                             }
@@ -136,15 +138,6 @@ public class AdminMapFragment extends Fragment {
         return view;
     }
 
-//    public void displayAdminLocation() {
-//        if (googleMap != null) {
-//
-//            LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
-//
-//            googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
-//        }
-//    }
-
     public void displayAdminLocation() {
         if (googleMap != null) {
             LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
@@ -155,6 +148,25 @@ public class AdminMapFragment extends Fragment {
                     .position(adminLocation)
                     .title("Admin Location")
                     .icon(truckIcon);
+
+            googleMap.addMarker(markerOptions);
+        }
+    }
+
+    public void displayBinLocation(){
+        if (googleMap != null) {
+            //dummy bin Latitude, Longitude
+            double binLatidue = 10.305827;
+            double binLongitude = 123.944845;
+
+            LatLng binLocation = new LatLng(binLatidue, binLongitude);
+
+            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(binLocation)
+                    .title("Bin Location")
+                    .icon(binIcon);
 
             googleMap.addMarker(markerOptions);
         }

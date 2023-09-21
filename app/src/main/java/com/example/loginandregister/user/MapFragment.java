@@ -36,6 +36,9 @@ public class MapFragment extends Fragment {
     private GoogleMap googleMap;
     double adminLatitude = LocationData.getInstance().getAdminLatitude();
     double adminLongitude = LocationData.getInstance().getAdminLongitude();
+    //dummy bin Latitude, Longitude
+    double binLatidue = 10.305827;
+    double binLongitude = 123.944845;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
 
@@ -78,6 +81,7 @@ public class MapFragment extends Fragment {
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation(adminLatitude, adminLongitude);
+                                displayBinLocation(binLatidue,binLongitude);
 
                                 onMapLoaded();
 
@@ -96,6 +100,7 @@ public class MapFragment extends Fragment {
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation(adminLatitude, adminLongitude);
+                                displayBinLocation(binLatidue,binLongitude);
 
                                 onMapLoaded();
                             }
@@ -120,14 +125,6 @@ public class MapFragment extends Fragment {
         return view;
     }
 
-//    public void displayAdminLocation(double adminLatitude, double adminLongitude) {
-//        if (googleMap != null) {
-//
-//            LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
-//
-//            googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
-//        }
-//    }
     public void displayAdminLocation(double adminLatitude, double adminLongitude) {
         if (googleMap != null) {
             LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
@@ -142,6 +139,24 @@ public class MapFragment extends Fragment {
             googleMap.addMarker(markerOptions);
         }
     }
+
+    public void displayBinLocation(double binLatidue, double binLongitude) {
+        if (googleMap != null) {
+
+            LatLng binLocation = new LatLng(binLatidue, binLongitude);
+
+            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(binLocation)
+                    .title("Bin Location")
+                    .icon(binIcon);
+
+            googleMap.addMarker(markerOptions);
+        }
+    }
+
+
 
     //    public void updateAdminLocation(double latitude, double longitude) {
 //        if (googleMap != null) {
