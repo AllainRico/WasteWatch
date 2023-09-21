@@ -1,9 +1,11 @@
 package com.example.loginandregister.admin;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -12,6 +14,8 @@ import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
@@ -50,6 +54,7 @@ public class AdminReportFragment extends Fragment {
     DatabaseReference binNamesReference;
     DatabaseReference fillLevelReference;
     private SharedPreferences sharedPreferences;
+    private static final int REQUEST_CODE_WRITE_STORAGE_PERMISSION = 1;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private String currentDate = sdf.format(new Date());
     private String barrangayName;
@@ -96,35 +101,75 @@ public class AdminReportFragment extends Fragment {
             }
         });
 
-        //set the button report
+        //set the button report ALLAIN
+//        reportbtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ArrayList<String> iotdatastring = new ArrayList<>();
+//                binNamesReference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
+//                binNamesReference.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        iotdatastring.clear();
+//                            for(DataSnapshot snapshot1: snapshot.getChildren())
+//                            {
+//                                String binName = snapshot1.getKey();
+//                                iotdatastring.add(binName);
+//                                //iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
+//                            }
+//                        Log.d("FirebaseData", String.valueOf(iotdatastring));
+//                        try {
+//                            createPdf(barrangayName, currentDate, iotdatastring);
+//                        } catch (FileNotFoundException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//            }
+//        });
+
+        // Earls Storage Permission Prompt
         reportbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> iotdatastring = new ArrayList<>();
-                binNamesReference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
-                binNamesReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        iotdatastring.clear();
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(requireActivity(),
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_CODE_WRITE_STORAGE_PERMISSION);
+                } else {
+                    ArrayList<String> iotdatastring = new ArrayList<>();
+                    binNamesReference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
+                    binNamesReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            iotdatastring.clear();
                             for(DataSnapshot snapshot1: snapshot.getChildren())
                             {
                                 String binName = snapshot1.getKey();
                                 iotdatastring.add(binName);
                                 //iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
                             }
-                        Log.d("FirebaseData", String.valueOf(iotdatastring));
-                        try {
-                            createPdf(barrangayName, currentDate, iotdatastring);
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
+                            Log.d("FirebaseData", String.valueOf(iotdatastring));
+                            try {
+                                createPdf(barrangayName, currentDate, iotdatastring);
+                            } catch (FileNotFoundException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
 
