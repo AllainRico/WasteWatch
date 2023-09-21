@@ -154,6 +154,8 @@ public class AdminReportFragment extends Fragment {
                     if (binDataList.size() == iotdatastring.size()) {
                         Log.d("FillLevelValue", String.valueOf(binDataList));
 
+                        Log.d("FillLevelValue", String.valueOf(getWeekDates()));
+
                         try {
                             createPdf(barrangayName, currentDate, iotdatastring);
                         } catch (FileNotFoundException e) {
@@ -169,6 +171,20 @@ public class AdminReportFragment extends Fragment {
             });
         }
 
+    }
+
+    public static ArrayList<Date> getWeekDates() {
+        ArrayList<Date> weekDates = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // Start with Sunday
+
+        for (int i = 0; i < 7; i++) {
+            weekDates.add(calendar.getTime());
+            calendar.add(Calendar.DAY_OF_WEEK, 1); // Move to the next day
+        }
+
+        return weekDates;
     }
 
     private void showLogoutConfirmationDialog() {
