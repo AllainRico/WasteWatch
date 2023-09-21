@@ -157,7 +157,7 @@ public class AdminReportFragment extends Fragment {
                         Object fillLevelValue = snapshot.getValue();
 
                         if (fillLevelValue == null) {
-                            binDataList.add("No Data");
+                            binDataList.add("NA");
                         } else {
                             binDataList.add(fillLevelValue.toString());
                         }
@@ -168,7 +168,7 @@ public class AdminReportFragment extends Fragment {
                             Log.d("FillLevelValue", String.valueOf(weekDates));
 
                             try {
-                                createPdf(barrangayName, currentDate, iotdatastring);
+                                createPdf(barrangayName, currentDate, iotdatastring, binDataList);
                             } catch (FileNotFoundException e) {
                                 throw new RuntimeException(e);
                             }
@@ -256,10 +256,11 @@ public class AdminReportFragment extends Fragment {
     }
 
     //createpdf
-    private void createPdf(String barName, String currentDate, ArrayList iotdatastring) throws FileNotFoundException {
+    private void createPdf(String barName, String currentDate, ArrayList iotdatastring, ArrayList binDataList) throws FileNotFoundException {
         String barangayName = barName;
         String date = currentDate;
         ArrayList binsList = iotdatastring;
+        ArrayList databinList = binDataList;
 
         //fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/2023/09/19");
         fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/" + getYear()+ "/" + getMonth() + "/" +getDate());
@@ -306,13 +307,24 @@ public class AdminReportFragment extends Fragment {
         canvas.drawText("Average", 207, 109, paint);
 
 
-        //data from the bins
-        double lastspace;
+        //bin names
         for (int i = 0; i < binsList.size(); i++) {
             String binName = (String) binsList.get(i);
             canvas.drawText("" + binName, 20, 126 + i * 17, paint);
-            lastspace = 126 + i * 17;
         }
+        //all the fill level
+
+        for(int i = 0; i < databinList.size(); i++)
+        {
+            String fillLevel = (String) databinList.get(i);
+
+            // Calculate x and y coordinates
+            int x = 67 + (i % 7) * 20;
+            int y = 126 + (i / 7) * 17;
+
+            canvas.drawText("" + fillLevel, x, y, paint);
+        }
+
 
 
         mypdfdoc.finishPage(myPage);
