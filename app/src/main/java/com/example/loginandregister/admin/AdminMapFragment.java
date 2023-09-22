@@ -88,16 +88,15 @@ public class AdminMapFragment extends Fragment {
                                 float zoomLevel = 15.3f;
                                 //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-
-
+                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
+                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation();
                                 displayBinLocation();
-                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
-                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
+
                                 onMapLoaded();
                             }
                         }else   if ("Basak".equals(bar)) { // Compare strings using .equals()
@@ -107,7 +106,8 @@ public class AdminMapFragment extends Fragment {
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
                                 float zoomLevel = 15.3f;
-
+                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
+                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -116,8 +116,7 @@ public class AdminMapFragment extends Fragment {
 
                                 displayAdminLocation();
                                 displayBinLocation();
-                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
-                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
+
 
                                 onMapLoaded();
                             }

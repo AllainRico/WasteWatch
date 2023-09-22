@@ -43,7 +43,7 @@ import java.util.Date;
 public class AdminReportFragment extends Fragment {
     private Button buttonLogout;
     private Button reportbtn;
-    private TextView barangay;
+    private TextView barangay, user;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final int STORAGE_PERMISSION_REQUEST_CODE = 1;
     DatabaseReference reference;
@@ -67,8 +67,7 @@ public class AdminReportFragment extends Fragment {
         reportbtn = view.findViewById(R.id.btn_report);
         buttonLogout = view.findViewById(R.id.btn_logout);
         barangay = view.findViewById(R.id.barangay);
-
-
+        user = view.findViewById(R.id.username);
 
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
@@ -78,8 +77,10 @@ public class AdminReportFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String barName = snapshot.child("barName").getValue(String.class);
+                String username1 = snapshot.child("username").getValue(String.class);
                 barrangayName = barName;
                 barangay.setText("Barangay " + barName);
+                user.setText(username1);
             }
 
             @Override
