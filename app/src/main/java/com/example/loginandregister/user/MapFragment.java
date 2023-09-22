@@ -156,8 +156,6 @@ public class MapFragment extends Fragment {
         }
     }
 
-
-
     //    public void updateAdminLocation(double latitude, double longitude) {
 //        if (googleMap != null) {
 //            LatLng adminLocation = new LatLng(latitude, longitude);
