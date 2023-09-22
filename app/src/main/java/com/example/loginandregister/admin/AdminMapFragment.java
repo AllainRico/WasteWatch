@@ -115,6 +115,8 @@ public class AdminMapFragment extends Fragment {
 
                                 displayAdminLocation();
                                 displayBinLocation();
+                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
+                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
 
                                 onMapLoaded();
                             }
