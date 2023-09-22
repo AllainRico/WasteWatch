@@ -68,6 +68,20 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
 
         updateDayTextView();
 
+        btnPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                previousMonth(v);
+            }
+        });
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextMonth(v);
+            }
+        });
+
+
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
 
@@ -92,20 +106,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
 
             }
         });
-
-        btnPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                previousMonth(v);
-            }
-        });
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextMonth(v);
-            }
-        });
-
 
         timeTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -303,6 +303,11 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             timeTextView.setText(savedTime);
             timeTextView.setEnabled(false); // Disable the timeTextView for previous dates
 
+            // Set the edit mode based on whether there's a saved time
+            isEditMode = savedTime != null;
+            editTimeImageView.setImageResource(isEditMode ? R.drawable.ic_check : R.drawable.ic_edit);
+
+
             SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
             String username = preferences2.getString("adminFragment","");
 
@@ -326,11 +331,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
 
                 }
             });
-
-
-            // Set the edit mode based on whether there's a saved time
-            isEditMode = savedTime != null;
-            editTimeImageView.setImageResource(isEditMode ? R.drawable.ic_check : R.drawable.ic_edit);
         }
     }
 
