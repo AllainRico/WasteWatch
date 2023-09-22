@@ -1,11 +1,9 @@
 package com.example.loginandregister.admin;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -14,8 +12,6 @@ import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
@@ -40,23 +36,26 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class AdminReportFragment extends Fragment {
     private Button buttonLogout;
     private Button reportbtn;
-    private TextView barangay;
+    private TextView buttonReport, barangay;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
     DatabaseReference binNamesReference;
     DatabaseReference fillLevelReference;
+    DatabaseReference binDataReference;
     private SharedPreferences sharedPreferences;
-    private static final int REQUEST_CODE_WRITE_STORAGE_PERMISSION = 1;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private String currentDate = sdf.format(new Date());
+
     private String barrangayName;
 
     @Override
@@ -92,6 +91,7 @@ public class AdminReportFragment extends Fragment {
             }
         });
 
+        // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,80 +101,104 @@ public class AdminReportFragment extends Fragment {
             }
         });
 
-        //set the button report ALLAIN
-//        reportbtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ArrayList<String> iotdatastring = new ArrayList<>();
-//                binNamesReference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
-//                binNamesReference.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        iotdatastring.clear();
-//                            for(DataSnapshot snapshot1: snapshot.getChildren())
-//                            {
-//                                String binName = snapshot1.getKey();
-//                                iotdatastring.add(binName);
-//                                //iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
-//                            }
-//                        Log.d("FirebaseData", String.valueOf(iotdatastring));
-//                        try {
-//                            createPdf(barrangayName, currentDate, iotdatastring);
-//                        } catch (FileNotFoundException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//            }
-//        });
+        //set the button report
 
-        // Earls Storage Permission Prompt
         reportbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
+                ArrayList<String> iotdatastring = new ArrayList<>();
 
-                    ActivityCompat.requestPermissions(requireActivity(),
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            REQUEST_CODE_WRITE_STORAGE_PERMISSION);
-                } else {
-                    ArrayList<String> iotdatastring = new ArrayList<>();
-                    binNamesReference =  FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins");
-                    binNamesReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            iotdatastring.clear();
+                String binNamesDBPath = "/Database/Barangay/"+ barrangayName +"/Bins";
+                binNamesReference =  FirebaseDatabase.getInstance().getReference(binNamesDBPath);
+                binNamesReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        iotdatastring.clear();
                             for(DataSnapshot snapshot1: snapshot.getChildren())
                             {
                                 String binName = snapshot1.getKey();
                                 iotdatastring.add(binName);
                                 //iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
                             }
-                            Log.d("FirebaseData", String.valueOf(iotdatastring));
-                            try {
-                                createPdf(barrangayName, currentDate, iotdatastring);
-                            } catch (FileNotFoundException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
+                        Log.d("Bin names", String.valueOf(iotdatastring));
+                            getBinNames(iotdatastring);
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                    }
 
-                        }
-                    });
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
         return view;
     }
+
+    private void getBinNames(ArrayList iotdatastring) {
+        ArrayList<String> binDataList = new ArrayList<>();
+        ArrayList<Integer> weekDates = getWeekDates();
+        int numBins = iotdatastring.size();
+
+        for(int i = 0; i < numBins; i++) {
+            String currentBin = (String) iotdatastring.get(i);
+            for (int ii = 0; ii < 7; ii++) {
+                String binDataPath = "/Database/Barangay/"+ barrangayName +"/Bins/"+ currentBin + "/" + getYear() + "/"+ getMonth() + "/" + weekDates.get(ii) + "/FillLevel";
+                Log.d("path", binDataPath);
+                int finalI = i;
+                int finalIi = ii;
+
+                binDataReference =  FirebaseDatabase.getInstance().getReference(binDataPath);
+
+                binDataReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Object fillLevelValue = snapshot.getValue();
+
+                        if (fillLevelValue == null) {
+                            binDataList.add("NA");
+                        } else {
+                            binDataList.add(fillLevelValue.toString());
+                        }
+
+                        if (binDataList.size() == numBins * 7) {
+                            Log.d("FillLevelValue", String.valueOf(binDataList));
+
+                            Log.d("FillLevelValue", String.valueOf(weekDates));
+
+                            try {
+                                createPdf(barrangayName, currentDate, iotdatastring, binDataList);
+                            } catch (FileNotFoundException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("FirebaseError", "Error fetching data: " + error.getMessage());
+                    }
+                });
+            }
+        }
+    }
+
+
+    public static ArrayList<Integer> getWeekDates() {
+        ArrayList<Integer> dayNumbers = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // Start with Sunday
+
+        for (int i = 0; i < 7; i++) {
+            dayNumbers.add(calendar.get(Calendar.DAY_OF_MONTH));
+            calendar.add(Calendar.DAY_OF_WEEK, 1); // Move to the next day
+        }
+
+        return dayNumbers;
+    }
+
 
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -193,18 +217,19 @@ public class AdminReportFragment extends Fragment {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Perform logout action here (e.g., start LoginActivity)
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 getActivity().finish();
                 ((AdminMainActivity) getActivity()).setOnlineStatus(false);
-                alertDialog.dismiss();
+                alertDialog.dismiss(); // Close the dialog after clicking "Yes"
             }
         });
 
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.dismiss();
+                alertDialog.dismiss(); // Close the dialog after clicking "No"
             }
         });
         alertDialog.show();
@@ -216,11 +241,26 @@ public class AdminReportFragment extends Fragment {
         editor.apply();
     }
 
+    // Check if location permission needs to be requested
+    private boolean shouldRequestLocationPermission() {
+        // Check the location permission status in SharedPreferences
+        return !sharedPreferences.getBoolean("location_permission_granted", false);
+    }
+
+    // Method to request location permission
+    private void requestLocationPermission() {
+        if (shouldRequestLocationPermission()) {
+            // Request location permission
+            // Your existing code for requesting location permission
+        }
+    }
+
     //createpdf
-    private void createPdf(String barName, String currentDate, ArrayList iotdatastring) throws FileNotFoundException {
+    private void createPdf(String barName, String currentDate, ArrayList iotdatastring, ArrayList binDataList) throws FileNotFoundException {
         String barangayName = barName;
         String date = currentDate;
         ArrayList binsList = iotdatastring;
+        ArrayList databinList = binDataList;
 
         //fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/2023/09/19");
         fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/" + getYear()+ "/" + getMonth() + "/" +getDate());
@@ -267,13 +307,24 @@ public class AdminReportFragment extends Fragment {
         canvas.drawText("Average", 207, 109, paint);
 
 
-        //data from the bins
-        double lastspace;
+        //bin names
         for (int i = 0; i < binsList.size(); i++) {
             String binName = (String) binsList.get(i);
             canvas.drawText("" + binName, 20, 126 + i * 17, paint);
-            lastspace = 126 + i * 17;
         }
+        //all the fill level
+
+        for(int i = 0; i < databinList.size(); i++)
+        {
+            String fillLevel = (String) databinList.get(i);
+
+            // Calculate x and y coordinates
+            int x = 67 + (i % 7) * 20;
+            int y = 126 + (i / 7) * 17;
+
+            canvas.drawText("" + fillLevel, x, y, paint);
+        }
+
 
 
         mypdfdoc.finishPage(myPage);
@@ -302,7 +353,7 @@ public class AdminReportFragment extends Fragment {
 
     private int getMonth(){
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
 
         return month;
     }
