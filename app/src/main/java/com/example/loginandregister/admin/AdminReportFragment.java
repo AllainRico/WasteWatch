@@ -35,19 +35,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
 public class AdminReportFragment extends Fragment {
     private Button buttonLogout;
     private Button reportbtn;
-    private TextView buttonReport, barangay;
+    private TextView barangay;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private static final int STORAGE_PERMISSION_REQUEST_CODE = 1;
     DatabaseReference reference;
     DatabaseReference binNamesReference;
     DatabaseReference fillLevelReference;
@@ -55,7 +53,6 @@ public class AdminReportFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private String currentDate = sdf.format(new Date());
-
     private String barrangayName;
 
     @Override
@@ -91,7 +88,6 @@ public class AdminReportFragment extends Fragment {
             }
         });
 
-        // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,8 +96,6 @@ public class AdminReportFragment extends Fragment {
                 showLogoutConfirmationDialog();
             }
         });
-
-        //set the button report
 
         reportbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,7 +237,6 @@ public class AdminReportFragment extends Fragment {
 
     // Check if location permission needs to be requested
     private boolean shouldRequestLocationPermission() {
-        // Check the location permission status in SharedPreferences
         return !sharedPreferences.getBoolean("location_permission_granted", false);
     }
 

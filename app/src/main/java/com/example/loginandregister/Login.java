@@ -49,7 +49,6 @@ import java.util.ListIterator;
 public class Login extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver = null;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    boolean isOnline = false;
     boolean locationPermissionGranted = false;
     private View decorView;
     private TextInputEditText editTextEmail, editTextPassword;
