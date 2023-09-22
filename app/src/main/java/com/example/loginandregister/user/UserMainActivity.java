@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.loginandregister.R;
+import com.example.loginandregister.admin.AdminHomeFragment;
+import com.example.loginandregister.admin.AdminMapFragment;
+import com.example.loginandregister.admin.AdminReportFragment;
+import com.example.loginandregister.admin.AdminScheduleFragment;
 import com.example.loginandregister.schedule.ScheduleNotificationManager;
 import com.example.loginandregister.databinding.ActivityMainBinding;
 
@@ -42,6 +46,10 @@ public class UserMainActivity extends AppCompatActivity {
             }
         });
 
+        initializeLayout();
+
+    }
+    private void initializeLayout() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -62,9 +70,7 @@ public class UserMainActivity extends AppCompatActivity {
 
             return true;
         });
-
     }
-
     private void replaceUserFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

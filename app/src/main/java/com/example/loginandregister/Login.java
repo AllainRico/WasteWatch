@@ -50,6 +50,7 @@ public class Login extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiver = null;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     boolean isOnline = false;
+    boolean locationPermissionGranted = false;
     private View decorView;
     private TextInputEditText editTextEmail, editTextPassword;
     private ImageView passwordToggle;
@@ -175,7 +176,6 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Register the receiver if it's not already registered
         if (!isReceiverRegistered) {
             registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
             isReceiverRegistered = true;
@@ -184,7 +184,6 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        // Unregister the receiver if it's registered
         if (isReceiverRegistered) {
             unregisterReceiver(broadcastReceiver);
             isReceiverRegistered = false;
@@ -286,49 +285,48 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    private void requestLocationPermission() {
-        Log.d("LocationPermission", "Requesting location permission");
-        // Request location permission
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                LOCATION_PERMISSION_REQUEST_CODE);
-    }
+private void requestLocationPermission() {
+    Log.d("LocationPermission", "Requesting location permission");
+    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            LOCATION_PERMISSION_REQUEST_CODE);
+}
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (!isFinishing()) {
-            if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-                // Handle permission results
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Location permission granted
-                    isOnline = true;
-                    Log.d("LocationPermission", "Location permission granted");
-                } else {
-                    Log.d("LocationPermission", "Location permission denied");
-                    showLocationPermissionDeniedDialog();
-                }
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Location permission granted
+                locationPermissionGranted = true;
+                loginUser(); // Now, you can proceed with login
+            } else {
+                Log.d("LocationPermission", "Location permission denied");
+                showLocationPermissionDeniedDialog();
             }
         }
     }
 
     private void showLocationPermissionDeniedDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("WasteWatch requires location access to proceed.")
-                .setPositiveButton("Grant Permission", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Request location permission again
-                        requestLocationPermission();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(Login.this, "Location is needed", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .create()
-                .show();
+        if (!isFinishing() && !isDestroyed()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("WasteWatch requires location access to proceed.")
+                    .setPositiveButton("Grant Permission", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // Request location permission again
+                            requestLocationPermission();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(Login.this, "Location is needed", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
     }
 
     private void showLoginWithOptionsDialog() {

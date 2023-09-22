@@ -21,6 +21,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class AdminMapFragment extends Fragment {
-
     private Button garbageBinStatusButton;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
@@ -94,6 +95,7 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation();
+                                displayBinLocation();
 
                                 onMapLoaded();
                             }
@@ -112,6 +114,7 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation();
+                                displayBinLocation();
 
                                 onMapLoaded();
                             }
@@ -137,10 +140,35 @@ public class AdminMapFragment extends Fragment {
 
     public void displayAdminLocation() {
         if (googleMap != null) {
-
             LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
 
-            googleMap.addMarker(new MarkerOptions().position(adminLocation).title("Admin Location"));
+            BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(adminLocation)
+                    .title("Admin Location")
+                    .icon(truckIcon);
+
+            googleMap.addMarker(markerOptions);
+        }
+    }
+
+    public void displayBinLocation(){
+        if (googleMap != null) {
+            //dummy bin Latitude, Longitude
+            double binLatidue = 10.305827;
+            double binLongitude = 123.944845;
+
+            LatLng binLocation = new LatLng(binLatidue, binLongitude);
+
+            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(binLocation)
+                    .title("Bin Location")
+                    .icon(binIcon);
+
+            googleMap.addMarker(markerOptions);
         }
     }
 

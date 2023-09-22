@@ -120,32 +120,10 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         });
 
-//        btnEditTime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                reference = database.getReference("Database").child("Barangay").child("Looc").child("Schedule");
-//                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        String day = dayTextView.getText().toString();
-//                        String time = timeTextView.getText().toString();
-//                        reference.child(day).setValue(time);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//            }
-//        });
-
         editTimeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleEditMode();
-//              Toast.makeText(getContext(), "Testing with no Firebase", Toast.LENGTH_LONG).show();
-//              Toast.makeText(getActivity(), "Testing with no Firebase", Toast.LENGTH_LONG).show();
             }
         });
 

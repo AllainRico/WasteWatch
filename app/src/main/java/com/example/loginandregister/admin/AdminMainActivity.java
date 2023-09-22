@@ -38,13 +38,6 @@
             // Retrieve the isOnline value from the Intent
             isOnline = getIntent().getBooleanExtra("isOnline", false);
 
-            if (isLocationPermissionGranted()) {
-                //Log.d("AdminLocation", "Initializing location service");
-                initializeLocationService();
-            } else {
-                requestLocationPermission();
-            }
-
             decorView = getWindow().getDecorView();
             decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
                 @Override
@@ -55,33 +48,13 @@
                 }
             });
 
-            binding = ActivityMainBinding.inflate(getLayoutInflater());
-            setContentView(binding.getRoot());
-
-            //Fragment shown first at start
-            replaceAdminFragment(new AdminHomeFragment());
-
-            binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-
-                int itemId = item.getItemId();
-                if (itemId == R.id.home) {
-                    replaceAdminFragment(new AdminHomeFragment());
-                } else if (itemId == R.id.schedule) {
-                    replaceAdminFragment(new AdminScheduleFragment());
-                } else if (itemId == R.id.map) {
-                    replaceAdminFragment(new AdminMapFragment());
-                } else if (itemId == R.id.profile) {
-                    replaceAdminFragment(new AdminReportFragment());
-                }
-                return true;
-            });
+            initializeLayout();
 
             if (isOnline) {
                 // Access GPS here
-                // You can use location services because the user is online
+                initializeLocationService();
             } else {
                 // User is not online, handle this case accordingly
-                // You might want to show a message or restrict access to GPS features
                 showLocationPermissionDeniedDialog();
             }
         }
@@ -102,10 +75,6 @@
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
             if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-                Log.d("LocationPermission", "Location permission request result received.");
-                for (int result : grantResults) {
-                    Log.d("LocationPermission", "Grant Result: " + result);
-                }
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Location permission granted, initialize location service
                     initializeLocationService();
@@ -117,17 +86,14 @@
 
         private void initializeLocationService() {
             if (isLocationPermissionGranted()) {
-
                 FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
-
                     fusedLocationClient.getLastLocation()
                             .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                                 @Override
                                 public void onSuccess(Location location) {
-
                                     if (location != null) {
                                         double adminLatitude = location.getLatitude();
                                         double adminLongitude = location.getLongitude();
@@ -194,6 +160,27 @@
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        }
+        private void initializeLayout() {
+            binding = ActivityMainBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+
+            // Fragment shown first at start
+            replaceAdminFragment(new AdminHomeFragment());
+
+            binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.home) {
+                    replaceAdminFragment(new AdminHomeFragment());
+                } else if (itemId == R.id.schedule) {
+                    replaceAdminFragment(new AdminScheduleFragment());
+                } else if (itemId == R.id.map) {
+                    replaceAdminFragment(new AdminMapFragment());
+                } else if (itemId == R.id.profile) {
+                    replaceAdminFragment(new AdminReportFragment());
+                }
+                return true;
+            });
         }
 
         private void replaceAdminFragment(Fragment fragment){
