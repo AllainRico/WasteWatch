@@ -13,10 +13,6 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 
 import com.example.loginandregister.R;
-import com.example.loginandregister.admin.AdminHomeFragment;
-import com.example.loginandregister.admin.AdminMapFragment;
-import com.example.loginandregister.admin.AdminReportFragment;
-import com.example.loginandregister.admin.AdminScheduleFragment;
 import com.example.loginandregister.schedule.ScheduleNotificationManager;
 import com.example.loginandregister.databinding.ActivityMainBinding;
 
