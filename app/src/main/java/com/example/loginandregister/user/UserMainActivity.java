@@ -1,12 +1,16 @@
 package com.example.loginandregister.user;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.AdminHomeFragment;
@@ -37,14 +41,11 @@ public class UserMainActivity extends AppCompatActivity {
 
         //Hide the Navigation Bar
         decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int i) {
-                if(i == 0){
-                    decorView.setSystemUiVisibility(hideSystemBars());
-                }
-            }
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            setupSystemBarsForAndroid12AndHigher(decorView);
+        } else {
+            hideSystemBars();
+        }
 
         initializeLayout();
 
@@ -82,20 +83,28 @@ public class UserMainActivity extends AppCompatActivity {
         binding.bottomNavigationView.setSelectedItemId(itemId);
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
-            decorView.setSystemUiVisibility(hideSystemBars());
-        }
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void setupSystemBarsForAndroid12AndHigher(View decorView) {
+        decorView.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+                WindowInsetsController controller = v.getWindowInsetsController();
+                if (controller != null) {
+                    // Hide system bars using the new API
+                    controller.hide(WindowInsets.Type.systemBars());
+                    controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                }
+                return insets;
+            }
+        });
     }
 
-    private int hideSystemBars(){
-        return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+    private void hideSystemBars() {
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 }

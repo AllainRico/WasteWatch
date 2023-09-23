@@ -236,18 +236,6 @@ public class AdminReportFragment extends Fragment {
         editor.apply();
     }
 
-    // Check if location permission needs to be requested
-    private boolean shouldRequestLocationPermission() {
-        return !sharedPreferences.getBoolean("location_permission_granted", false);
-    }
-
-    // Method to request location permission
-    private void requestLocationPermission() {
-        if (shouldRequestLocationPermission()) {
-            // Request location permission
-            // Your existing code for requesting location permission
-        }
-    }
 
     //createpdf
     private void createPdf(String barName, String currentDate, ArrayList iotdatastring, ArrayList binDataList) throws FileNotFoundException {

@@ -1,6 +1,7 @@
     package com.example.loginandregister.admin;
 
     import androidx.annotation.NonNull;
+    import androidx.annotation.RequiresApi;
     import androidx.appcompat.app.AppCompatActivity;
     import androidx.core.app.ActivityCompat;
     import androidx.fragment.app.Fragment;
@@ -11,9 +12,12 @@
     import android.content.DialogInterface;
     import android.content.pm.PackageManager;
     import android.location.Location;
+    import android.os.Build;
     import android.os.Bundle;
     import android.util.Log;
     import android.view.View;
+    import android.view.WindowInsets;
+    import android.view.WindowInsetsController;
     import android.widget.Toast;
 
     import com.google.android.gms.location.FusedLocationProviderClient;
@@ -38,15 +42,13 @@
             // Retrieve the isOnline value from the Intent
             isOnline = getIntent().getBooleanExtra("isOnline", false);
 
+            //Hide the Navigation Bar
             decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-                @Override
-                public void onSystemUiVisibilityChange(int i) {
-                    if(i == 0){
-                        decorView.setSystemUiVisibility(hideSystemBars());
-                    }
-                }
-            });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                setupSystemBarsForAndroid12AndHigher(decorView);
+            } else {
+                hideSystemBars();
+            }
 
             initializeLayout();
 
@@ -145,22 +147,8 @@
             isOnline = onlineStatus;
         }
 
-        @Override
-        public void onWindowFocusChanged(boolean hasFocus) {
-            super.onWindowFocusChanged(hasFocus);
-            if(hasFocus){
-                decorView.setSystemUiVisibility(hideSystemBars());
-            }
-        }
 
-        private int hideSystemBars(){
-            return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
+
         private void initializeLayout() {
             binding = ActivityMainBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
@@ -192,5 +180,30 @@
 
         public void setBottomNavigationSelectedItem(int itemId) {
             binding.bottomNavigationView.setSelectedItemId(itemId);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.R)
+        private void setupSystemBarsForAndroid12AndHigher(View decorView) {
+            decorView.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+                @Override
+                public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+                    WindowInsetsController controller = v.getWindowInsetsController();
+                    if (controller != null) {
+                        // Hide system bars using the new API
+                        controller.hide(WindowInsets.Type.systemBars());
+                        controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                    }
+                    return insets;
+                }
+            });
+        }
+
+        private void hideSystemBars() {
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     }
