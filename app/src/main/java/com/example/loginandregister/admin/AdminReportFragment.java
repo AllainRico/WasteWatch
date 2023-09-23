@@ -212,19 +212,18 @@ public class AdminReportFragment extends Fragment {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Perform logout action here (e.g., start LoginActivity)
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 getActivity().finish();
                 ((AdminMainActivity) getActivity()).setOnlineStatus(false);
-                alertDialog.dismiss(); // Close the dialog after clicking "Yes"
+                alertDialog.dismiss();
             }
         });
 
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.dismiss(); // Close the dialog after clicking "No"
+                alertDialog.dismiss();
             }
         });
         alertDialog.show();
