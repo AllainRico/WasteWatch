@@ -179,7 +179,6 @@ public class AdminReportFragment extends Fragment {
         }
     }
 
-
     public static ArrayList<Integer> getWeekDates() {
         ArrayList<Integer> dayNumbers = new ArrayList<>();
 
@@ -193,7 +192,6 @@ public class AdminReportFragment extends Fragment {
 
         return dayNumbers;
     }
-
 
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
