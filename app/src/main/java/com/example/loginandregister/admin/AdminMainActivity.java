@@ -15,6 +15,7 @@
     import android.location.Location;
     import android.os.Build;
     import android.os.Bundle;
+    import android.os.Handler;
     import android.util.Log;
     import android.view.View;
     import android.view.WindowInsets;
@@ -36,6 +37,7 @@
         private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
         private static final int PERMISSION_REQUEST_CODE = 123;
         boolean isOnline = false;
+        private final Handler locationHandler = new Handler();
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@
             if (isOnline) {
                 // Access GPS here
                 requestLocationAndStoragePermissions();
+                locationHandler.postDelayed(fetchLocationRunnable, 5000);
             } else {
                 // User is not online, handle this case accordingly
                 showPermissionsDialog();
@@ -195,6 +198,17 @@
             }
         }
 
+        private final Runnable fetchLocationRunnable = new Runnable() {
+            @Override
+            public void run() {
+                initializeLocationService(); // Retrieve location
+
+                // Schedule the next request for location update after 2 seconds
+                locationHandler.postDelayed(this, 2000); // 2000 milliseconds = 2 seconds
+            }
+        };
+
+
 //        private void showLocationPermissionDeniedDialog() {
 //            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //            builder.setMessage("WasteWatch requires location access to proceed.")
@@ -274,4 +288,11 @@
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         }
+
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            locationHandler.removeCallbacks(fetchLocationRunnable);
+        }
+
     }
