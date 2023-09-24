@@ -45,7 +45,6 @@ public class AdminReportFragment extends Fragment {
     private Button reportbtn;
     private TextView barangay, user;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static final int STORAGE_PERMISSION_REQUEST_CODE = 1;
     DatabaseReference reference;
     DatabaseReference binNamesReference;
     DatabaseReference fillLevelReference;
