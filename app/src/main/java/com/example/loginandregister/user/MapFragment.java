@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import android.os.Handler;
 
 public class MapFragment extends Fragment {
 
@@ -44,6 +45,8 @@ public class MapFragment extends Fragment {
     DatabaseReference reference;
     DatabaseReference adminNameReference;
     DatabaseReference adminLatLongReference;
+    private Handler handler = new Handler();
+    private static final int INTERVAL = 2000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,16 +85,26 @@ public class MapFragment extends Fragment {
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
+                                onMapLoaded();
 
                                 Log.d("DBLatitude: ", String.valueOf(lat));
                                 Log.d("DBLongitude: ", String.valueOf(longi));
 
                                 realtimeLocation();
 
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Call your method to retrieve data here
+                                        realtimeLocation();
+                                        handler.postDelayed(this, INTERVAL);
+                                    }
+                                }, INTERVAL);
+
 //                                displayAdminLocation(adminLatitude, adminLongitude);
 //                                displayBinLocation(binLatidue,binLongitude);
 
-                                onMapLoaded();
+
 
                             }
                         } else if ("Basak".equals(bar)) { // Compare strings using .equals()
@@ -111,7 +124,14 @@ public class MapFragment extends Fragment {
 //                                displayBinLocation(binLatidue,binLongitude);
 
                                 onMapLoaded();
-                                realtimeLocation();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Call your method to retrieve data here
+                                        realtimeLocation();
+                                        handler.postDelayed(this, INTERVAL);
+                                    }
+                                }, INTERVAL);
                             }
                         }
                     }
@@ -196,17 +216,24 @@ public class MapFragment extends Fragment {
 
 
     public void displayAdminLocation(double adminLatitude, double adminLongitude) {
-        if (googleMap != null) {
-            LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (googleMap != null) {
+                        LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
 
-            BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
+                        BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
 
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(adminLocation)
-                    .title("Admin Location")
-                    .icon(truckIcon);
+                        MarkerOptions markerOptions = new MarkerOptions()
+                                .position(adminLocation)
+                                .title("Admin Location")
+                                .icon(truckIcon);
 
-            googleMap.addMarker(markerOptions);
+                        googleMap.addMarker(markerOptions);
+                    }
+                }
+            });
         }
     }
 
