@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,8 @@ public class MapFragment extends Fragment {
     double binLongitude = 123.944845;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
+    DatabaseReference adminNameReference;
+    DatabaseReference adminLatLongReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,8 +83,13 @@ public class MapFragment extends Fragment {
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                                displayAdminLocation(adminLatitude, adminLongitude);
-                                displayBinLocation(binLatidue,binLongitude);
+                                Log.d("DBLatitude: ", String.valueOf(lat));
+                                Log.d("DBLongitude: ", String.valueOf(longi));
+
+                                realtimeLocation();
+
+//                                displayAdminLocation(adminLatitude, adminLongitude);
+//                                displayBinLocation(binLatidue,binLongitude);
 
                                 onMapLoaded();
 
@@ -99,10 +107,11 @@ public class MapFragment extends Fragment {
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                                displayAdminLocation(adminLatitude, adminLongitude);
-                                displayBinLocation(binLatidue,binLongitude);
+//                                displayAdminLocation(lat, longi);
+//                                displayBinLocation(binLatidue,binLongitude);
 
                                 onMapLoaded();
+                                realtimeLocation();
                             }
                         }
                     }
@@ -124,6 +133,67 @@ public class MapFragment extends Fragment {
         });
         return view;
     }
+
+    public void realtimeLocation(){
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("ProfileUsername", "");
+
+        String path = "/Database";
+        adminNameReference = database.getReference(path);
+
+        adminNameReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String bar = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                if ("Looc".equals(bar))
+                {
+                    String latlongpath = "/Database/collectors/admin";
+                    adminLatLongReference = database.getReference(latlongpath);
+                    adminLatLongReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Object adminlat = snapshot.child("latitude").getValue();
+                            Object adminlong = snapshot.child("longitude").getValue();
+
+                            displayAdminLocation((Double) adminlat, (Double) adminlong);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+                if ("Basak".equals(bar))
+                {
+                    String latlongpath = "/Database/collectors/basakAdmin";
+                    adminLatLongReference = database.getReference(latlongpath);
+                    adminLatLongReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Object adminlat = snapshot.child("latitude").getValue();
+                            Object adminlong = snapshot.child("longitude").getValue();
+
+                            displayAdminLocation((Double) adminlat, (Double) adminlong);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     public void displayAdminLocation(double adminLatitude, double adminLongitude) {
         if (googleMap != null) {
