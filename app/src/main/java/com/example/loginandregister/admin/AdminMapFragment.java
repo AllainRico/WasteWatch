@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,8 @@ public class AdminMapFragment extends Fragment {
     double adminLongitude = LocationData.getInstance().getAdminLongitude();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
+    private final Handler mapUpdateHandler = new Handler();
+    private final Handler mapRefreshHandler = new Handler();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +72,7 @@ public class AdminMapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap map) {
                 googleMap = map;
-
+                startMapUpdates();
                 SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
                 String username = preferences2.getString("adminFragment", "");
 
@@ -88,8 +91,8 @@ public class AdminMapFragment extends Fragment {
                                 float zoomLevel = 15.3f;
                                 //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
-                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
+//                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
+//                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
@@ -106,8 +109,8 @@ public class AdminMapFragment extends Fragment {
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
                                 float zoomLevel = 15.3f;
-                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
-                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
+//                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
+//                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -141,6 +144,7 @@ public class AdminMapFragment extends Fragment {
     }
 
     public void displayAdminLocation() {
+        Log.d("displayAdminLocation-lat", String.valueOf(adminLatitude));
         if (googleMap != null) {
             LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
 
@@ -194,5 +198,59 @@ public class AdminMapFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         mapPlaceholder.setVisibility(View.GONE);
     }
+
+    private void refreshMap() {
+        googleMap.clear(); // Clear existing markers
+        displayAdminLocation(); // Display admin's location marker
+        displayBinLocation();   // Display bin's location marker
+        // Add any other code to update the map here
+    }
+    private final Runnable mapUpdateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // Code to refresh the map
+            refreshMap();
+            // Schedule the next update after 2 seconds
+            mapUpdateHandler.postDelayed(this, 2000);
+        }
+    };
+    private void startMapUpdates() {
+        mapUpdateHandler.postDelayed(mapUpdateRunnable, 2000); // Start updates
+    }
+
+    private void stopMapUpdates() {
+        mapUpdateHandler.removeCallbacks(mapUpdateRunnable); // Stop updates
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        startMapUpdates(); // Start updates when the fragment is visible
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapRefreshHandler.postDelayed(mapRefreshRunnable, 2000); // Start refreshing immediately
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapRefreshHandler.removeCallbacks(mapRefreshRunnable); // Stop refreshing
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopMapUpdates(); // Stop updates when the fragment is not visible
+    }
+    private final Runnable mapRefreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // Code for refreshing the map goes here
+
+            // Schedule the next refresh after 2 seconds
+            mapRefreshHandler.postDelayed(this, 2000); // 2000 milliseconds = 2 seconds
+        }
+    };
 
 }
