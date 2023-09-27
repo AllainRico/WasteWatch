@@ -60,7 +60,7 @@ public class AdminMapFragment extends Fragment {
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.frameLayout, garbageBinStatusFragment)
-                        .addToBackStack(null) // This allows the user to navigate back to the previous fragment
+                        .addToBackStack(null)
                         .commit();
             }
         });

@@ -34,8 +34,7 @@
     public class AdminMainActivity extends AppCompatActivity {
         private View decorView;
         ActivityMainBinding binding;
-        private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-        private static final int PERMISSION_REQUEST_CODE = 123;
+        private static final int PERMISSION_REQUEST_CODE = 1;
         boolean isOnline = false;
         private final Handler locationHandler = new Handler();
 
@@ -64,20 +63,11 @@
 
             initializeLayout();
 
-//            if (isOnline) {
-//                // Access GPS here
-//                initializeLocationService();
-//            } else {
-//                // User is not online, handle this case accordingly
-//                showLocationPermissionDeniedDialog();
-//            }
-
             if (isOnline) {
                 // Access GPS here
                 requestLocationAndStoragePermissions();
                 locationHandler.postDelayed(fetchLocationRunnable, 5000);
             } else {
-                // User is not online, handle this case accordingly
                 showPermissionsDialog();
             }
         }
@@ -140,26 +130,6 @@
                     == PackageManager.PERMISSION_GRANTED;
         }
 
-//        private void requestLocationPermission() {
-//            Log.d("LocationPermission", "Requesting location permission");
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                    LOCATION_PERMISSION_REQUEST_CODE);
-//        }
-
-//        @Override
-//        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//            if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    // Location permission granted, initialize location service
-//                    initializeLocationService();
-//                } else {
-//                    showLocationPermissionDeniedDialog();
-//                }
-//            }
-//        }
-
         private void initializeLocationService() {
             if (isLocationPermissionGranted()) {
                 FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -207,26 +177,6 @@
                 locationHandler.postDelayed(this, 2000); // 2000 milliseconds = 2 seconds
             }
         };
-
-
-//        private void showLocationPermissionDeniedDialog() {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setMessage("WasteWatch requires location access to proceed.")
-//                    .setPositiveButton("Grant Permission", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            requestLocationPermission();
-//                        }
-//                    })
-//                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            Toast.makeText(AdminMainActivity.this, "Location is needed", Toast.LENGTH_SHORT).show();
-//                        }
-//                    })
-//                    .create()
-//                    .show();
-//        }
 
         public void setOnlineStatus(boolean onlineStatus) {
             isOnline = onlineStatus;

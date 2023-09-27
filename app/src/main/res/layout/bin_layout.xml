@@ -16,7 +16,7 @@
             android:id="@+id/bin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bin #"
+            android:text="Bin Name"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
@@ -33,10 +33,10 @@
             android:id="@+id/fillLevel"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:scaleType="fitCenter"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"/>
-            <!--android:src="@drawable/empty"-->
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter" />
+        <!--android:src="@drawable/empty"-->
 
     </RelativeLayout>
 
