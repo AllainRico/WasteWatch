@@ -32,7 +32,6 @@ public class AddNewGarbageBin extends BottomSheetDialogFragment {
         fragment.garbageBinAdapter = garbageBinAdapter;
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -52,14 +51,12 @@ public class AddNewGarbageBin extends BottomSheetDialogFragment {
             public void onClick(View view) {
                 String binText = newGarbageBinText.getText().toString();
                 if (!binText.isEmpty()) {
-                    // Create a new GarbageBinStatusModel and add it to the list
                     GarbageBinStatusModel newBin = new GarbageBinStatusModel();
                     newBin.setBin(binText);
-                    newBin.setFillLevel(0); // Set initial fill level, modify as needed
+                    newBin.setFillLevel(0);
 
-                    // Add the new bin to the list
                     garbageBinList.add(newBin);
-
+                    garbageBinAdapter.setBin(garbageBinList);
                     // Log list size before and after adding a new bin
                     Log.d("DEBUG", "List size before adding: " + garbageBinList.size());
 
@@ -77,10 +74,6 @@ public class AddNewGarbageBin extends BottomSheetDialogFragment {
                 }
             }
         });
-
-
-
-
         return view;
     }
 

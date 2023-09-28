@@ -2,14 +2,18 @@ package com.example.loginandregister.garbageBin;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.loginandregister.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,13 +52,13 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         model.setFillLevel(0);
 
         garbageBinList.add(model);
-
         garbageBinAdapter.setBin(garbageBinList);
 
         addGarbageBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddNewGarbageBin.newInstance(garbageBinList, garbageBinAdapter).show(getParentFragmentManager(), AddNewGarbageBin.TAG);
+//                AddNewGarbageBin.newInstance(garbageBinList, garbageBinAdapter).show(getParentFragmentManager(), AddNewGarbageBin.TAG);
+                showAddBinDialog();
             }
         });
 
@@ -68,7 +72,51 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
         return view;
     }
+    private void showAddBinDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Add New Bin");
 
+        // Create an EditText for bin name input
+        final EditText binNameInput = new EditText(requireContext());
+        binNameInput.setHint("Enter Bin Name");
+        binNameInput.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(binNameInput);
+
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Get the bin name entered by the user
+                String binName = binNameInput.getText().toString().trim();
+
+                if (!binName.isEmpty()) {
+                    // Create a new GarbageBinStatusModel and add it to the list
+                    GarbageBinStatusModel newBin = new GarbageBinStatusModel();
+                    newBin.setBin(binName);
+                    newBin.setFillLevel(0); // Set initial fill level, modify as needed
+
+                    // Add the new bin to the list
+                    garbageBinList.add(newBin);
+
+                    // Notify the adapter that the data has changed
+                    garbageBinAdapter.notifyDataSetChanged();
+
+                    // Close the dialog
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(requireContext(), "Bin Name is empty", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     private void initWidgets(View view){
         backButton = view.findViewById(R.id.backButton);
         garbageBinRecyclerView = view.findViewById(R.id.garbageBinRecyclerView);
