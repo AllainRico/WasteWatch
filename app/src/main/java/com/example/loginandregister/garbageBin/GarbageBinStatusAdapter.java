@@ -6,14 +6,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.loginandregister.R;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStatusAdapter.ViewHolder> {
     private List<GarbageBinStatusModel> binStatusModel;
-    private GarbageBinStatus fragmentGarbageBinStatus;
 
-    public GarbageBinStatusAdapter(GarbageBinStatus fragmentGarbageBinStatus){
-        this.fragmentGarbageBinStatus = fragmentGarbageBinStatus;
+    public GarbageBinStatusAdapter(){
+        this.binStatusModel = new ArrayList<>();
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){

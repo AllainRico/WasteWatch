@@ -2,6 +2,7 @@ package com.example.loginandregister.garbageBin;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,10 +18,17 @@ import android.widget.Toast;
 
 import com.example.loginandregister.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
@@ -30,6 +38,9 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
     private GarbageBinStatusAdapter garbageBinAdapter;
     private List<GarbageBinStatusModel> garbageBinList;
 
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reference;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,46 +48,90 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         View view = inflater.inflate(R.layout.fragment_garbage_bin_status, container, false);
 
         initWidgets(view);
-        garbageBinList = new ArrayList<>();
 
+        garbageBinList = new ArrayList<>();
         garbageBinRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        garbageBinAdapter = new GarbageBinStatusAdapter(this);
+        garbageBinAdapter = new GarbageBinStatusAdapter();
         garbageBinRecyclerView.setAdapter(garbageBinAdapter);
 
-        Collections.reverse(garbageBinList);
-        garbageBinAdapter.setBin(garbageBinList);
-
         //dummy
-        GarbageBinStatusModel model = new GarbageBinStatusModel();
-        model.setBin("Test Bin");
-        model.setFillLevel(0);
+//        GarbageBinStatusModel model = new GarbageBinStatusModel();
+//        model.setBin("Test Bin");
+//        model.setFillLevel(0);
+//
+//        garbageBinList.add(model);
+//        garbageBinAdapter.setBin(garbageBinList);
 
-        garbageBinList.add(model);
-        garbageBinAdapter.setBin(garbageBinList);
+        reference = database.getReference("Database")
+                .child("Barangay")
+                .child("Looc")
+                .child("Bins");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                garbageBinList.clear();
+                for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
+                    String binName = binSnapshot.getKey();
+
+                    for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
+
+                        for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
+
+                            for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
+
+                                if (daySnapshot.hasChild("FillLevel") &&
+                                        daySnapshot.hasChild("Latitude") &&
+                                        daySnapshot.hasChild("Longitude")) {
+
+                                    int fillLevel = daySnapshot.child("FillLevel").getValue(Integer.class);
+                                    double latitude = daySnapshot.child("Latitude").getValue(Double.class);
+                                    double longitude = daySnapshot.child("Longitude").getValue(Double.class);
+
+                                    GarbageBinStatusModel model = new GarbageBinStatusModel();
+                                    model.setBin(binName);
+                                    model.setFillLevel(fillLevel);
+                                    model.setLatitude(latitude);
+                                    model.setLongitude(longitude);
+
+                                    garbageBinList.add(model);
+                                }
+                            }
+                        }
+                    }
+                }
+                garbageBinAdapter.setBin(garbageBinList);
+                garbageBinAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
         addGarbageBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                AddNewGarbageBin.newInstance(garbageBinList, garbageBinAdapter).show(getParentFragmentManager(), AddNewGarbageBin.TAG);
                 showAddBinDialog();
             }
         });
 
-        backButton = view.findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
-
         return view;
     }
+
     private void showAddBinDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Add New Bin");
 
-        // Create an EditText for bin name input
         final EditText binNameInput = new EditText(requireContext());
         binNameInput.setHint("Enter Bin Name");
         binNameInput.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -85,22 +140,41 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Get the bin name entered by the user
                 String binName = binNameInput.getText().toString().trim();
 
+
+                Calendar calendar = Calendar.getInstance();
+                int currentYear = calendar.get(Calendar.YEAR);
+                int currentMonth = calendar.get(Calendar.MONTH) + 1;
+                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                String year = String.valueOf(currentYear);
+                String month = String.valueOf(currentMonth);
+                String day = String.valueOf(currentDay);
+
+                HashMap<String, Object> bin = new HashMap<>();
+                bin.put("FillLevel", 0);
+                bin.put("Latitude", 0);
+                bin.put("Longitude", 0);
+
+                database.getReference("Database")
+                        .child("Barangay")
+                        .child("Looc")
+                        .child("Bins")
+                        .child(binName)
+                        .child(year)
+                        .child(month)
+                        .child(day)
+                        .updateChildren(bin);
+
                 if (!binName.isEmpty()) {
-                    // Create a new GarbageBinStatusModel and add it to the list
                     GarbageBinStatusModel newBin = new GarbageBinStatusModel();
                     newBin.setBin(binName);
-                    newBin.setFillLevel(0); // Set initial fill level, modify as needed
+                    newBin.setFillLevel(0);
 
-                    // Add the new bin to the list
                     garbageBinList.add(newBin);
-
-                    // Notify the adapter that the data has changed
                     garbageBinAdapter.notifyDataSetChanged();
 
-                    // Close the dialog
                     dialog.dismiss();
                 } else {
                     Toast.makeText(requireContext(), "Bin Name is empty", Toast.LENGTH_SHORT).show();
@@ -117,12 +191,12 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     private void initWidgets(View view){
         backButton = view.findViewById(R.id.backButton);
         garbageBinRecyclerView = view.findViewById(R.id.garbageBinRecyclerView);
         addGarbageBin = view.findViewById(R.id.addGarbageBin);
     }
-
     @Override
     public void handleDialogClose(DialogInterface dialog) {
         Collections.reverse(garbageBinList);
