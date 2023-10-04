@@ -54,14 +54,6 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         garbageBinAdapter = new GarbageBinStatusAdapter();
         garbageBinRecyclerView.setAdapter(garbageBinAdapter);
 
-        //dummy
-//        GarbageBinStatusModel model = new GarbageBinStatusModel();
-//        model.setBin("Test Bin");
-//        model.setFillLevel(0);
-//
-//        garbageBinList.add(model);
-//        garbageBinAdapter.setBin(garbageBinList);
-
         reference = database.getReference("Database")
                 .child("Barangay")
                 .child("Looc")
@@ -125,6 +117,14 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+
+        garbageBinAdapter.setOnItemLongClickListener(new GarbageBinStatusAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(int position) {
+                showDeleteBinDialog(position);
+            }
+        });
+
         return view;
     }
 
@@ -142,20 +142,19 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
             public void onClick(DialogInterface dialog, int which) {
                 String binName = binNameInput.getText().toString().trim();
 
-
                 Calendar calendar = Calendar.getInstance();
                 int currentYear = calendar.get(Calendar.YEAR);
                 int currentMonth = calendar.get(Calendar.MONTH) + 1;
                 int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-                String year = String.valueOf(currentYear);
-                String month = String.valueOf(currentMonth);
-                String day = String.valueOf(currentDay);
+                String year = String.valueOf(currentYear); //setYear();
+                String month = String.valueOf(currentMonth); //setMonth();
+                String day = String.valueOf(currentDay); //setDay();
 
                 HashMap<String, Object> bin = new HashMap<>();
-                bin.put("FillLevel", 0);
-                bin.put("Latitude", 0);
-                bin.put("Longitude", 0);
+                bin.put("FillLevel", 0); //getFillLevel();
+                bin.put("Latitude", 0); //getLatitude();
+                bin.put("Longitude", 0); //getLongitude();
 
                 database.getReference("Database")
                         .child("Barangay")
@@ -190,6 +189,55 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void showDeleteBinDialog(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Delete Bin");
+        builder.setMessage("Are you sure you want to delete this bin?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                GarbageBinStatusModel binToDelete = garbageBinList.get(position);
+
+                deleteBinFromDatabase(binToDelete);
+
+                garbageBinList.remove(position);
+                garbageBinAdapter.notifyItemRemoved(position);
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteBinFromDatabase(GarbageBinStatusModel bin) {
+        String binName = bin.getBin();
+        String year = bin.getYear();
+        String month = bin.getMonth();
+        String day = bin.getDay();
+
+        // Delete the bin's data from the database
+        DatabaseReference binRef = database.getReference("Database")
+                .child("Barangay")
+                .child("Looc")
+                .child("Bins")
+                .child(binName)
+                .child(year)
+                .child(month)
+                .child(day);
+
+        binRef.removeValue();
     }
 
     private void initWidgets(View view){

@@ -1,4 +1,5 @@
 package com.example.loginandregister.garbageBin;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,14 @@ import java.util.List;
 
 public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStatusAdapter.ViewHolder> {
     private List<GarbageBinStatusModel> binStatusModel;
+    private OnItemLongClickListener longClickListener;
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.longClickListener = listener;
+    }
 
     public GarbageBinStatusAdapter(){
         this.binStatusModel = new ArrayList<>();
@@ -24,11 +33,12 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         return new ViewHolder(itemView);
     }
 
-    public void onBindViewHolder(ViewHolder holder, int position){
+    @Override
+    public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int position){
         GarbageBinStatusModel item = binStatusModel.get(position);
         holder.bin.setText(item.getBin());
 
-        int fillLevel = item.getFillLevel();
+        int fillLevel = binStatusModel.get(holder.getAdapterPosition()).getFillLevel();
 
         int fillLevelImageResource;
 
@@ -43,6 +53,17 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         }
 
         holder.fillLevel.setImageResource(fillLevelImageResource);
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (longClickListener != null) {
+                    longClickListener.onItemLongClick(position);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
