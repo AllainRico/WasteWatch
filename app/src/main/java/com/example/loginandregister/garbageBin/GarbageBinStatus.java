@@ -204,7 +204,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                 deleteBinFromDatabase(binToDelete);
 
                 garbageBinList.remove(position);
-                garbageBinAdapter.notifyItemRemoved(position);
+                garbageBinAdapter.notifyDataSetChanged();
 
                 dialog.dismiss();
             }
@@ -220,6 +220,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
     private void deleteBinFromDatabase(GarbageBinStatusModel bin) {
         String binName = bin.getBin();
