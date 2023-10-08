@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.loginandregister.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +29,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -199,12 +201,23 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                GarbageBinStatusModel binToDelete = garbageBinList.get(position);
 
-                deleteBinFromDatabase(binToDelete);
+                Log.d("DeleteBin", "Deleting bin at position: " + position);
 
-                garbageBinList.remove(position);
-                garbageBinAdapter.notifyDataSetChanged();
+                // Ensure that position is valid
+                if (position >= 0 && position < garbageBinList.size()) {
+
+                    GarbageBinStatusModel binToDelete = garbageBinList.get(position);
+                    String binName = binToDelete.getBin();
+                    Log.d("DeleteBin", "binName: " + binName);
+
+
+                    deleteBinFromDatabase(binName, position);
+                } else {
+
+                    Log.e("DeleteBin", "Invalid position: " + position);
+                    Toast.makeText(requireContext(), "Invalid position for deletion", Toast.LENGTH_SHORT).show();
+                }
 
                 dialog.dismiss();
             }
@@ -221,25 +234,33 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         dialog.show();
     }
 
+    private void deleteBinFromDatabase(String binName, final int position) {
+        if (position >= 0 && position < garbageBinList.size()) {
+            DatabaseReference binRef = database.getReference("Database")
+                    .child("Barangay")
+                    .child("Looc")
+                    .child("Bins")
+                    .child(binName);
 
-    private void deleteBinFromDatabase(GarbageBinStatusModel bin) {
-        String binName = bin.getBin();
-        String year = bin.getYear();
-        String month = bin.getMonth();
-        String day = bin.getDay();
-
-        // Delete the bin's data from the database
-        DatabaseReference binRef = database.getReference("Database")
-                .child("Barangay")
-                .child("Looc")
-                .child("Bins")
-                .child(binName)
-                .child(year)
-                .child(month)
-                .child(day);
-
-        binRef.removeValue();
+            binRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        if (position >= 0 && position < garbageBinList.size()) {
+                            garbageBinList.remove(position);
+                            garbageBinAdapter.notifyItemRemoved(position);
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to delete bin from Firebase", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            Log.e("DeleteBin", "Invalid position: " + position);
+            Toast.makeText(requireContext(), "Invalid position for deletion", Toast.LENGTH_SHORT).show();
+        }
     }
+
 
     private void initWidgets(View view){
         backButton = view.findViewById(R.id.backButton);
