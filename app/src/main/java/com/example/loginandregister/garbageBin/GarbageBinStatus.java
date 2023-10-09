@@ -67,6 +67,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                 garbageBinList.clear();
                 for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
                     String binName = binSnapshot.getKey();
+                    updateBinForCurrentDate(binName);
 
                     for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
 
@@ -233,6 +234,47 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    private void updateBinForCurrentDate(final String binName) {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        final String year = String.valueOf(currentYear);
+        final String month = String.valueOf(currentMonth);
+        final String day = String.valueOf(currentDay);
+
+        DatabaseReference currentBinRef = database.getReference("Database")
+                .child("Barangay")
+                .child("Looc")
+                .child("Bins")
+                .child(binName)
+                .child(year)
+                .child(month)
+                .child(day);
+
+        currentBinRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    // If the bin for the current date doesn't exist, create it
+                    DatabaseReference binRef = currentBinRef;
+                    binRef.child("FillLevel").setValue(0); // Set FillLevel as needed
+                    binRef.child("Latitude").setValue(0.0); // Set Latitude as needed
+                    binRef.child("Longitude").setValue(0.0); // Set Longitude as needed
+                }
+                // You can choose to do nothing if the bin for the current date already exists
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(requireContext(), "Failed to read database", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     private void deleteBinFromDatabase(String binName, final int position) {
         if (position >= 0 && position < garbageBinList.size()) {
