@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import com.example.loginandregister.Login;
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.LocationData;
+import com.example.loginandregister.garbageBin.GarbageBinStatus;
+import com.example.loginandregister.requestCollection.userRequestCollectionFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -67,6 +69,12 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getActivity(), "CLICKED~!", Toast.LENGTH_SHORT).show();
+                userRequestCollectionFragment requestCollectionFragment = new userRequestCollectionFragment();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameLayout, requestCollectionFragment)
+                        .addToBackStack(null) // This allows the user to navigate back to the previous fragment
+                        .commit();
             }
         });
 

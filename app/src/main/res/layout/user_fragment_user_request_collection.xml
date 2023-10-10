@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".requestCollection.userRequestCollectionFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+
+        <!-- Username -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_username"
+                android:text="Username: " />
+
+            <EditText
+                android:id="@+id/user_username"
+                android:text="@string/blank"
+                android:textSize="14sp"
+                android:paddingLeft="15dp"
+                android:inputType="none"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                />
+        </LinearLayout>
+
+        <!-- Latitude -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_lat"
+                android:text="Latitude: " />
+
+            <EditText
+                android:id="@+id/user_latvalue"
+                android:text="@string/blank"
+                android:textSize="14sp"
+                android:paddingLeft="15dp"
+                android:inputType="none"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                />
+        </LinearLayout>
+
+        <!-- Longitude -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_long"
+                android:text="Longitude: " />
+
+            <EditText
+                android:id="@+id/user_longvalue"
+                android:text="@string/blank"
+                android:textSize="14sp"
+                android:paddingLeft="15dp"
+                android:inputType="none"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/white" />
+        </LinearLayout>
+
+        <!-- Request Message -->
+        <TextView
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/label_message"
+            android:paddingTop="10dp"
+            android:text="Request Message:"
+            />
+
+        <EditText
+            android:id="@+id/request_message"
+            android:layout_width="match_parent"
+            android:layout_height="224dp"
+            android:background="@color/white"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:paddingLeft="15dp"
+            android:text="@string/blank"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/user_requestCollectionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send Request"
+            android:layout_gravity="center"
+            />
+        <!-- Adjust the button for roundness -->
+    </LinearLayout>
+
+
+</FrameLayout>
