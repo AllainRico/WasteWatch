@@ -64,42 +64,81 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                garbageBinList.clear();
+                // Use a HashMap to keep track of the latest date for each bin
+                HashMap<String, String> latestBinDates = new HashMap<>();
+
                 for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
                     String binName = binSnapshot.getKey();
                     updateBinForCurrentDate(binName);
+                    String latestDate = ""; // Initialize to an empty string
 
                     for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
-
                         for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
-
                             for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
-
                                 if (daySnapshot.hasChild("FillLevel") &&
                                         daySnapshot.hasChild("Latitude") &&
                                         daySnapshot.hasChild("Longitude")) {
+                                    String date = yearSnapshot.getKey() + monthSnapshot.getKey() + daySnapshot.getKey();
 
-                                    int fillLevel = daySnapshot.child("FillLevel").getValue(Integer.class);
-                                    double latitude = daySnapshot.child("Latitude").getValue(Double.class);
-                                    double longitude = daySnapshot.child("Longitude").getValue(Double.class);
+                                    // Check if this date is newer than the existing one (if any)
+                                    if (date.compareTo(latestDate) > 0) {
+                                        latestDate = date; // Update the latest date
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                                    GarbageBinStatusModel model = new GarbageBinStatusModel();
-                                    model.setBin(binName);
-                                    model.setFillLevel(fillLevel);
-                                    model.setLatitude(latitude);
-                                    model.setLongitude(longitude);
+                    // Now, you have the latest date for this bin
+                    latestBinDates.put(binName, latestDate);
+                }
 
-                                    garbageBinList.add(model);
+                // Create a new list to store the latest bin entries
+                List<GarbageBinStatusModel> latestBinEntries = new ArrayList<>();
+
+                // Iterate through the bins and get the latest entry for each bin
+                for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
+                    String binName = binSnapshot.getKey();
+                    String latestDate = latestBinDates.get(binName); // Get the latest date
+
+                    for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
+                        for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
+                            for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
+                                if (daySnapshot.hasChild("FillLevel") &&
+                                        daySnapshot.hasChild("Latitude") &&
+                                        daySnapshot.hasChild("Longitude")) {
+                                    String date = yearSnapshot.getKey() + monthSnapshot.getKey() + daySnapshot.getKey();
+
+                                    // Check if this entry corresponds to the latest date for the bin
+                                    if (date.equals(latestDate)) {
+                                        int fillLevel = daySnapshot.child("FillLevel").getValue(Integer.class);
+                                        double latitude = daySnapshot.child("Latitude").getValue(Double.class);
+                                        double longitude = daySnapshot.child("Longitude").getValue(Double.class);
+
+                                        GarbageBinStatusModel model = new GarbageBinStatusModel();
+                                        model.setBin(binName);
+                                        model.setFillLevel(fillLevel);
+                                        model.setLatitude(latitude);
+                                        model.setLongitude(longitude);
+
+                                        // Add the latest entry to the list
+                                        latestBinEntries.add(model);
+                                    }
                                 }
                             }
                         }
                     }
                 }
+
+                // Clear the old data and set the new data in garbageBinList
+                garbageBinList.clear();
+                garbageBinList.addAll(latestBinEntries);
+
                 garbageBinAdapter.setBin(garbageBinList);
                 garbageBinAdapter.notifyDataSetChanged();
             }
 
-            @Override
+                @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
@@ -259,12 +298,47 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
                     // If the bin for the current date doesn't exist, create it
-                    DatabaseReference binRef = currentBinRef;
-                    binRef.child("FillLevel").setValue(0); // Set FillLevel as needed
-                    binRef.child("Latitude").setValue(0.0); // Set Latitude as needed
-                    binRef.child("Longitude").setValue(0.0); // Set Longitude as needed
+
+                    // Get the data from the previous day (assuming it exists)
+                    DatabaseReference previousDayRef = database.getReference("Database")
+                            .child("Barangay")
+                            .child("Looc")
+                            .child("Bins")
+                            .child(binName)
+                            .child(year)
+                            .child(month)
+                            .child(String.valueOf(currentDay - 1)); // Get data from the previous day
+
+                    previousDayRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot previousDaySnapshot) {
+                            // Check if the previous day's data exists
+                            if (previousDaySnapshot.exists()) {
+                                // Get the data from the previous day
+                                int fillLevel = previousDaySnapshot.child("FillLevel").getValue(Integer.class);
+                                double latitude = previousDaySnapshot.child("Latitude").getValue(Double.class);
+                                double longitude = previousDaySnapshot.child("Longitude").getValue(Double.class);
+
+                                // Create the new entry for the current day and set it to the previous day's values
+                                DatabaseReference binRef = currentBinRef;
+                                binRef.child("FillLevel").setValue(fillLevel);
+                                binRef.child("Latitude").setValue(latitude);
+                                binRef.child("Longitude").setValue(longitude);
+                            } else {
+                                // If there is no data for the previous day, set default values
+                                DatabaseReference binRef = currentBinRef;
+                                binRef.child("FillLevel").setValue(0); // Set FillLevel as needed
+                                binRef.child("Latitude").setValue(0.0); // Set Latitude as needed
+                                binRef.child("Longitude").setValue(0.0); // Set Longitude as needed
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(requireContext(), "Failed to read database", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-                // You can choose to do nothing if the bin for the current date already exists
             }
 
             @Override
