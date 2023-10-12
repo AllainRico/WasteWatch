@@ -1,7 +1,13 @@
 package com.example.loginandregister.user;
 
+
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.location.LocationRequest;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -12,13 +18,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.location.LocationRequestCompat;
 import androidx.fragment.app.Fragment;
+
 
 import com.example.loginandregister.Login;
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.LocationData;
 import com.example.loginandregister.garbageBin.GarbageBinStatus;
 import com.example.loginandregister.requestCollection.userRequestCollectionFragment;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -54,6 +64,8 @@ public class MapFragment extends Fragment {
     private static final int INTERVAL = 2000;
 
     FloatingActionButton requestCollectionBTN;
+    private LocationRequest locationRequest;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,13 +80,7 @@ public class MapFragment extends Fragment {
         requestCollectionBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "CLICKED~!", Toast.LENGTH_SHORT).show();
-                userRequestCollectionFragment requestCollectionFragment = new userRequestCollectionFragment();
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frameLayout, requestCollectionFragment)
-                        .addToBackStack(null) // This allows the user to navigate back to the previous fragment
-                        .commit();
+                displayUserCollectionFragment();
             }
         });
 
@@ -176,6 +182,50 @@ public class MapFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void displayUserCollectionFragment() {
+        Toast.makeText(getActivity(), "CLICKED~!", Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                if(isGPSEnabled()){
+                    Toast.makeText(getActivity(), "NICE GPS IS ENABLED", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Toast.makeText(getActivity(), "ERROR! GPS DISABLED ", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        }
+        else {
+            Toast.makeText(getActivity(), "ERROR! Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ", Toast.LENGTH_SHORT).show();
+        }
+        getUserCollectionFragmentUI();
+    }
+
+
+
+    private boolean isGPSEnabled() {
+        LocationManager locationManager = null;
+        boolean isEnabled = false;
+
+        if(locationManager == null){
+            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
+    }
+
+    private void getUserCollectionFragmentUI() {
+        userRequestCollectionFragment requestCollectionFragment = new userRequestCollectionFragment();
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameLayout, requestCollectionFragment)
+                .addToBackStack(null) // This allows the user to navigate back to the previous fragment
+                .commit();
     }
 
     public void realtimeLocation(){

@@ -58,14 +58,13 @@
 
             <EditText
                 android:id="@+id/user_latvalue"
-                android:text="@string/blank"
-                android:textSize="14sp"
-                android:paddingLeft="15dp"
-                android:inputType="none"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:background="@color/white"
-                />
+                android:inputType="none"
+                android:paddingLeft="15dp"
+                android:text="@string/blank"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <!-- Longitude -->
@@ -107,7 +106,7 @@
             />
 
         <EditText
-            android:id="@+id/request_message"
+            android:id="@+id/user_request_message"
             android:layout_width="match_parent"
             android:layout_height="224dp"
             android:background="@color/white"
