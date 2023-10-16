@@ -41,33 +41,8 @@
                 />
         </LinearLayout>
 
-        <!-- Latitude -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <TextView
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/label_lat"
-                android:text="Latitude: " />
-
-            <EditText
-                android:id="@+id/user_latvalue"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:background="@color/white"
-                android:inputType="none"
-                android:paddingLeft="15dp"
-                android:text="@string/blank"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- Longitude -->
+        <!-- Barangay name -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,17 +55,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/label_long"
-                android:text="Longitude: " />
+                android:text="Barangay Name: " />
 
             <EditText
-                android:id="@+id/user_longvalue"
-                android:text="@string/blank"
-                android:textSize="14sp"
-                android:paddingLeft="15dp"
-                android:inputType="none"
-                android:layout_width="match_parent"
+                android:id="@+id/user_barname"
+                android:layout_width="154dp"
                 android:layout_height="48dp"
-                android:background="@color/white" />
+                android:background="@color/white"
+                android:inputType="none"
+                android:paddingLeft="15dp"
+                android:text="@string/blank"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <!-- Request Message -->
@@ -117,10 +92,17 @@
             android:textSize="14sp" />
 
         <Button
+            android:id="@+id/user_checklocationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check Location"
+            android:layout_gravity="center"
+            />
+        <Button
             android:id="@+id/user_requestCollectionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send Request"
+            android:text="  Send Request   "
             android:layout_gravity="center"
             />
         <!-- Adjust the button for roundness -->

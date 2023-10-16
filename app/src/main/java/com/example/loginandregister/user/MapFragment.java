@@ -1,15 +1,11 @@
 package com.example.loginandregister.user;
 
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.location.LocationRequest;
-import android.os.Build;
 import android.os.Bundle;
-
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +14,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.location.LocationRequestCompat;
 import androidx.fragment.app.Fragment;
 
-
-import com.example.loginandregister.Login;
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.LocationData;
-import com.example.loginandregister.garbageBin.GarbageBinStatus;
 import com.example.loginandregister.requestCollection.userRequestCollectionFragment;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -43,8 +33,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import android.os.Handler;
-import android.widget.Toast;
 
 public class MapFragment extends Fragment {
 
@@ -80,7 +68,7 @@ public class MapFragment extends Fragment {
         requestCollectionBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displayUserCollectionFragment();
+                getUserCollectionFragmentUI();
             }
         });
 
@@ -182,41 +170,6 @@ public class MapFragment extends Fragment {
 
 
         return view;
-    }
-
-    private void displayUserCollectionFragment() {
-        Toast.makeText(getActivity(), "CLICKED~!", Toast.LENGTH_SHORT).show();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                if(isGPSEnabled()){
-                    Toast.makeText(getActivity(), "NICE GPS IS ENABLED", Toast.LENGTH_SHORT).show();
-
-                }else{
-                    Toast.makeText(getActivity(), "ERROR! GPS DISABLED ", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-        }
-        else {
-            Toast.makeText(getActivity(), "ERROR! Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ", Toast.LENGTH_SHORT).show();
-        }
-        getUserCollectionFragmentUI();
-    }
-
-
-
-    private boolean isGPSEnabled() {
-        LocationManager locationManager = null;
-        boolean isEnabled = false;
-
-        if(locationManager == null){
-            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        }
-
-        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        return isEnabled;
     }
 
     private void getUserCollectionFragmentUI() {
