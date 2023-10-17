@@ -30,6 +30,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class userRequestCollectionFragment extends Fragment {
 
     private EditText user_username_editText;
@@ -77,7 +80,7 @@ public class userRequestCollectionFragment extends Fragment {
                                         Double user_lat_value = location.getLatitude();
                                         Double user_long_value = location.getLongitude();
                                         Toast.makeText(getActivity(), "Latitude = "+ user_lat_value + " Longitude = " + user_long_value, Toast.LENGTH_SHORT).show();
-
+                                        sendLocationToDB(user_lat_value, user_long_value);
 
                                     }
                                     else
@@ -104,6 +107,8 @@ public class userRequestCollectionFragment extends Fragment {
             Log.e("ButtonError", "user_check_location_button is null");
         }
     }
+
+
 
     private void displayDataToScreen(View view) {
         //this is to display the data to editTexts
@@ -141,6 +146,42 @@ public class userRequestCollectionFragment extends Fragment {
         });
 
     }
+    private void sendLocationToDB(Double _lat, Double _long) {
+        ///Database/Barangay/getBarName()/Requests/Pending
+        String barname = String.valueOf(user_barangayName.getText());
+        String username = String.valueOf(user_username_editText.getText());
+        String path = "Database/Barangay/"+ barname +"/Requests/Pending"+"/" + username;
+        Log.d("PATH CHECK~~", path);
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference().child(path);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Create a new entry with lat and long values
+                Map<String, Object> locationData = new HashMap<>();
+                locationData.put("lat", _lat);
+                locationData.put("long", _long);
 
+                // Push the data to the "Pending" node
+                reference.setValue(locationData, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError != null) {
+                            // There was an error adding the data
+                            Log.e("Firebase", "Data could not be saved. " + databaseError.getMessage());
+                        } else {
+                            // Data added successfully
+                            Log.d("Firebase", "Data saved successfully.");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 }
