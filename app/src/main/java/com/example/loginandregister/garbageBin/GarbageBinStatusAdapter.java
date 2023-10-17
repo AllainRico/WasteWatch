@@ -1,26 +1,29 @@
 package com.example.loginandregister.garbageBin;
-
-import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.loginandregister.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStatusAdapter.ViewHolder> {
-
     private List<GarbageBinStatusModel> binStatusModel;
+    private OnItemLongClickListener longClickListener;
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position);
+    }
 
-    private GarbageBinStatus fragmentGarbageBinStatus;
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.longClickListener = listener;
+    }
 
-    public GarbageBinStatusAdapter(GarbageBinStatus fragmentGarbageBinStatus){
-        this.fragmentGarbageBinStatus = fragmentGarbageBinStatus;
+    public GarbageBinStatusAdapter(){
+        this.binStatusModel = new ArrayList<>();
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -30,15 +33,12 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         return new ViewHolder(itemView);
     }
 
-    public void onBindViewHolder(ViewHolder holder, int position){
+    @Override
+    public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int position){
         GarbageBinStatusModel item = binStatusModel.get(position);
         holder.bin.setText(item.getBin());
-        holder.place.setText(item.getPlace());
 
-        int latitude = item.getFillLevel();
-        int longitude = item.getFillLevel();
-
-        int fillLevel = item.getFillLevel(); //fill Level to image
+        int fillLevel = binStatusModel.get(holder.getAdapterPosition()).getFillLevel();
 
         int fillLevelImageResource;
 
@@ -53,6 +53,17 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         }
 
         holder.fillLevel.setImageResource(fillLevelImageResource);
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (longClickListener != null) {
+                    longClickListener.onItemLongClick(position);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -61,28 +72,17 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
     }
 
     public void setBin(List<GarbageBinStatusModel> binStatusModel){
-            this.binStatusModel = binStatusModel;
+        this.binStatusModel = binStatusModel;
         notifyDataSetChanged();
-    }
-    public void editItem(int position) {
-        GarbageBinStatusModel item = binStatusModel.get(position);
-        Bundle bundle = new Bundle();
-        bundle.putString("Bin", item.getBin());
-        bundle.putString("Place", item.getPlace());
-        bundle.putInt("Status", item.getFillLevel());
-        AddNewGarbageBin fragment = new AddNewGarbageBin();
-        fragment.setArguments(bundle);
-        fragment.show(fragment.getParentFragmentManager(), AddNewGarbageBin.TAG);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        TextView bin, place;
+        TextView bin;
         ImageView fillLevel;
 
         ViewHolder(View view){
             super(view);
             bin = view.findViewById(R.id.bin);
-            place = view.findViewById(R.id.place);
             fillLevel = view.findViewById(R.id.fillLevel);
         }
     }

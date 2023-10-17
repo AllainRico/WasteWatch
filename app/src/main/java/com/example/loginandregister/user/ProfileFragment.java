@@ -58,30 +58,15 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        initWidgets(view);
 
-        txtFirstName = view.findViewById(R.id.txt_first_name);
-        txtLastName = view.findViewById(R.id.txt_last_name);
-        txtEmail = view.findViewById(R.id.txt_email);
-        txtUsername = view.findViewById(R.id.username);
-
-        editFirstName = view.findViewById(R.id.edit_first_name);
-        editLastName = view.findViewById(R.id.edit_last_name);
-        editEmail = view.findViewById(R.id.edit_email);
-
-        buttonLogout = view.findViewById(R.id.btn_logout);
-
-        //change profile
-        //editProfile = view.findViewById(R.id.editprofile);
-
-        // Set EditTexts initially as read-only
+        // Set EditTexts read-only
         txtFirstName.setInputType(InputType.TYPE_NULL);
         txtLastName.setInputType(InputType.TYPE_NULL);
         txtEmail.setInputType(InputType.TYPE_NULL);
 
-        // Set OnClickListener for the edit ImageViews
         editFirstName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +101,6 @@ public class ProfileFragment extends Fragment {
         txtEmail.setText(email);
         txtUsername.setText(username);
 
-        // Set the button logout click listener
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,7 +135,6 @@ public class ProfileFragment extends Fragment {
                         return true;
                     }
                 }
-
                 return false;
             }
         });
@@ -240,5 +223,16 @@ public class ProfileFragment extends Fragment {
         });
 
         isEditMode = !isEditMode;
+    }
+
+    private void initWidgets(View view) {
+        txtFirstName = view.findViewById(R.id.txt_first_name);
+        txtLastName = view.findViewById(R.id.txt_last_name);
+        txtEmail = view.findViewById(R.id.txt_email);
+        txtUsername = view.findViewById(R.id.username);
+        editFirstName = view.findViewById(R.id.edit_first_name);
+        editLastName = view.findViewById(R.id.edit_last_name);
+        editEmail = view.findViewById(R.id.edit_email);
+        buttonLogout = view.findViewById(R.id.btn_logout);
     }
 }
