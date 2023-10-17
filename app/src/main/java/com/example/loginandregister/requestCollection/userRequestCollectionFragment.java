@@ -37,7 +37,6 @@ public class userRequestCollectionFragment extends Fragment {
 
     private EditText user_username_editText;
     private EditText user_barangayName;
-    private EditText user_userRequestMessage_editText;
     private Button user_checklocationButton;
     private FusedLocationProviderClient fusedLocationProviderClient;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -115,7 +114,6 @@ public class userRequestCollectionFragment extends Fragment {
 
         user_username_editText = view.findViewById(R.id.user_username);
         user_barangayName = view.findViewById(R.id.user_barname);
-        user_userRequestMessage_editText = view.findViewById(R.id.user_request_message);
 
         user_username_editText.setInputType(InputType.TYPE_NULL);
         user_barangayName.setInputType(InputType.TYPE_NULL);

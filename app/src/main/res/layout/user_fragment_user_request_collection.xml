@@ -95,17 +95,10 @@
             android:id="@+id/user_checklocationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Check Location"
+            android:text="Send Request"
             android:layout_gravity="center"
             />
-        <Button
-            android:id="@+id/user_requestCollectionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  Send Request   "
-            android:layout_gravity="center"
-            />
-        <!-- Adjust the button for roundness -->
+        <!-- suggestion: Adjust the button for roundness -->
     </LinearLayout>
 
 
