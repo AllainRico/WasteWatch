@@ -1,9 +1,11 @@
 package com.example.loginandregister.user;
 
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.LocationRequest;
 import android.os.Bundle;
-
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,20 +18,21 @@ import androidx.fragment.app.Fragment;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.LocationData;
+import com.example.loginandregister.requestCollection.userRequestCollectionFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import android.os.Handler;
 
 public class MapFragment extends Fragment {
 
@@ -48,13 +51,26 @@ public class MapFragment extends Fragment {
     private Handler handler = new Handler();
     private static final int INTERVAL = 2000;
 
+    FloatingActionButton requestCollectionBTN;
+    private LocationRequest locationRequest;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         initWidgets(view);
+
+        requestCollectionBTN = view.findViewById(R.id.requestCollectionbtn);
+        requestCollectionBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getUserCollectionFragmentUI();
+            }
+        });
 
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.userMap);
@@ -151,7 +167,18 @@ public class MapFragment extends Fragment {
                 });
             }
         });
+
+
         return view;
+    }
+
+    private void getUserCollectionFragmentUI() {
+        userRequestCollectionFragment requestCollectionFragment = new userRequestCollectionFragment();
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameLayout, requestCollectionFragment)
+                .addToBackStack(null) // This allows the user to navigate back to the previous fragment
+                .commit();
     }
 
     public void realtimeLocation(){
