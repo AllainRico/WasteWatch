@@ -3,103 +3,85 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".requestCollection.userRequestCollectionFragment">
+    tools:context=".requestCollection.userRequestCollectionFragment"
+    android:padding="50dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        >
+        android:orientation="vertical">
 
-        <!-- Username -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/label_username"
-                android:text="Username: " />
-
-            <EditText
-                android:id="@+id/user_username"
-                android:text="@string/blank"
-                android:textSize="14sp"
-                android:paddingLeft="15dp"
-                android:inputType="none"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/white"
-                />
-        </LinearLayout>
-
-
-        <!-- Barangay name -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/label_long"
-                android:text="Barangay Name: " />
-
-            <EditText
-                android:id="@+id/user_barname"
-                android:layout_width="154dp"
-                android:layout_height="48dp"
-                android:background="@color/white"
-                android:inputType="none"
-                android:paddingLeft="15dp"
-                android:text="@string/blank"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- Request Message -->
         <TextView
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/request_collection"
             android:textColor="@color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/label_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/username"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/user_username"
+            android:background="@drawable/input_text"
+            android:hint="@string/blank"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/label_long"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/barangay_name"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/user_barname"
+            android:background="@drawable/input_text"
+            android:hint="@string/blank"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
             android:id="@+id/label_message"
-            android:paddingTop="10dp"
-            android:text="Request Message:"
-            />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/request_message"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/user_request_message"
+            android:background="@drawable/input_text"
+            android:hint="@string/blank"
             android:layout_width="match_parent"
             android:layout_height="224dp"
-            android:background="@color/white"
+            android:padding="10dp"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:paddingLeft="15dp"
-            android:text="@string/blank"
-            android:textSize="14sp" />
+            android:layout_marginBottom="10dp"/>
 
         <Button
             android:id="@+id/user_checklocationButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send Request"
             android:layout_gravity="center"
-            />
-        <!-- suggestion: Adjust the button for roundness -->
+            android:background="@drawable/button"
+            android:text="@string/send_request"
+            android:textColor="@color/white"/>
     </LinearLayout>
-
 
 </FrameLayout>

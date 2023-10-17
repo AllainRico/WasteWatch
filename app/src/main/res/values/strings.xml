@@ -68,4 +68,8 @@
     <string name="we">We</string>
     <string name="starts_at_mm_ss_am_pm">Starts at MM:SS AM/PM</string>
     <string name="save">Save</string>
+    <string name="barangay_name">Barangay Name</string>
+    <string name="request_message">Request Message</string>
+    <string name="send_request">Send Request</string>
+    <string name="request_collection">Request Collection</string>
 </resources>
