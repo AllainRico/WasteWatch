@@ -37,4 +37,17 @@
         android:layout_gravity="center"
         android:visibility="visible" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/admin_requestCollectionbtn"
+        android:contentDescription="Collection Requests"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="92dp"
+        android:layout_marginRight="12dp"
+        />
+
+
+
+
 </FrameLayout>
