@@ -32,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+
 
 public class AdminMapFragment extends Fragment {
     private Button garbageBinStatusButton;
@@ -76,6 +78,15 @@ public class AdminMapFragment extends Fragment {
                 SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
                 String username = preferences2.getString("adminFragment", "");
 
+                Calendar calendar = Calendar.getInstance();
+                int currentYear = calendar.get(Calendar.YEAR);
+                int currentMonth = calendar.get(Calendar.MONTH) + 1;
+                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                String year = String.valueOf(currentYear); //setYear();
+                String month = String.valueOf(currentMonth); //setMonth();
+                String day = String.valueOf(currentDay); //setDay();
+
                 reference = database.getReference("Database");
 
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -83,9 +94,10 @@ public class AdminMapFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String bar = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
                         if ("Looc".equals(bar)) { // Compare strings using .equals()
-                            Double lat = snapshot.child("Barangay").child("Looc").child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child("Looc").child("Map").child("Longitude").getValue(Double.class);
-
+                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
+                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
+                            Double binLat = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Latitude").getValue(Double.class);
+                            Double binLong = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Longitude").getValue(Double.class);
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
                                 float zoomLevel = 15.3f;
@@ -98,7 +110,7 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation();
-                                displayBinLocation();
+                                displayBinLocation(binLat, binLong);
 
                                 onMapLoaded();
                             }
@@ -118,7 +130,7 @@ public class AdminMapFragment extends Fragment {
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation();
-                                displayBinLocation();
+        //                        displayBinLocation();
 
 
                                 onMapLoaded();
@@ -159,13 +171,11 @@ public class AdminMapFragment extends Fragment {
         }
     }
 
-    public void displayBinLocation(){
+    public void displayBinLocation(Double binLatitude, Double binLongitude){
         if (googleMap != null) {
             //dummy bin Latitude, Longitude
-            double binLatidue = 10.305827;
-            double binLongitude = 123.944845;
 
-            LatLng binLocation = new LatLng(binLatidue, binLongitude);
+            LatLng binLocation = new LatLng(binLatitude, binLongitude);
 
             BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
 
@@ -202,7 +212,7 @@ public class AdminMapFragment extends Fragment {
     private void refreshMap() {
         googleMap.clear(); // Clear existing markers
         displayAdminLocation(); // Display admin's location marker
-        displayBinLocation();   // Display bin's location marker
+     //   displayBinLocation();   // Display bin's location marker
         // Add any other code to update the map here
     }
     private final Runnable mapUpdateRunnable = new Runnable() {
