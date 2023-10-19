@@ -34,6 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+
 public class MapFragment extends Fragment {
 
     private ProgressBar progressBar;
@@ -83,6 +85,15 @@ public class MapFragment extends Fragment {
                 SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
                 String username = preferences2.getString("ProfileUsername", "");
 
+                Calendar calendar = Calendar.getInstance();
+                int currentYear = calendar.get(Calendar.YEAR);
+                int currentMonth = calendar.get(Calendar.MONTH) + 1;
+                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                String year = String.valueOf(currentYear); //setYear();
+                String month = String.valueOf(currentMonth); //setMonth();
+                String day = String.valueOf(currentDay); //setDay();
+
                 reference = database.getReference("Database");
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -91,6 +102,8 @@ public class MapFragment extends Fragment {
                         if ("Looc".equals(bar)) { // Compare strings using .equals()
                             Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
                             Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
+                            Double binLat = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Latitude").getValue(Double.class);
+                            Double binLong = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Longitude").getValue(Double.class);
 
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
@@ -118,7 +131,7 @@ public class MapFragment extends Fragment {
                                 }, INTERVAL);
 
 //                                displayAdminLocation(adminLatitude, adminLongitude);
-//                                displayBinLocation(binLatidue,binLongitude);
+                                displayBinLocation(binLatidue,binLongitude);
 
 
 
