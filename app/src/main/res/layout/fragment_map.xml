@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".user.MapFragment"
     android:id="@+id/fragment_map">
 
@@ -10,11 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/requestCollectionbtn"
-        android:contentDescription="Request Collection"
+        android:contentDescription="@string/request_collection"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="92dp"
-        android:layout_marginRight="12dp"
-        />
+        android:layout_marginBottom="120dp"
+        android:layout_marginEnd="30dp"
+        app:srcCompat="@drawable/ic_add"
+        app:backgroundTint="#00b167"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/userMap"
@@ -36,7 +38,4 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="visible" />
-
-
-
 </FrameLayout>

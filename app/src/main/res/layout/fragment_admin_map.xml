@@ -3,18 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".admin.AdminMapFragment"
     android:id="@+id/fragment_admin_map">
 
-    <Button
-        android:id="@+id/garbageBinStatusButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/button"
-        android:textColor="@color/white"
-        android:padding="5dp"
-        android:text="@string/garbage_bin_status"/>
+<!--    <Button-->
+<!--        android:id="@+id/garbageBinStatusButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:background="@drawable/button"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:padding="5dp"-->
+<!--        android:text="@string/garbage_bin_status"/>-->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/adminMap"
@@ -40,14 +41,11 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/admin_requestCollectionbtn"
-        android:contentDescription="Collection Requests"
+        android:id="@+id/fabOptionMenu"
+        android:contentDescription="@string/collection_requests"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="92dp"
-        android:layout_marginRight="12dp"
-        />
-
-
-
-
+        android:layout_marginBottom="120dp"
+        android:layout_marginEnd="30dp"
+        app:srcCompat="@drawable/ic_add"
+        app:backgroundTint="#00b167"/>
 </FrameLayout>

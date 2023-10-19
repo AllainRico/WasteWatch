@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
 import com.example.loginandregister.R;
@@ -33,7 +36,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class AdminMapFragment extends Fragment {
-    private Button garbageBinStatusButton;
+//    private Button garbageBinStatusButton;
+    private FloatingActionButton fabOptionMenu;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
     private GoogleMap googleMap;
@@ -41,7 +45,6 @@ public class AdminMapFragment extends Fragment {
     double adminLongitude = LocationData.getInstance().getAdminLongitude();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
-    private FloatingActionButton collectionrequestsfab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,30 +53,16 @@ public class AdminMapFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin_map, container, false);
 
         initWidgets(view);
-
-        collectionrequestsfab = view.findViewById(R.id.admin_requestCollectionbtn);
-        collectionrequestsfab.setOnClickListener(new View.OnClickListener() {
+        ;
+        fabOptionMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getAdminRequestsFragmentUI();
-            }
-        });
-
-        garbageBinStatusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                GarbageBinStatus garbageBinStatusFragment = new GarbageBinStatus();
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frameLayout, garbageBinStatusFragment)
-                        .addToBackStack(null)
-                        .commit();
+                showFabOptionsMenu(view);
             }
         });
 
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.adminMap);
-
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
@@ -143,7 +132,40 @@ public class AdminMapFragment extends Fragment {
         return view;
     }
 
-    private void getAdminRequestsFragmentUI() {
+    private void showFabOptionsMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(requireContext(), view);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.fab_options_menu, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId(); // Get the ID of the clicked menu item
+                if (itemId == R.id.action_garbage_bin) {
+                    openGarbageBinStatusFragment();
+                    return true;
+                } else if (itemId == R.id.action_collection_requests) {
+                    openCollectionRequestsFragment();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        popupMenu.show();
+    }
+
+    private void openGarbageBinStatusFragment() {
+        GarbageBinStatus garbageBinStatusFragment = new GarbageBinStatus();
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameLayout, garbageBinStatusFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void openCollectionRequestsFragment() {
         adminCollectionRequestsFragment collectionrequestsfragment = new adminCollectionRequestsFragment();
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -187,7 +209,7 @@ public class AdminMapFragment extends Fragment {
     }
 
     private void initWidgets(@NonNull View view) {
-        garbageBinStatusButton = view.findViewById(R.id.garbageBinStatusButton);
+        fabOptionMenu = view.findViewById(R.id.fabOptionMenu);
         progressBar = view.findViewById(R.id.progressBar);
         mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
     }
