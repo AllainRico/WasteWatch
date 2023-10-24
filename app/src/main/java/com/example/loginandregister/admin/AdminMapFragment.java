@@ -78,61 +78,28 @@ public class AdminMapFragment extends Fragment {
                 SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
                 String username = preferences2.getString("adminFragment", "");
 
-                Calendar calendar = Calendar.getInstance();
-                int currentYear = calendar.get(Calendar.YEAR);
-                int currentMonth = calendar.get(Calendar.MONTH) + 1;
-                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                String year = String.valueOf(currentYear); //setYear();
-                String month = String.valueOf(currentMonth); //setMonth();
-                String day = String.valueOf(currentDay); //setDay();
-
                 reference = database.getReference("Database");
 
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String bar = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
-                        if ("Looc".equals(bar)) { // Compare strings using .equals()
-                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
-                            Double binLat = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Latitude").getValue(Double.class);
-                            Double binLong = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Longitude").getValue(Double.class);
-                            if (lat != null && longi != null) {
-                                LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 15.3f;
-                                //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-//                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
-//                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
-                                googleMap.getUiSettings().setZoomControlsEnabled(false);
-                                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                                googleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                                displayAdminLocation();
-                                displayBinLocation(binLat, binLong);
-
-                                onMapLoaded();
-                            }
-                        }else   if ("Basak".equals(bar)) { // Compare strings using .equals()
+                        if (bar != null) {
                             Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
                             Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
 
                             if (lat != null && longi != null) {
                                 LatLng brgyMap = new LatLng(lat, longi);
                                 float zoomLevel = 15.3f;
-//                                reference.child("collectors").child(username).child("latitude").setValue(adminLatitude);
-//                                reference.child("collectors").child(username).child("longitude").setValue(adminLongitude);
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-
                                 googleMap.getUiSettings().setZoomControlsEnabled(false);
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                                 displayAdminLocation();
-        //                        displayBinLocation();
 
-
+                                // Fetch and display all the bins
+                                displayAllBins(snapshot.child("Barangay").child(bar).child("Bins"));
                                 onMapLoaded();
                             }
                         }
@@ -154,7 +121,25 @@ public class AdminMapFragment extends Fragment {
         });
         return view;
     }
+    public void displayAllBins(DataSnapshot binsSnapshot) {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
 
+        String year = String.valueOf(currentYear); //setYear();
+        String month = String.valueOf(currentMonth); //setMonth();
+        String day = String.valueOf(currentDay); //setDay();
+
+        for (DataSnapshot binSnapshot : binsSnapshot.getChildren()) {
+            Double binLatitude = binSnapshot.child(year).child(month).child(day).child("Latitude").getValue(Double.class);
+            Double binLongitude = binSnapshot.child(year).child(month).child(day).child("Longitude").getValue(Double.class);
+
+            if (binLatitude != null && binLongitude != null) {
+                displayBinLocation(binLatitude, binLongitude);
+            }
+        }
+    }
     public void displayAdminLocation() {
         Log.d("displayAdminLocation-lat", String.valueOf(adminLatitude));
         if (googleMap != null) {
