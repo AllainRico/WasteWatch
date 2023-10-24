@@ -36,7 +36,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class AdminMapFragment extends Fragment {
-//    private Button garbageBinStatusButton;
     private FloatingActionButton fabOptionMenu;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
@@ -140,7 +139,7 @@ public class AdminMapFragment extends Fragment {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                int itemId = item.getItemId(); // Get the ID of the clicked menu item
+                int itemId = item.getItemId();
                 if (itemId == R.id.action_garbage_bin) {
                     openGarbageBinStatusFragment();
                     return true;

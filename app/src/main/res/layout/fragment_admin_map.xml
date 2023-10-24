@@ -45,7 +45,8 @@
         android:contentDescription="@string/collection_requests"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="120dp"
+        android:backgroundTint="@color/background_green"
         android:layout_marginEnd="30dp"
         app:srcCompat="@drawable/ic_add"
-        app:backgroundTint="#00b167"/>
+        app:maxImageSize="40dp"/>
 </FrameLayout>

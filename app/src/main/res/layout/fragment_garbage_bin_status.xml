@@ -15,15 +15,15 @@
 
         <Button
             android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_toEndOf="@id/binStatus"
             android:textColor="@color/white"
             android:background="@drawable/button"
-            android:padding="5dp"
+            android:drawableLeft="@drawable/ic_back"
             android:layout_marginTop="50dp"
-            android:layout_marginStart="100dp"
-            android:text="@string/back"/>
+            android:layout_marginStart="156dp"
+            android:text="@string/blank"/>
 
         <TextView
             android:id="@+id/binStatus"
@@ -51,8 +51,9 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="120dp"
             android:backgroundTint="@color/background_green"
+            android:contentDescription="@string/add_garbage_bin"
             android:src="@drawable/ic_add"
-            android:contentDescription="@string/add_garbage_bin"/>
+            app:maxImageSize="40dp"/>
 
     </RelativeLayout>
 
