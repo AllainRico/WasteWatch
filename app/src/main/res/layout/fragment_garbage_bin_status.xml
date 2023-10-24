@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".garbageBin.GarbageBinStatus"
+    android:id="@+id/fragment_garbage_bin_status"
+    android:paddingRight="30dp"
+    android:paddingLeft="30dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_toEndOf="@id/binStatus"
+            android:textColor="@color/white"
+            android:background="@drawable/button"
+            android:drawableLeft="@drawable/ic_back"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="156dp"
+            android:text="@string/blank"/>
+
+        <TextView
+            android:id="@+id/binStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bin_status"
+            android:textSize="32dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="50dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/garbageBinRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/binStatus"
+            android:nestedScrollingEnabled="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addGarbageBin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="120dp"
+            android:backgroundTint="@color/background_green"
+            android:contentDescription="@string/add_garbage_bin"
+            android:src="@drawable/ic_add"
+            app:maxImageSize="40dp"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

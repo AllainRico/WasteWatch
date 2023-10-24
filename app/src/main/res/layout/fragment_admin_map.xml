@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".admin.AdminMapFragment"
+    android:id="@+id/fragment_admin_map">
+
+<!--    <Button-->
+<!--        android:id="@+id/garbageBinStatusButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:background="@drawable/button"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:padding="5dp"-->
+<!--        android:text="@string/garbage_bin_status"/>-->
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/adminMap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+    <ImageView
+        android:id="@+id/mapPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/placeholdermap"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/map_place_holder"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fabOptionMenu"
+        android:contentDescription="@string/collection_requests"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="120dp"
+        android:backgroundTint="@color/background_green"
+        android:layout_marginEnd="30dp"
+        app:srcCompat="@drawable/ic_add"
+        app:maxImageSize="40dp"/>
+</FrameLayout>

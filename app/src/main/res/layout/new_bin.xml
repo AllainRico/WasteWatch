@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/newBinText"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@null"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:hint="Bin Name"/>
+
+    <Button
+        android:id="@+id/newBinButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/background_green"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:text="@string/save"/>
+
+</RelativeLayout>

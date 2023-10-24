@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/action_garbage_bin"
+    android:title="Garbage Bin Status" />
+<item
+    android:id="@+id/action_collection_requests"
+    android:title="Collection Requests" />
+</menu>
