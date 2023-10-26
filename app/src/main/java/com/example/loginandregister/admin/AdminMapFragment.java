@@ -1,3 +1,5 @@
+// AdminMapFragment.java
+
 package com.example.loginandregister.admin;
 
 import android.content.Context;
@@ -9,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -35,7 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class AdminMapFragment extends Fragment {
+public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
+
     private FloatingActionButton fabOptionMenu;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
@@ -44,15 +46,16 @@ public class AdminMapFragment extends Fragment {
     double adminLongitude = LocationData.getInstance().getAdminLongitude();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
+    double requestLat;
+    double requestLon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin_map, container, false);
 
         initWidgets(view);
-        ;
+
         fabOptionMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,73 +65,78 @@ public class AdminMapFragment extends Fragment {
 
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.adminMap);
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+        supportMapFragment.getMapAsync(this);
+
+        return view;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
+
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("adminFragment", "");
+
+        reference = database.getReference("Database");
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onMapReady(GoogleMap map) {
-                googleMap = map;
-                SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
-                String username = preferences2.getString("adminFragment", "");
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String bar = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
+                if ("Looc".equals(bar)) {
+                    Double lat = snapshot.child("Barangay").child("Looc").child("Map").child("Latitude").getValue(Double.class);
+                    Double longi = snapshot.child("Barangay").child("Looc").child("Map").child("Longitude").getValue(Double.class);
 
-                reference = database.getReference("Database");
+                    if (lat != null && longi != null) {
+                        LatLng brgyMap = new LatLng(lat, longi);
+                        float zoomLevel = 15.3f;
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+                        googleMap.getUiSettings().setZoomControlsEnabled(false);
+                        googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                        googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String bar = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
-                        if ("Looc".equals(bar)) {
-                            Double lat = snapshot.child("Barangay").child("Looc").child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child("Looc").child("Map").child("Longitude").getValue(Double.class);
+                        displayAdminLocation();
+                        displayBinLocation();
 
-                            if (lat != null && longi != null) {
-                                LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 15.3f;
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-                                googleMap.getUiSettings().setZoomControlsEnabled(false);
-                                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                                googleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                                displayAdminLocation();
-                                displayBinLocation();
-
-                                onMapLoaded();
-                            }
-                        } else if ("Basak".equals(bar)) {
-                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
-
-                            if (lat != null && longi != null) {
-                                LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 15.3f;
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-
-                                googleMap.getUiSettings().setZoomControlsEnabled(false);
-                                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                                googleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                                displayAdminLocation();
-                                displayBinLocation();
-
-                                onMapLoaded();
-                            }
-                        }
+                        onMapLoaded();
                     }
+                } else if ("Basak".equals(bar)) {
+                    Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
+                    Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                    if (lat != null && longi != null) {
+                        LatLng brgyMap = new LatLng(lat, longi);
+                        float zoomLevel = 15.3f;
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 
+                        googleMap.getUiSettings().setZoomControlsEnabled(false);
+                        googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                        googleMap.getUiSettings().setAllGesturesEnabled(false);
+
+                        displayAdminLocation();
+                        displayBinLocation();
+
+                        onMapLoaded();
                     }
-                });
+                }
+            }
 
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        // Do nothing when clicked on map, effectively disabling any action
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-        return view;
+
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                // Do nothing when clicked on map, effectively disabling any action
+            }
+        });
+
+        if (requestLat != 0 && requestLon != 0) {
+            displayRequesteeLocationOnMap(requestLat, requestLon);
+        }
     }
 
     private void showFabOptionsMenu(View view) {
@@ -216,5 +224,32 @@ public class AdminMapFragment extends Fragment {
     public void onMapLoaded() {
         progressBar.setVisibility(View.GONE);
         mapPlaceholder.setVisibility(View.GONE);
+    }
+
+    public void setRequestLocations(double request_lat_value, double request_longi_value) {
+        requestLat = request_lat_value;
+        requestLon = request_longi_value;
+    }
+
+    public void displayRequesteeLocationOnMap(double _lat, double _long) {
+        if (googleMap != null) {
+            LatLng requesteeLocation = new LatLng(_lat, _long);
+
+            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(requesteeLocation)
+                    .title("Request")
+                    .icon(binIcon);
+
+            googleMap.addMarker(markerOptions);
+
+            // Move the camera to center on the requestee's location
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(requesteeLocation));
+        }
+    }
+
+    public interface OnMapReadyListener {
+        void onMapReady();
     }
 }

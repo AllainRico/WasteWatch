@@ -1,3 +1,5 @@
+// adminCollectionRequestsFragment.java
+
 package com.example.loginandregister.adminCollectionRequests;
 
 import android.os.Bundle;
@@ -19,11 +21,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class adminCollectionRequestsFragment extends Fragment implements UserDataAdapter.OnItemClickListener {
+public class adminCollectionRequestsFragment extends Fragment implements UserDataAdapter.OnItemClickListener, AdminMapFragment.OnMapReadyListener {
 
     private RecyclerView recyclerView;
     private UserDataAdapter adapter;
     ArrayList<UserDataModel> userDataList = new ArrayList<>();
+    private double requestLat;
+    private double requestLon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,8 +35,6 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
         View view = inflater.inflate(R.layout.admin_fragment_admin_collection_requests, container, false);
 
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Requests/Pending");
-
-
 
         recyclerView = view.findViewById(R.id.requestsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -65,20 +67,34 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
         });
 
         return view;
-    }//onCreateView
-
+    }
 
     @Override
     public void onItemClick(int position) {
         UserDataModel clickedItem = userDataList.get(position);
-        //Toast.makeText(getContext(), "Clicked: " + clickedItem.getUsername(), Toast.LENGTH_SHORT).show();
 
         AdminMapFragment adminMapFragment = new AdminMapFragment();
+        adminMapFragment.setRequestLocations(clickedItem.getLat(), clickedItem.getLon());
+
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frameLayout, adminMapFragment)
                 .addToBackStack(null)
                 .commit();
+    }
 
-    }//onItemClick
-}//adminCollectionRequestsFragment
+    @Override
+    public void onMapReady() {
+        AdminMapFragment adminMapFragment = (AdminMapFragment) getActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.adminMap);
+
+        if (adminMapFragment != null) {
+            adminMapFragment.displayRequesteeLocationOnMap(requestLat, requestLon);
+        }
+    }
+
+    public void setRequestLocations(double request_lat_value, double request_longi_value) {
+        requestLat = request_lat_value;
+        requestLon = request_longi_value;
+    }
+}
