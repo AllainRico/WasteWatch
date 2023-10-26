@@ -235,7 +235,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
         if (googleMap != null) {
             LatLng requesteeLocation = new LatLng(_lat, _long);
 
-            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.requesteepic);
 
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(requesteeLocation)
