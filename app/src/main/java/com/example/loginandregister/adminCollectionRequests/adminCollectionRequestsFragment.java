@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,12 +17,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 import java.util.ArrayList;
 
-public class adminCollectionRequestsFragment extends Fragment {
+public class adminCollectionRequestsFragment extends Fragment implements UserDataAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
     private UserDataAdapter adapter;
+    ArrayList<UserDataModel> userDataList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,11 +33,14 @@ public class adminCollectionRequestsFragment extends Fragment {
 
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Requests/Pending");
 
-        ArrayList<UserDataModel> userDataList = new ArrayList<>();
+
 
         recyclerView = view.findViewById(R.id.requestsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new UserDataAdapter(userDataList);
+
+        adapter.setOnItemClickListener(this);
+
         recyclerView.setAdapter(adapter);
 
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -62,4 +68,10 @@ public class adminCollectionRequestsFragment extends Fragment {
         return view;
     }//onCreateView
 
+
+    @Override
+    public void onItemClick(int position) {
+        UserDataModel clickedItem = userDataList.get(position);
+        Toast.makeText(getContext(), "Clicked: " + clickedItem.getUsername(), Toast.LENGTH_SHORT).show();
+    }//onItemClick
 }//adminCollectionRequestsFragment
