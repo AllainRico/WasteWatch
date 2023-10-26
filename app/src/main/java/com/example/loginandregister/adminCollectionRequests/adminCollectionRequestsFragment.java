@@ -1,11 +1,10 @@
-// adminCollectionRequestsFragment.java
-
 package com.example.loginandregister.adminCollectionRequests;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +27,7 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
     ArrayList<UserDataModel> userDataList = new ArrayList<>();
     private double requestLat;
     private double requestLon;
+    private Button backButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,6 +37,9 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Requests/Pending");
 
         recyclerView = view.findViewById(R.id.requestsRecyclerView);
+
+        initWidgets(view);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new UserDataAdapter(userDataList);
 
@@ -63,6 +66,13 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Handle errors here
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
@@ -96,5 +106,11 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
     public void setRequestLocations(double request_lat_value, double request_longi_value) {
         requestLat = request_lat_value;
         requestLon = request_longi_value;
+    }
+}
+
+    private void initWidgets(View view){
+        backButton = view.findViewById(R.id.backButton);
+        recyclerView = view.findViewById(R.id.requestsRecyclerView);
     }
 }

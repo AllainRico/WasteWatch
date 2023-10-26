@@ -12,25 +12,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@+id/requestsRecyclerView"
+            android:textColor="@color/white"
+            android:background="@drawable/button"
+            android:drawableStart="@drawable/ic_back"
+            android:text="@string/blank"/>
+
         <TextView
             android:id="@+id/binStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Collection Requests"
-            android:textSize="32dp"
+            android:text="@string/collection_requests"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/black"
+            android:padding="6dp"
             android:layout_marginTop="50dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/requestsRecyclerView"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/binStatus"
             android:nestedScrollingEnabled="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-
 
     </RelativeLayout>
 

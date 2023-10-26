@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="4dp"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="8dp">
+    android:layout_margin="1dp"
+    app:cardCornerRadius="8dp"
+    app:cardUseCompatPadding="true"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardPreventCornerOverlap="false">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -18,7 +20,8 @@
             android:layout_height="wrap_content"
             android:text="Bin Name"
             android:textColor="@color/black"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/place"
@@ -26,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/bin"
             android:textSize="16dp"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:text="Near Looc Barangay Hall"/>
 
