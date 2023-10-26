@@ -7,9 +7,7 @@
     app:cardCornerRadius="8dp"
     app:cardUseCompatPadding="true"
     app:cardBackgroundColor="@android:color/white"
-    app:cardPreventCornerOverlap="false"
-    app:cardMaxElevation="8dp"
-    app:cardElevation="4dp">
+    app:cardPreventCornerOverlap="false">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,9 +24,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Requestee: "
+                android:text="@string/requestee"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:textStyle="bold"/>
 
             <TextView

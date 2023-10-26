@@ -39,7 +39,6 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
     private RecyclerView garbageBinRecyclerView;
     private GarbageBinStatusAdapter garbageBinAdapter;
     private List<GarbageBinStatusModel> garbageBinList;
-
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
 
@@ -143,8 +142,6 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
             }
         });
-
-
 
         addGarbageBin.setOnClickListener(new View.OnClickListener() {
             @Override

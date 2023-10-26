@@ -73,4 +73,5 @@
     <string name="send_request">Send Request</string>
     <string name="request_collection">Request Collection</string>
     <string name="collection_requests">Collection Requests</string>
+    <string name="requestee">Requestee:</string>
 </resources>

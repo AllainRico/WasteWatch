@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ public class adminCollectionRequestsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private UserDataAdapter adapter;
+    private Button backButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +34,8 @@ public class adminCollectionRequestsFragment extends Fragment {
 
         ArrayList<UserDataModel> userDataList = new ArrayList<>();
 
-        recyclerView = view.findViewById(R.id.requestsRecyclerView);
+        initWidgets(view);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new UserDataAdapter(userDataList);
         recyclerView.setAdapter(adapter);
@@ -59,7 +62,17 @@ public class adminCollectionRequestsFragment extends Fragment {
             }
         });
 
-        return view;
-    }//onCreateView
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
 
-}//adminCollectionRequestsFragment
+        return view;
+    }
+    private void initWidgets(View view){
+        backButton = view.findViewById(R.id.backButton);
+        recyclerView = view.findViewById(R.id.requestsRecyclerView);
+    }
+}

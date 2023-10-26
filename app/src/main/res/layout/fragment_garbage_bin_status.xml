@@ -23,7 +23,7 @@
             android:layout_above="@+id/garbageBinRecyclerView"
             android:textColor="@color/white"
             android:background="@drawable/button"
-            android:drawableLeft="@drawable/ic_back"
+            android:drawableStart="@drawable/ic_back"
             android:text="@string/blank"/>
 
         <TextView
@@ -36,9 +36,10 @@
             android:textColor="@color/black"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="10dp"
             android:id="@+id/garbageBinRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/binStatus"
             android:nestedScrollingEnabled="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
