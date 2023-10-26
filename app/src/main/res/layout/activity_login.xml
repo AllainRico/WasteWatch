@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Login">
+    tools:context=".Login"
+    android:id="@+id/mainLayout">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +15,8 @@
         android:gravity="center"
         android:paddingTop="120dp"
         android:paddingLeft="70dp"
-        android:paddingRight="70dp">
+        android:paddingRight="70dp"
+        android:paddingBottom="10dp">
 
         <TextView
             android:text="@string/welcome"
@@ -55,14 +57,13 @@
             android:layout_height="48dp"
             android:padding="10dp"
             android:layout_marginBottom="5dp"
-            android:inputType="text|textNoSuggestions"/>
+            android:inputType="textNoSuggestions"/>
 
         <TextView
             android:text="@string/password"
             android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordLayout"
@@ -91,10 +92,9 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_toggle_password"
                     android:contentDescription="@string/show_password"
-                    android:padding="12dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="4dp"
+                    android:padding="12dp"
                     android:clickable="true"
                     android:focusable="true"/>
 
@@ -127,7 +127,6 @@
 
         </LinearLayout>
 
-
         <Button
             android:id="@+id/btn_login"
             android:text="@string/login"
@@ -158,10 +157,6 @@
 
     </LinearLayout>
 
-
-
-
-    <!-- ImageView with Shape and Logo-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
