@@ -107,8 +107,6 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
         requestLat = request_lat_value;
         requestLon = request_longi_value;
     }
-}
-
     private void initWidgets(View view){
         backButton = view.findViewById(R.id.backButton);
         recyclerView = view.findViewById(R.id.requestsRecyclerView);
