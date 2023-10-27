@@ -107,7 +107,6 @@ public class Login extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    // When the "Done" action is triggered, click the Login button
                     buttonLogin.performClick();
                     return true;
                 }
@@ -164,7 +163,7 @@ public class Login extends AppCompatActivity {
     private boolean validateCredentials() {
         String username = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
-        boolean isValid = true; // Assume both fields are valid
+        boolean isValid = true;
 
         if (TextUtils.isEmpty(username)) {
             editTextEmail.setError("Username is required.");
@@ -204,12 +203,13 @@ public class Login extends AppCompatActivity {
                     if (adminPasswordFromDB.equals(password)) {
                         // Admin login successful
                         if (locationPermissionGranted) {
-                            // Store admin details in SharedPreferences
-                            SharedPreferences adminPreferences = getSharedPreferences("AdminPreferences", MODE_PRIVATE);
-                            adminPreferences.edit().putString("adminUsername", username).apply();
-
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
                             adminIntent.putExtra("isOnline", true);
+
+                            SharedPreferences adminPreferences = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
+                            String adminUsername = snapshot.child("collectors").child(username).child("username").getValue(String.class);
+                            adminPreferences.edit().putString("adminFragment", adminUsername).apply();
+
                             startActivity(adminIntent);
                             finish();
                         } else {
@@ -225,22 +225,24 @@ public class Login extends AppCompatActivity {
                     String passwordFromDB = snapshot.child("users").child(username).child("password").getValue(String.class);
                     if (passwordFromDB.equals(password)) {
                         // User login successful
-                        // Store user details in SharedPreferences
-                        SharedPreferences userPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
-
-                        // Store user-specific data such as username, name, or any other relevant information
-                        String firstName = snapshot.child("users").child(username).child("firstName").getValue(String.class);
-                        String lastName = snapshot.child("users").child(username).child("lastName").getValue(String.class);
-                        // Add other user data as needed
-
-                        userPreferences.edit()
-                                .putString("username", username)
-                                .putString("firstName", firstName)
-                                .putString("lastName", lastName)
-                                .apply();
-
                         // Launch the main user activity or perform other actions as needed
                         Intent userIntent = new Intent(Login.this, UserMainActivity.class);
+
+                        SharedPreferences userPreferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
+                        String firstname = snapshot.child("firstName").getValue(String.class);
+                        userPreferences.edit().putString("firstname", firstname).apply();
+
+                        SharedPreferences userProfilePreferences = getSharedPreferences("ProfileFragment", MODE_PRIVATE);
+                        String firstName = snapshot.child("users").child(username).child("firstName").getValue(String.class);
+                        String lastName = snapshot.child("users").child(username).child("lastName").getValue(String.class);
+                        String email = snapshot.child("users").child(username).child("email").getValue(String.class);
+                        String username1 = snapshot.child("users").child(username).child("username").getValue(String.class);
+
+                        userProfilePreferences.edit().putString("firstname", firstName).apply();
+                        userProfilePreferences.edit().putString("lastname", lastName).apply();
+                        userProfilePreferences.edit().putString("email", email).apply();
+                        userProfilePreferences.edit().putString("ProfileUsername", username1).apply();
+
                         startActivity(userIntent);
                         finish();
 
