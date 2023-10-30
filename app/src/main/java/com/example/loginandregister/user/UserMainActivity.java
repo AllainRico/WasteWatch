@@ -6,8 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
@@ -16,24 +20,42 @@ import com.example.loginandregister.R;
 import com.example.loginandregister.schedule.ScheduleNotificationManager;
 import com.example.loginandregister.databinding.ActivityMainBinding;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class UserMainActivity extends AppCompatActivity {
     private View decorView;
     ActivityMainBinding binding;
+    private ScheduleNotificationManager notificationManager; // Declare notificationManager
+    private Handler notificationHandler; // Declare notificationHandler
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        // Create a NotificationManager instance
+//        ScheduleNotificationManager notificationManager = new ScheduleNotificationManager(this);
+//
+//        // Schedule a notification
+//        String title = "Garbage Collection";
+//        String message = "Make sure your garbage is ready to collect.";
+//        notificationManager.showNotification(title, message);
+
+
         // Create a NotificationManager instance
-        ScheduleNotificationManager notificationManager = new ScheduleNotificationManager(this);
+        notificationManager = new ScheduleNotificationManager(this);
 
-        // Schedule a notification
-        String title = "Garbage Collection";
-        String message = "Make sure your garbage is ready to collect.";
-        notificationManager.showNotification(title, message);
+        createNotificationChannel();
 
+        // Create a handler to periodically check the time and trigger notifications
+        notificationHandler = new Handler(Looper.getMainLooper());
+
+        // Start checking for scheduled notifications
+        checkScheduledNotifications();
 
         //Hide the Navigation Bar
         decorView = getWindow().getDecorView();
@@ -53,6 +75,50 @@ public class UserMainActivity extends AppCompatActivity {
         initializeLayout();
 
     }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Waste Watch";
+            String description = "Garbage Collection Schedule";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(ScheduleNotificationManager.CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+
+    private void checkScheduledNotifications() {
+        // You can adjust the delay and frequency of checking as needed
+        long initialDelayMillis = 1000; // Initial delay in milliseconds
+        long checkFrequencyMillis = 60000; // Check every 60 seconds
+
+        notificationHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkAndScheduleNotifications();
+                notificationHandler.postDelayed(this, checkFrequencyMillis);
+            }
+        }, initialDelayMillis);
+    }
+
+    private void checkAndScheduleNotifications() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String currentTime = timeFormat.format(new Date());
+
+        // Fetch the scheduled time from Firebase (Replace this with your Firebase logic)
+        String scheduledTime = "07:30"; // Example time
+
+        // Compare the current time with the scheduled time
+        if (currentTime.equals(scheduledTime)) {
+            // It's time for the collection, so trigger a notification
+            String title = "Garbage Collection";
+            String message = "It's time for garbage collection at " + scheduledTime;
+            notificationManager.showNotification(title, message);
+        }
+    }
+
     private void initializeLayout() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
