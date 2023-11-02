@@ -20,6 +20,7 @@ import com.example.loginandregister.R;
 import com.example.loginandregister.schedule.ScheduleNotificationManager;
 import com.example.loginandregister.databinding.ActivityMainBinding;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -46,18 +47,18 @@ public class UserMainActivity extends AppCompatActivity {
 //        notificationManager.showNotification(title, message);
 
 
-        // Create a NotificationManager instance
+        // This Creates a NotificationManager instance
         notificationManager = new ScheduleNotificationManager(this);
 
         createNotificationChannel();
 
-        // Create a handler to periodically check the time and trigger notifications
+        // This Creates a handler to periodically check the time and trigger notifications
         notificationHandler = new Handler(Looper.getMainLooper());
 
-        // Start checking for scheduled notifications
+        // Checks for scheduled notifications
         checkScheduledNotifications();
 
-        //Hide the Navigation Bar
+        //Hides the Navigation Bar
         decorView = getWindow().getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             setupSystemBarsForAndroid12AndHigher(decorView);
@@ -90,7 +91,7 @@ public class UserMainActivity extends AppCompatActivity {
 
 
     private void checkScheduledNotifications() {
-        // You can adjust the delay and frequency of checking as needed
+        //delay and frequency of checking
         long initialDelayMillis = 1000; // Initial delay in milliseconds
         long checkFrequencyMillis = 60000; // Check every 60 seconds
 
@@ -107,17 +108,26 @@ public class UserMainActivity extends AppCompatActivity {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String currentTime = timeFormat.format(new Date());
 
-        // Fetch the scheduled time from Firebase (Replace this with your Firebase logic)
-        String scheduledTime = "07:30"; // Example time
+        // Fetch the scheduled time from Firebase Here
+        String scheduledTime = "03:21 AM"; // Example time
 
-        // Compare the current time with the scheduled time
-        if (currentTime.equals(scheduledTime)) {
-            // It's time for the collection, so trigger a notification
-            String title = "Garbage Collection";
-            String message = "It's time for garbage collection at " + scheduledTime;
-            notificationManager.showNotification(title, message);
+        try {
+            Date scheduledTimeDate = new SimpleDateFormat("hh:mm a", new Locale("en", "PH")).parse(scheduledTime);
+
+            // Format the scheduled time as HH:mm
+            String formattedScheduledTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(scheduledTimeDate);
+
+            // Compare the current time with the scheduled time
+            if (currentTime.equals(formattedScheduledTime)) {
+                String title = "Garbage Collection";
+                String message = "It's time for garbage collection at " + formattedScheduledTime;
+                notificationManager.showNotification(title, message);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
+
 
     private void initializeLayout() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
