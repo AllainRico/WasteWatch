@@ -1,5 +1,6 @@
 package com.example.loginandregister.user;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,13 +13,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.widget.Toast;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.schedule.ScheduleNotificationManager;
 import com.example.loginandregister.databinding.ActivityMainBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +36,9 @@ import java.util.Locale;
 
 
 public class UserMainActivity extends AppCompatActivity {
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reference;
+    private String scheduledTime;
     private View decorView;
     ActivityMainBinding binding;
     private ScheduleNotificationManager notificationManager; // Declare notificationManager
@@ -46,6 +57,8 @@ public class UserMainActivity extends AppCompatActivity {
 //        String message = "Make sure your garbage is ready to collect.";
 //        notificationManager.showNotification(title, message);
 
+        // This initialized the Firebase Database
+        reference = FirebaseDatabase.getInstance().getReference();
 
         // This Creates a NotificationManager instance
         notificationManager = new ScheduleNotificationManager(this);
@@ -105,27 +118,71 @@ public class UserMainActivity extends AppCompatActivity {
     }
 
     private void checkAndScheduleNotifications() {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String currentTime = timeFormat.format(new Date());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
+        String today = dateFormat.format(new Date());
 
-        // Fetch the scheduled time from Firebase Here
-        String scheduledTime = "03:21 AM"; // Example time
+        Log.d("MyApp", "Today time: " + today);
 
-        try {
-            Date scheduledTimeDate = new SimpleDateFormat("hh:mm a", new Locale("en", "PH")).parse(scheduledTime);
+        reference = database.getReference("Database");
 
-            // Format the scheduled time as HH:mm
-            String formattedScheduledTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(scheduledTimeDate);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String time = snapshot.child("Barangay").child("Looc").child("Schedule").child(today).getValue(String.class);
+                if (time != null && !time.isEmpty()) {
+                    // Schedule a notification if time is available
+                    scheduledTime = time;
+                } else {
+                    // No Schedule
+                    scheduledTime = ""; // Default Value
+                }
 
-            // Compare the current time with the scheduled time
-            if (currentTime.equals(formattedScheduledTime)) {
-                String title = "Garbage Collection";
-                String message = "It's time for garbage collection at " + formattedScheduledTime;
-                notificationManager.showNotification(title, message);
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                String currentTime = timeFormat.format(new Date());
+
+                try {
+                    Date scheduledTimeDate = new SimpleDateFormat("hh:mm a", new Locale("en", "PH")).parse(scheduledTime);
+                    String formattedScheduledTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(scheduledTimeDate);
+
+                    if (currentTime.equals(formattedScheduledTime)) {
+                        String title = "Garbage Collection";
+                        String message = "It's time for garbage collection at " + formattedScheduledTime;
+                        notificationManager.showNotification(title, message);
+                    } else {
+                        Log.d("MyApp", "Scheduled time doesn't match current time. Scheduled: " + formattedScheduledTime + ", Current: " + currentTime);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.e("MyApp", "Error parsing time: " + e.getMessage());
+                }
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UserMainActivity.this, "Cancel Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+//        SimpleDateFormat timeFormat    = new SimpleDateFormat("HH:mm", Locale.getDefault());
+//        String currentTime = timeFormat.format(new Date());
+//
+//        // Fetch the scheduled time from Firebase Here
+//        String scheduledTime = "03:21 AM"; // Example time
+//
+//        try {
+//            Date scheduledTimeDate = new SimpleDateFormat("hh:mm a", new Locale("en", "PH")).parse(scheduledTime);
+//
+//            // Format the scheduled time as HH:mm
+//            String formattedScheduledTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(scheduledTimeDate);
+//
+//            // Compare the current time with the scheduled time
+//            if (currentTime.equals(formattedScheduledTime)) {
+//                String title = "Garbage Collection";
+//                String message = "It's time for garbage collection at " + formattedScheduledTime;
+//                notificationManager.showNotification(title, message);
+//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
