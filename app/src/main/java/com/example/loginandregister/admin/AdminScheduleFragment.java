@@ -1,5 +1,6 @@
 package com.example.loginandregister.admin;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
@@ -31,10 +32,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -163,6 +166,9 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
                 imm.showSoftInput(timeTextView, InputMethodManager.SHOW_IMPLICIT);
 
                 editTimeImageView.setImageResource(R.drawable.ic_check); // Change to check icon
+
+                // Show the time picker when entering edit mode
+                showTimePickerDialog();
             } else {
                 // If the selected date is in the past, show a message and disable editing
                 Toast.makeText(getActivity(), "Cannot edit past dates", Toast.LENGTH_SHORT).show();
@@ -194,6 +200,26 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             }
         }
     }
+
+    private void showTimePickerDialog() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                requireContext(),
+                (view, hourOfDay, minute) -> {
+                    // Format the selected time to hh:mm a (12-hour format with AM/PM)
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    calendar.set(Calendar.MINUTE, minute);
+                    String formattedTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(calendar.getTime());
+                    timeTextView.setText(formattedTime);
+                },
+                // Set the current time as the default selection
+                Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                Calendar.getInstance().get(Calendar.MINUTE),
+                false // Set to true for 24-hour format
+        );
+        timePickerDialog.show();
+    }
+
 
     private void initWidgets(View view) {
         calendarRecyclerView = view.findViewById(R.id.calendarRecycleView);
