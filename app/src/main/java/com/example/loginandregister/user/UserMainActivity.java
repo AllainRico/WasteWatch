@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -137,6 +138,36 @@ public class UserMainActivity extends AppCompatActivity {
                     scheduledTime = ""; // Default Value
                 }
 
+                try {
+                    Date scheduledTimeDate = new SimpleDateFormat("hh:mm a", new Locale("en", "PH")).parse(scheduledTime);
+
+                    // Create a calendar instance and set the scheduled time
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(scheduledTimeDate);
+
+                    // Subtract 5 minutes for the reminder time
+                    calendar.add(Calendar.MINUTE, -5);
+
+                    // Get the reminder time
+                    Date reminderTime = calendar.getTime();
+
+                    // Get the current time
+                    String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+
+                    // Format the reminder time
+                    String formattedReminderTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(reminderTime);
+
+                    if (currentTime.equals(formattedReminderTime)) {
+                        // Trigger the reminder notification
+                        String reminderTitle = "Garbage Collection Reminder";
+                        String reminderMessage = "Garbage collection starts at " + formattedReminderTime + ". Don't forget!";
+                        notificationManager.showNotification(reminderTitle, reminderMessage);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.e("MyApp", "Error parsing time: " + e.getMessage());
+                }
+
                 SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 String currentTime = timeFormat.format(new Date());
 
@@ -162,27 +193,6 @@ public class UserMainActivity extends AppCompatActivity {
                 Toast.makeText(UserMainActivity.this, "Cancel Error", Toast.LENGTH_SHORT).show();
             }
         });
-//        SimpleDateFormat timeFormat    = new SimpleDateFormat("HH:mm", Locale.getDefault());
-//        String currentTime = timeFormat.format(new Date());
-//
-//        // Fetch the scheduled time from Firebase Here
-//        String scheduledTime = "03:21 AM"; // Example time
-//
-//        try {
-//            Date scheduledTimeDate = new SimpleDateFormat("hh:mm a", new Locale("en", "PH")).parse(scheduledTime);
-//
-//            // Format the scheduled time as HH:mm
-//            String formattedScheduledTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(scheduledTimeDate);
-//
-//            // Compare the current time with the scheduled time
-//            if (currentTime.equals(formattedScheduledTime)) {
-//                String title = "Garbage Collection";
-//                String message = "It's time for garbage collection at " + formattedScheduledTime;
-//                notificationManager.showNotification(title, message);
-//            }
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
     }
 
 

@@ -230,7 +230,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         btnPrevious = view.findViewById(R.id.btnPrevious);
         btnNext = view.findViewById(R.id.btnNext);
         editTimeImageView = view.findViewById(R.id.edit_time);
-        //btnEditTime = view.findViewById(R.id.edit_time_button);
     }
 
     private void setMonthView() {
@@ -240,7 +239,6 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
-
     }
 
     private String monthYearFromDate(LocalDate date){
