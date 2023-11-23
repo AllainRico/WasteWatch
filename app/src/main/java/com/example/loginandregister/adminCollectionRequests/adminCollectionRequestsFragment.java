@@ -1,5 +1,6 @@
 package com.example.loginandregister.adminCollectionRequests;
 
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class adminCollectionRequestsFragment extends Fragment implements UserDataAdapter.OnItemClickListener, AdminMapFragment.OnMapReadyListener {
 
@@ -39,9 +41,10 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
         recyclerView = view.findViewById(R.id.requestsRecyclerView);
 
         initWidgets(view);
+        UserDataAdapter.initGeocoder(requireContext());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new UserDataAdapter(userDataList);
+        adapter = new UserDataAdapter(userDataList, new Geocoder(getContext(), Locale.getDefault()));
 
         adapter.setOnItemClickListener(this);
 
