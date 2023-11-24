@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -27,6 +28,7 @@
                 android:text="@string/requestee"
                 android:textColor="@color/black"
                 android:textSize="16dp"
+                android:paddingRight="10dp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -51,7 +53,8 @@
                 android:text="@string/address"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:paddingRight="27dp"/>
 
             <TextView
                 android:id="@+id/addressTextView"
