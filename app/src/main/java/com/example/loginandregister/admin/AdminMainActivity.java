@@ -33,7 +33,7 @@ public class AdminMainActivity extends AppCompatActivity {
     private View decorView;
     ActivityMainBinding binding;
     private static final int PERMISSION_REQUEST_CODE = 1;
-    boolean isOnline = false;
+    public static boolean isOnline = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,115 +60,15 @@ public class AdminMainActivity extends AppCompatActivity {
 
         initializeLayout();
 
-        if (isOnline) {
-            // Access GPS here
-            requestLocationAndStoragePermissions();
-        } else {
-            showPermissionsDialog();
-        }
+
     }
+    //all related to location requisition
 
-    private void requestLocationAndStoragePermissions() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
-    }
 
-    private void showPermissionsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("WasteWatch requires location and storage access to proceed.")
-                .setPositiveButton("Grant Permissions", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Request both location and storage permissions
-                        requestLocationAndStoragePermissions();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // if the user denies permissions
-                        Intent intent = new Intent(AdminMainActivity.this, Login.class);
-                        startActivity(intent);
-                        finish();
-                        ((AdminMainActivity) AdminMainActivity.this).setOnlineStatus(false);
-                        Toast.makeText(AdminMainActivity.this, "Permissions denied", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .create()
-                .show();
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0) {
-                // Check the grantResults array for both permissions
-                boolean locationPermissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                boolean storagePermissionGranted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
 
-                if (locationPermissionGranted && storagePermissionGranted) {
-                    // Both permissions are granted
-                    // Continue with your location and storage-related tasks
-                    initializeLocationService();
-                    // Any other initialization or tasks that require storage access
-
-                } else {
-                    // Handle if the user denies either or both permissions
-                    Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
-    private boolean isLocationPermissionGranted() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void initializeLocationService() {
-        if (isLocationPermissionGranted()) {
-            FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    double adminLatitude = location.getLatitude();
-                                    double adminLongitude = location.getLongitude();
-
-                                    LocationData.getInstance().setAdminLatitude(adminLatitude);
-                                    LocationData.getInstance().setAdminLongitude(adminLongitude);
-
-                                    Log.d("AdminLocation", "Latitude: " + adminLatitude);
-                                    Log.d("AdminLocation", "Longitude: " + adminLongitude);
-                                } else {
-                                    Toast.makeText(AdminMainActivity.this, "Location is not available", Toast.LENGTH_SHORT).show();
-
-                                    double defaultLatitude = 10.305627;
-                                    double defaultLongitude = 123.946517;
-
-                                    LocationData.getInstance().setAdminLatitude(defaultLatitude);
-                                    LocationData.getInstance().setAdminLongitude(defaultLongitude);
-                                }
-                            }
-                        });
-            } else {
-                //showLocationPermissionDeniedDialog();
-            }
-        } else {
-            //requestLocationPermission();
-        }
-    }
-
-    public void setOnlineStatus(boolean onlineStatus) {
-        isOnline = onlineStatus;
-    }
-
+    //All related to UI
     private void initializeLayout() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

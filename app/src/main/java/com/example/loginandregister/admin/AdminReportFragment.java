@@ -53,6 +53,7 @@ public class AdminReportFragment extends Fragment {
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private String currentDate = sdf.format(new Date());
     private String barrangayName;
+    public String _username;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +81,7 @@ public class AdminReportFragment extends Fragment {
                 barrangayName = barName;
                 barangay.setText("Barangay " + barName);
                 user.setText(username1);
+
             }
 
             @Override
@@ -193,6 +195,13 @@ public class AdminReportFragment extends Fragment {
     }
 
     private void showLogoutConfirmationDialog() {
+
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("adminFragment","");
+
+        reference = database.getReference("Database").child("collectors").child(username);
+
+        Log.d( "path? ", reference.toString());
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
         // Inflate the custom layout for the dialog content
@@ -212,7 +221,9 @@ public class AdminReportFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 getActivity().finish();
-                ((AdminMainActivity) getActivity()).setOnlineStatus(false);
+//                Log.d("FirebasePath", "Path: collectors/" + username + "/isOnline");
+                reference.child("isOnline").setValue(false);
+
                 alertDialog.dismiss();
             }
         });

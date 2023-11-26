@@ -208,7 +208,9 @@ public class Login extends AppCompatActivity {
 
                             SharedPreferences adminPreferences = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
                             String adminUsername = snapshot.child("collectors").child(username).child("username").getValue(String.class);
+                            reference.child("collectors").child(username).child("isOnline").setValue(true);
                             adminPreferences.edit().putString("adminFragment", adminUsername).apply();
+
 
                             startActivity(adminIntent);
                             finish();
