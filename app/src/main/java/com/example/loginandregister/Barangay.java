@@ -56,7 +56,7 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
         initWidgets();
 
         database = FirebaseDatabase.getInstance();
-        barangayRef = database.getReference("Database").child("Barangay");
+        barangayRef = database.getReference().child("Barangay");
 
         ArrayList<String> barangayList = new ArrayList<>();
         barangayRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -142,7 +142,7 @@ public class Barangay extends AppCompatActivity implements AdapterView.OnItemSel
     private void populateDistrictSpinner(String selectedBarangay) {
         ArrayList<String> districtList = new ArrayList<>();
 
-        DatabaseReference districtRef = database.getReference("Database")
+        DatabaseReference districtRef = database.getReference()
                 .child("Barangay")
                 .child(selectedBarangay)
                 .child("District");

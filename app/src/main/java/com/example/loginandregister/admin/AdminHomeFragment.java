@@ -40,7 +40,7 @@ public class AdminHomeFragment extends Fragment {
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
         Log.d("username", username);
-        reference = database.getReference("Database").child("collectors").child(username);
+        reference = database.getReference().child("collectors").child(username);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -2,8 +2,11 @@
 
 package com.example.loginandregister.admin;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,14 +16,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.adminCollectionRequests.adminCollectionRequestsFragment;
 import com.example.loginandregister.garbageBin.GarbageBinStatus;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,24 +45,27 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
 
     private FloatingActionButton fabOptionMenu;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
     private GoogleMap googleMap;
-    double adminLatitude = LocationData.getInstance().getAdminLatitude();
-    double adminLongitude = LocationData.getInstance().getAdminLongitude();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
     double requestLat;
     double requestLon;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    public static String adminusername;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_admin_map, container, false);
-
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         initWidgets(view);
 
         fabOptionMenu.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +79,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
                 getChildFragmentManager().findFragmentById(R.id.adminMap);
         supportMapFragment.getMapAsync(this);
 
+        setCollectorLocation();
         return view;
     }
 
@@ -77,7 +90,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment", "");
 
-        reference = database.getReference("Database");
+        reference = database.getReference();
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -95,7 +108,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
                         googleMap.getUiSettings().setZoomGesturesEnabled(false);
                         googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                        displayAdminLocation();
+//                        displayAdminLocation();
                         displayBinLocation();
 
                         onMapLoaded();
@@ -113,7 +126,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
                         googleMap.getUiSettings().setZoomGesturesEnabled(false);
                         googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                        displayAdminLocation();
+//                        displayAdminLocation();
                         displayBinLocation();
 
                         onMapLoaded();
@@ -181,21 +194,85 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
                 .commit();
     }
 
-    public void displayAdminLocation() {
-        Log.d("displayAdminLocation-lat", String.valueOf(adminLatitude));
-        if (googleMap != null) {
-            LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
+    public boolean isLocationPermissionGranted(Context context) {
+        return ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
 
-            BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
+    }
 
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(adminLocation)
-                    .title("Admin Location")
-                    .icon(truckIcon);
+    public void setCollectorLocation() {
+        if (isLocationPermissionGranted(getActivity())) {
+            Log.d("setCollectorLocation: ", "location permission granted");
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    Log.d("onSuccess: ", location.toString());
+                    if (location != null) {
 
-            googleMap.addMarker(markerOptions);
+                        Double user_lat_value = location.getLatitude();
+                        Double user_long_value = location.getLongitude();
+                        Toast.makeText(getActivity(), "Latitude = " + user_lat_value + " Longitude = " + user_long_value, Toast.LENGTH_SHORT).show();
+                        sendLocationToDB(user_lat_value, user_long_value);
+//                        displayAdminLocation(user_lat_value, user_long_value);
+
+                    } else {
+                        Toast.makeText(getActivity(), "!!!!!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        else{
+            Log.d("setCollectorLocation: ", "location permission not granted");
         }
     }
+
+
+    private void sendLocationToDB(Double _lat, Double _long) {
+
+        String path = "/collectors/"+ adminusername;
+        Log.d("PATH CHECK~~", path);
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference().child(path);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Create a new entry with lat and long values
+//                Map<String, Object> locationData = new HashMap<>();
+//                locationData.put("latitude", _lat);
+//                locationData.put("longitude", _long);
+
+                reference.child("latitude").setValue(_lat);
+                reference.child("longitude").setValue(_long);
+                // Push the data to the "Pending" node
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+//    public void displayAdminLocation() {
+//        Log.d("displayAdminLocation-lat", String.valueOf(adminLatitude));
+//        if (googleMap != null) {
+//            LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
+//
+//            BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
+//
+//            MarkerOptions markerOptions = new MarkerOptions()
+//                    .position(adminLocation)
+//                    .title("Admin Location")
+//                    .icon(truckIcon);
+//
+//            googleMap.addMarker(markerOptions);
+//        }
+//    }
 
     public void displayBinLocation() {
         if (googleMap != null) {

@@ -78,7 +78,7 @@ public class Register extends AppCompatActivity {
             public void onClick(View view) {
                 String username = editTextUsername.getText().toString().trim();
                 database = FirebaseDatabase.getInstance();
-                reference = database.getReference("Database").child("users");
+                reference = database.getReference().child("users");
 
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

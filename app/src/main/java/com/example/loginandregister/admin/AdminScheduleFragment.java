@@ -88,7 +88,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
 
-        reference = database.getReference("Database");
+        reference = database.getReference();
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -180,7 +180,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             if (!timeTextView.getText().toString().isEmpty()) {
                 dayTimeMap.put(selectedDate, timeTextView.getText().toString());
 
-                reference = database.getReference("Database");
+                reference = database.getReference();
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -313,7 +313,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
             SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
             String username = preferences2.getString("adminFragment","");
 
-            reference = database.getReference("Database");
+            reference = database.getReference();
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

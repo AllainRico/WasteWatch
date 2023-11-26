@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
         // this is the get sharedPreference for the first name from the login
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("ProfileUsername","");
-        reference = database.getReference("Database").child("users").child(username);
+        reference = database.getReference().child("users").child(username);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

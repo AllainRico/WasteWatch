@@ -72,7 +72,7 @@ public class AdminReportFragment extends Fragment {
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
 
-        reference = database.getReference("Database").child("collectors").child(username);
+        reference = database.getReference().child("collectors").child(username);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -104,7 +104,7 @@ public class AdminReportFragment extends Fragment {
             public void onClick(View view) {
                 ArrayList<String> iotdatastring = new ArrayList<>();
 
-                String binNamesDBPath = "/Database/Barangay/"+ barrangayName +"/Bins";
+                String binNamesDBPath = "/Barangay/"+ barrangayName +"/Bins";
                 binNamesReference =  FirebaseDatabase.getInstance().getReference(binNamesDBPath);
                 binNamesReference.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -140,7 +140,7 @@ public class AdminReportFragment extends Fragment {
         for(int i = 0; i < numBins; i++) {
             String currentBin = (String) iotdatastring.get(i);
             for (int ii = 0; ii < 7; ii++) {
-                String binDataPath = "/Database/Barangay/"+ barrangayName +"/Bins/"+ currentBin + "/" + getYear() + "/"+ getMonth() + "/" + weekDates.get(ii) + "/FillLevel";
+                String binDataPath = "/Barangay/"+ barrangayName +"/Bins/"+ currentBin + "/" + getYear() + "/"+ getMonth() + "/" + weekDates.get(ii) + "/FillLevel";
                 Log.d("path", binDataPath);
                 int finalI = i;
                 int finalIi = ii;
@@ -199,7 +199,7 @@ public class AdminReportFragment extends Fragment {
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
 
-        reference = database.getReference("Database").child("collectors").child(username);
+        reference = database.getReference().child("collectors").child(username);
 
         Log.d( "path? ", reference.toString());
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -252,7 +252,7 @@ public class AdminReportFragment extends Fragment {
         ArrayList databinList = binDataList;
 
         //fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/2023/09/19");
-        fillLevelReference = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Bins/bin2/" + getYear()+ "/" + getMonth() + "/" +getDate());
+        fillLevelReference = FirebaseDatabase.getInstance().getReference("/Barangay/Looc/Bins/bin2/" + getYear()+ "/" + getMonth() + "/" +getDate());
 
         //lets create a WasteWatchReports directory to hold all the reports
 //        File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "WasteWatchReports2");

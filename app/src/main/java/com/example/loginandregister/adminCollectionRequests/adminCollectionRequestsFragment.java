@@ -36,7 +36,7 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.admin_fragment_admin_collection_requests, container, false);
 
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("/Database/Barangay/Looc/Requests/Pending");
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("/Barangay/Looc/Requests/Pending");
 
         recyclerView = view.findViewById(R.id.requestsRecyclerView);
 

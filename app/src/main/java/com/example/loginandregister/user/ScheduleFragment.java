@@ -77,7 +77,7 @@
                 SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
                 String username = preferences2.getString("ProfileUsername","");
 
-                reference = database.getReference("Database");
+                reference = database.getReference();
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -176,7 +176,7 @@
                     SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
                     String username = preferences2.getString("ProfileUsername","");
 
-                    reference = database.getReference("Database");
+                    reference = database.getReference();
                     reference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {

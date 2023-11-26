@@ -35,6 +35,7 @@ public class AdminMainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 1;
     public static boolean isOnline = false;
 
+    public static String globalusername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,7 @@ public class AdminMainActivity extends AppCompatActivity {
 
         // Retrieve the isOnline value from the Intent
         isOnline = getIntent().getBooleanExtra("isOnline", false);
+        AdminMapFragment.adminusername = globalusername;
 
         //Hide the Navigation Bar
         decorView = getWindow().getDecorView();

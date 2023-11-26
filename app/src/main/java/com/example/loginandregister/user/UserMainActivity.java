@@ -124,7 +124,7 @@ public class UserMainActivity extends AppCompatActivity {
 
         Log.d("MyApp", "Today time: " + today);
 
-        reference = database.getReference("Database");
+        reference = database.getReference();
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

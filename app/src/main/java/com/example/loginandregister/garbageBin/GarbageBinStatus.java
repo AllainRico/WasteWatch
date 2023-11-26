@@ -55,7 +55,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         garbageBinAdapter = new GarbageBinStatusAdapter();
         garbageBinRecyclerView.setAdapter(garbageBinAdapter);
 
-        reference = database.getReference("Database")
+        reference = database.getReference()
                 .child("Barangay")
                 .child("Looc")
                 .child("Bins");
@@ -195,7 +195,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                 bin.put("Latitude", 0); //getLatitude();
                 bin.put("Longitude", 0); //getLongitude();
 
-                database.getReference("Database")
+                database.getReference()
                         .child("Barangay")
                         .child("Looc")
                         .child("Bins")
@@ -281,7 +281,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         final String month = String.valueOf(currentMonth);
         final String day = String.valueOf(currentDay);
 
-        DatabaseReference currentBinRef = database.getReference("Database")
+        DatabaseReference currentBinRef = database.getReference()
                 .child("Barangay")
                 .child("Looc")
                 .child("Bins")
@@ -297,7 +297,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                     // If the bin for the current date doesn't exist, create it
 
                     // Get the data from the previous day (assuming it exists)
-                    DatabaseReference previousDayRef = database.getReference("Database")
+                    DatabaseReference previousDayRef = database.getReference()
                             .child("Barangay")
                             .child("Looc")
                             .child("Bins")
@@ -349,7 +349,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
     private void deleteBinFromDatabase(String binName, final int position) {
         if (position >= 0 && position < garbageBinList.size()) {
-            DatabaseReference binRef = database.getReference("Database")
+            DatabaseReference binRef = database.getReference()
                     .child("Barangay")
                     .child("Looc")
                     .child("Bins")

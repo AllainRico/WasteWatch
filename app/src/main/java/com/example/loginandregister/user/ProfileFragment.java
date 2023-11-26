@@ -88,7 +88,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        reference = database.getInstance().getReference("Database").child("users");
+        reference = database.getInstance().getReference().child("users");
 
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
         String firstName = preferences2.getString("firstname", " ");
@@ -209,7 +209,7 @@ public class ProfileFragment extends Fragment {
         String email3 = txtEmail.getText().toString().trim();
         String user = txtUsername.getText().toString().trim();
 
-        reference = database.getReference("Database").child("users").child(user);
+        reference = database.getReference().child("users").child(user);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

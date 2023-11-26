@@ -129,7 +129,7 @@ public class userRequestCollectionFragment extends Fragment {
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("ProfileUsername","");
 
-        reference = database.getReference("Database");
+        reference = database.getReference();
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -148,7 +148,7 @@ public class userRequestCollectionFragment extends Fragment {
         ///Database/Barangay/getBarName()/Requests/Pending
         String barname = String.valueOf(user_barangayName.getText());
         String username = String.valueOf(user_username_editText.getText());
-        String path = "Database/Barangay/"+ barname +"/Requests/Pending"+"/" + username;
+        String path = "/Barangay/"+ barname +"/Requests/Pending"+"/" + username;
         Log.d("PATH CHECK~~", path);
         database = FirebaseDatabase.getInstance();
         reference = database.getReference().child(path);

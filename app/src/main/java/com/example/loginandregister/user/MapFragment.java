@@ -94,7 +94,7 @@ public class MapFragment extends Fragment {
                 String month = String.valueOf(currentMonth); //setMonth();
                 String day = String.valueOf(currentDay); //setDay();
 
-                reference = database.getReference("Database");
+                reference = database.getReference();
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -198,8 +198,7 @@ public class MapFragment extends Fragment {
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("ProfileUsername", "");
 
-        String path = "/Database";
-        adminNameReference = database.getReference(path);
+        adminNameReference = database.getReference();
 
         adminNameReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -207,7 +206,7 @@ public class MapFragment extends Fragment {
                 String bar = snapshot.child("users").child(username).child("barName").getValue(String.class);
                 if ("Looc".equals(bar))
                 {
-                    String latlongpath = "/Database/collectors/admin";
+                    String latlongpath = "/collectors/admin";
                     adminLatLongReference = database.getReference(latlongpath);
                     adminLatLongReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -227,7 +226,7 @@ public class MapFragment extends Fragment {
                 }
                 if ("Basak".equals(bar))
                 {
-                    String latlongpath = "/Database/collectors/basakAdmin";
+                    String latlongpath = "/collectors/basakAdmin";
                     adminLatLongReference = database.getReference(latlongpath);
                     adminLatLongReference.addValueEventListener(new ValueEventListener() {
                         @Override

@@ -192,8 +192,7 @@ public class Login extends AppCompatActivity {
         final String username = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
 
-        reference = database.getReference("Database");
-
+        reference = database.getReference();
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -208,6 +207,8 @@ public class Login extends AppCompatActivity {
 
                             SharedPreferences adminPreferences = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
                             String adminUsername = snapshot.child("collectors").child(username).child("username").getValue(String.class);
+                            AdminMainActivity.globalusername = username;
+
                             reference.child("collectors").child(username).child("isOnline").setValue(true);
                             adminPreferences.edit().putString("adminFragment", adminUsername).apply();
 
