@@ -36,6 +36,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -95,43 +96,23 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String bar = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
-                if ("Looc".equals(bar)) {
-                    Double lat = snapshot.child("Barangay").child("Looc").child("Map").child("Latitude").getValue(Double.class);
-                    Double longi = snapshot.child("Barangay").child("Looc").child("Map").child("Longitude").getValue(Double.class);
+                Double collectorLatValue = (Double) snapshot.child("collectors").child(username).child("latitude").getValue();
+                Double collectorLongValue = (Double) snapshot.child("collectors").child(username).child("longitude").getValue();
 
-                    if (lat != null && longi != null) {
-                        LatLng brgyMap = new LatLng(lat, longi);
+                    if (collectorLatValue != null && collectorLongValue != null) {
+                        LatLng brgyMap = new LatLng(collectorLatValue, collectorLongValue);
                         float zoomLevel = 15.3f;
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-                        googleMap.getUiSettings().setZoomControlsEnabled(false);
-                        googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                        googleMap.getUiSettings().setAllGesturesEnabled(false);
+//                        googleMap.getUiSettings().setZoomControlsEnabled(true);
+                        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+                        googleMap.getUiSettings().setAllGesturesEnabled(true);
 
-//                        displayAdminLocation();
+                        displayAdminLocation(collectorLatValue, collectorLongValue);
                         displayBinLocation();
 
                         onMapLoaded();
                     }
-                } else if ("Basak".equals(bar)) {
-                    Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
-                    Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
 
-                    if (lat != null && longi != null) {
-                        LatLng brgyMap = new LatLng(lat, longi);
-                        float zoomLevel = 15.3f;
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-
-                        googleMap.getUiSettings().setZoomControlsEnabled(false);
-                        googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                        googleMap.getUiSettings().setAllGesturesEnabled(false);
-
-//                        displayAdminLocation();
-                        displayBinLocation();
-
-                        onMapLoaded();
-                    }
-                }
             }
 
             @Override
@@ -217,7 +198,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
                         Double user_long_value = location.getLongitude();
                         Toast.makeText(getActivity(), "Latitude = " + user_lat_value + " Longitude = " + user_long_value, Toast.LENGTH_SHORT).show();
                         sendLocationToDB(user_lat_value, user_long_value);
-//                        displayAdminLocation(user_lat_value, user_long_value);
+                        displayAdminLocation(user_lat_value, user_long_value);
 
                     } else {
                         Toast.makeText(getActivity(), "!!!!!", Toast.LENGTH_SHORT).show();
@@ -240,15 +221,8 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Create a new entry with lat and long values
-//                Map<String, Object> locationData = new HashMap<>();
-//                locationData.put("latitude", _lat);
-//                locationData.put("longitude", _long);
-
                 reference.child("latitude").setValue(_lat);
                 reference.child("longitude").setValue(_long);
-                // Push the data to the "Pending" node
-
             }
 
             @Override
@@ -258,21 +232,27 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-//    public void displayAdminLocation() {
-//        Log.d("displayAdminLocation-lat", String.valueOf(adminLatitude));
-//        if (googleMap != null) {
-//            LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
-//
-//            BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
-//
-//            MarkerOptions markerOptions = new MarkerOptions()
-//                    .position(adminLocation)
-//                    .title("Admin Location")
-//                    .icon(truckIcon);
-//
-//            googleMap.addMarker(markerOptions);
-//        }
-//    }
+    public void displayAdminLocation(Double collectorlatvalue, Double collectorlongvalue) {
+        double _latvalue, _longvalue;
+        _latvalue = collectorlatvalue;
+        _longvalue = collectorlongvalue;
+
+
+        if (googleMap != null) {
+            LatLng adminLocation = new LatLng(_latvalue, _longvalue);
+
+            BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(adminLocation)
+                    .title("Current Location")
+                    .icon(truckIcon);
+
+
+            Marker adminMarker= googleMap.addMarker(markerOptions);
+            adminMarker.showInfoWindow();
+        }
+    }
 
     public void displayBinLocation() {
         if (googleMap != null) {
