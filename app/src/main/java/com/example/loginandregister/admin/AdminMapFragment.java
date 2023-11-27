@@ -3,7 +3,9 @@
 package com.example.loginandregister.admin;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -49,7 +51,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
+public class AdminMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private FloatingActionButton fabOptionMenu;
     private ProgressBar progressBar;
@@ -87,6 +89,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
+        googleMap.setOnInfoWindowClickListener(this);
 
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment", "");
@@ -303,6 +306,33 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
 
             // Move the camera to center on the requestee's location
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(requesteeLocation));
+        }
+    }
+
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker) {
+        if(marker.getTitle() == "Current Location"){
+            marker.hideInfoWindow();
+
+        }//if marker kay dili request
+        else {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Determine route to Requestee?")
+                    .setCancelable(true)
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialogInterface, @SuppressWarnings("unused") final int id) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialogInterface, @SuppressWarnings("unused") final int id) {
+                            dialogInterface.cancel();
+                        }
+                    });
+            final AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         }
     }
 
