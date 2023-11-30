@@ -88,6 +88,7 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
 
         AdminMapFragment adminMapFragment = new AdminMapFragment();
         adminMapFragment.setRequestLocations(clickedItem.getLat(), clickedItem.getLon());
+        adminMapFragment.requesteeName = clickedItem.getUsername();
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()

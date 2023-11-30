@@ -63,6 +63,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
     double requestLon;
     private FusedLocationProviderClient fusedLocationProviderClient;
     public static String adminusername;
+    public static String requesteeName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -311,17 +312,19 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
+
         if(marker.getTitle() == "Current Location"){
             marker.hideInfoWindow();
 
         }//if marker kay dili request
         else {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Determine route to Requestee?")
+            builder.setMessage("Remove this request from " + requesteeName + "?")
                     .setCancelable(true)
                     .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(@SuppressWarnings("unused") final DialogInterface dialogInterface, @SuppressWarnings("unused") final int id) {
+                            deleteThisRequest(requesteeName);
                             dialogInterface.dismiss();
                         }
                     })
@@ -334,6 +337,14 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
             final AlertDialog alertDialog = builder.create();
             alertDialog.show();
         }
+    }
+
+    private void deleteThisRequest(String _username) {
+        String path = "/Barangay/Looc/Requests/Pending";
+
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference().child(path);
+        reference.child(_username).removeValue();
     }
 
     public interface OnMapReadyListener {
