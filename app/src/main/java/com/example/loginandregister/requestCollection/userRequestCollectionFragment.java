@@ -21,6 +21,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.loginandregister.R;
+import com.example.loginandregister.user.HomeFragment;
+import com.example.loginandregister.user.UserMainActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -170,6 +172,8 @@ public class userRequestCollectionFragment extends Fragment {
                         } else {
                             // Data added successfully
                             Log.d("Firebase", "Data saved successfully.");
+
+                            redirectToHomeFragment();
                         }
                     }
                 });
@@ -181,5 +185,14 @@ public class userRequestCollectionFragment extends Fragment {
             }
         });
     }
+
+        private void redirectToHomeFragment() {
+            // Replace the current fragment with the HomeFragment
+            if (getActivity() instanceof UserMainActivity) {
+                UserMainActivity userMainActivity = (UserMainActivity) getActivity();
+                userMainActivity.replaceUserFragment(new HomeFragment());
+                userMainActivity.setBottomNavigationSelectedItem(R.id.home);
+            }
+        }
 
 }

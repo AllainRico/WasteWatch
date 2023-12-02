@@ -218,7 +218,7 @@ public class UserMainActivity extends AppCompatActivity {
             return true;
         });
     }
-    private void replaceUserFragment(Fragment fragment){
+    public void replaceUserFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);
