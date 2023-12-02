@@ -187,7 +187,7 @@ public class userRequestCollectionFragment extends Fragment {
     }
 
         private void redirectToHomeFragment() {
-            // Replace the current fragment with the HomeFragment
+            // method using replaceUserFragment from UserMainActivity for redirection
             if (getActivity() instanceof UserMainActivity) {
                 UserMainActivity userMainActivity = (UserMainActivity) getActivity();
                 userMainActivity.replaceUserFragment(new HomeFragment());
