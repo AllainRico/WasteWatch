@@ -28,12 +28,17 @@ import com.example.loginandregister.databinding.ActivityMainBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AdminMainActivity extends AppCompatActivity {
+    private String TAG = "Admin Main Activity";
     private View decorView;
     ActivityMainBinding binding;
     private static final int PERMISSION_REQUEST_CODE = 1;
     public static boolean isOnline = false;
+    DatabaseReference reference;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     public static String globalusername;
     @Override
@@ -131,5 +136,32 @@ public class AdminMainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy: "+ globalusername);
+        setAdminOffline();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: " + globalusername);
+        setAdminOffline();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: " + globalusername);
+        setAdminOffline();
+    }
+
+    //maps-related methods here
+
+    public void setAdminOffline()
+    {
+        reference = database.getReference().child("collectors").child(globalusername);
+        reference.child("isOnline").setValue(false);
+        Log.d(TAG, "setAdminOffline: "+ reference.toString());
+    }
+
+    //end
 }
