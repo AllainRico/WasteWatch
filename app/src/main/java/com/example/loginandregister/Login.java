@@ -55,7 +55,6 @@ public class Login extends AppCompatActivity {
     private ImageView passwordToggle;
     private Button buttonLogin;
     private TextView register;
-    private TextView btnLoginWith;
     private boolean isReceiverRegistered = false;
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -81,16 +80,6 @@ public class Login extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), Barangay.class);
                 startActivity(intent);
                 finish();
-            }
-        });
-
-        SpannableString loginWithSpannable = new SpannableString(getString(R.string.login_with));
-        loginWithSpannable.setSpan(new UnderlineSpan(), 0, loginWithSpannable.length(), 0);
-        btnLoginWith.setText(loginWithSpannable);
-        btnLoginWith.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLoginWithOptionsDialog();
             }
         });
 
@@ -309,43 +298,6 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    private void showLoginWithOptionsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_login_with, null);
-        builder.setView(dialogView);
-
-        AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-
-        int dialogWidth = getResources().getDimensionPixelSize(R.dimen.login_dialog_width); // Use a dimension resource
-
-        // Set the layout parameters for the dialog's root view
-        dialogView.setLayoutParams(new ViewGroup.LayoutParams(dialogWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        ImageView btnGoogle = dialogView.findViewById(R.id.btnGoogle);
-        ImageView btnFacebook = dialogView.findViewById(R.id.btnFacebook);
-
-
-        btnGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle Google login here
-                dialog.dismiss();
-            }
-        });
-
-        btnFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle Facebook login here
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
     public void InternetStatus(){
         registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
@@ -373,7 +325,6 @@ public class Login extends AppCompatActivity {
         passwordToggle = findViewById(R.id.passwordToggle);
         buttonLogin = findViewById(R.id.btn_login);
         register = findViewById(R.id.register);
-        btnLoginWith = findViewById(R.id.btnLoginWith);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
