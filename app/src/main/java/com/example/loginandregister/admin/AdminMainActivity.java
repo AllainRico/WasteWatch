@@ -1,6 +1,8 @@
 package com.example.loginandregister.admin;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -158,6 +160,8 @@ public class AdminMainActivity extends AppCompatActivity {
     {
         reference = database.getReference().child("collectors").child(globalusername);
         reference.child("isOnline").setValue(false);
+        reference.child("latitude").setValue(0.00);
+        reference.child("longitude").setValue(0.00);
         Log.d(TAG, "setAdminOffline: "+ reference.toString());
     }
 
@@ -184,6 +188,20 @@ public class AdminMainActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    private boolean isGPSEnabled(){
+        LocationManager locationManager = null;
+        boolean isEnabled = false;
+
+        if(locationManager == null)
+            {
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            }
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
+    }
+
 
     //end
 }

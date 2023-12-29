@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,9 @@ import android.widget.Toast;
 
 import com.example.loginandregister.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -39,11 +43,18 @@ public class AdminHomeFragment extends Fragment {
     DatabaseReference reference;
     AdminMainActivity mainActivity;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest locationRequest;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(2000);
+
         setCollectorLocation();
     }
 
@@ -127,23 +138,42 @@ public class AdminHomeFragment extends Fragment {
                     && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+
+            LocationServices.getFusedLocationProviderClient(getActivity()).requestLocationUpdates(locationRequest, new LocationCallback() {
                 @Override
-                public void onSuccess(Location location) {
-                    Log.d("onSuccess: ", location.toString());
-                    if (location != null) {
+                public void onLocationResult(@NonNull LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+                    LocationServices.getFusedLocationProviderClient(getActivity())
+                            .removeLocationUpdates(this);
 
-                        Double user_lat_value = location.getLatitude();
-                        Double user_long_value = location.getLongitude();
-                        Toast.makeText(getActivity(), "Latitude = " + user_lat_value + " Longitude = " + user_long_value, Toast.LENGTH_SHORT).show();
-                        sendLocationToDB(user_lat_value, user_long_value);
-//                        displayAdminLocation(user_lat_value, user_long_value);
-
-                    } else {
-                        Toast.makeText(getActivity(), "!!!!!", Toast.LENGTH_SHORT).show();
-                    }
+                    if(locationResult != null && locationResult.getLocations().size() > 0)
+                        {
+                            int index = locationResult.getLocations().size() - 1;
+                            Double collector_lat_value = locationResult.getLocations().get(index).getLatitude();
+                            Double collector_long_value = locationResult.getLocations().get(index).getLongitude();
+                            sendLocationToDB(collector_lat_value, collector_long_value);
+                            Toast.makeText(getActivity(), "Latitude = " + collector_lat_value + " Longitude = " + collector_long_value, Toast.LENGTH_SHORT).show();
+                        }
                 }
-            });
+            }, Looper.getMainLooper());
+
+//            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+//                @Override
+//                public void onSuccess(Location location) {
+//                    Log.d("onSuccess: ", location.toString());
+//                    if (location != null) {
+//
+//                        Double user_lat_value = location.getLatitude();
+//                        Double user_long_value = location.getLongitude();
+//                        Toast.makeText(getActivity(), "Latitude = " + user_lat_value + " Longitude = " + user_long_value, Toast.LENGTH_SHORT).show();
+//                        sendLocationToDB(user_lat_value, user_long_value);
+////                        displayAdminLocation(user_lat_value, user_long_value);
+//
+//                    } else {
+//                        Toast.makeText(getActivity(), "!!!!!", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
         }
         else{
             Log.d("setCollectorLocation: ", "location permission not granted");
