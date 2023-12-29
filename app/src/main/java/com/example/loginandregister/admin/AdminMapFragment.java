@@ -83,7 +83,6 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                 getChildFragmentManager().findFragmentById(R.id.adminMap);
         supportMapFragment.getMapAsync(this);
 
-        setCollectorLocation();
         return view;
     }
 
@@ -179,62 +178,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                 .commit();
     }
 
-    public boolean isLocationPermissionGranted(Context context) {
-        return ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
 
-    }
-
-    public void setCollectorLocation() {
-        if (isLocationPermissionGranted(getActivity())) {
-            Log.d("setCollectorLocation: ", "location permission granted");
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    Log.d("onSuccess: ", location.toString());
-                    if (location != null) {
-
-                        Double user_lat_value = location.getLatitude();
-                        Double user_long_value = location.getLongitude();
-                        Toast.makeText(getActivity(), "Latitude = " + user_lat_value + " Longitude = " + user_long_value, Toast.LENGTH_SHORT).show();
-                        sendLocationToDB(user_lat_value, user_long_value);
-                        displayAdminLocation(user_lat_value, user_long_value);
-
-                    } else {
-                        Toast.makeText(getActivity(), "!!!!!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-        else{
-            Log.d("setCollectorLocation: ", "location permission not granted");
-        }
-    }
-
-
-    private void sendLocationToDB(Double _lat, Double _long) {
-
-        String path = "/collectors/"+ adminusername;
-        Log.d("PATH CHECK~~", path);
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference().child(path);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                reference.child("latitude").setValue(_lat);
-                reference.child("longitude").setValue(_long);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     public void displayAdminLocation(Double collectorlatvalue, Double collectorlongvalue) {
         double _latvalue, _longvalue;
