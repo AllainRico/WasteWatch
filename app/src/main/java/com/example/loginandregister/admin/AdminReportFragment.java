@@ -223,6 +223,8 @@ public class AdminReportFragment extends Fragment {
                 getActivity().finish();
 //                Log.d("FirebasePath", "Path: collectors/" + username + "/isOnline");
                 reference.child("isOnline").setValue(false);
+                reference.child("latitude").setValue(0.00);
+                reference.child("longitude").setValue(0.00);
 
                 alertDialog.dismiss();
             }
