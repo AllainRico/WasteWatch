@@ -47,6 +47,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private TextView dayTextView;
+    private ArrayList<String> daysWithSchedule = new ArrayList<>();
     private TextView barangayTextView;
     private EditText timeTextView;
     private Button btnPrevious, btnNext;
@@ -95,6 +96,13 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
                 String day = dayTextView.getText().toString();
                 String barName = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
                 String timeString = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
+
+                daysWithSchedule.clear(); // Clear existing data
+                for (DataSnapshot scheduleSnapshot : snapshot.child("Barangay").child(barName).child("Schedule").getChildren()) {
+                    String scheduleDay = scheduleSnapshot.getKey();
+                    daysWithSchedule.add(scheduleDay);
+                }
+
                 barangayTextView.setText(barName+" Barangay Hall cc");
                 if (timeString != null && !timeString.isEmpty()) {
                     timeTextView.setText("Starts at: " + timeString);
@@ -235,7 +243,7 @@ public class AdminScheduleFragment extends Fragment implements CalendarAdapter.O
     private void setMonthView() {
         monthYearText.setText(monthYearFromDate((selectedDate)));
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
-        CalendarAdapter calendarAdapter = new CalendarAdapter(this, daysInMonth);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(this, daysInMonth, daysWithSchedule, selectedDate);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
