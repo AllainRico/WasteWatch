@@ -39,9 +39,9 @@ public class AdminHomeFragment extends Fragment {
 
     private Button buttonMap, buttonReport, buttonSchedule;
     TextView adminTxt;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference reference;
-    AdminMainActivity mainActivity;
+    static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    static DatabaseReference reference;
+    static AdminMainActivity mainActivity;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
 
@@ -152,7 +152,9 @@ public class AdminHomeFragment extends Fragment {
                             Double collector_lat_value = locationResult.getLocations().get(index).getLatitude();
                             Double collector_long_value = locationResult.getLocations().get(index).getLongitude();
                             sendLocationToDB(collector_lat_value, collector_long_value);
-                            Toast.makeText(getActivity(), "Latitude = " + collector_lat_value + " Longitude = " + collector_long_value, Toast.LENGTH_SHORT).show();
+                            Log.d( "onLocationResult: Lat value:", collector_lat_value.toString());
+                            Log.d( "onLocationResult: Long value:", collector_long_value.toString());
+//                            Toast.makeText(getActivity(), "Latitude = " + collector_lat_value + " Longitude = " + collector_long_value, Toast.LENGTH_SHORT).show();
                         }
                 }
             }, Looper.getMainLooper());
@@ -181,7 +183,7 @@ public class AdminHomeFragment extends Fragment {
     }
 
 
-    private void sendLocationToDB(Double _lat, Double _long) {
+    public static void sendLocationToDB(Double _lat, Double _long) {
 
         String path = "/collectors/"+ mainActivity.globalusername;
         Log.d("PATH CHECK~~", path);
