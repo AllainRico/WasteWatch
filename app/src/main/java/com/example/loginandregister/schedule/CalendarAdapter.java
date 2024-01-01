@@ -40,7 +40,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         String day = daysInMonth.get(position);
         holder.dayTextView.setText(day);
 
-        // Clear the background color
         holder.itemView.setBackgroundColor(Color.WHITE);
 
         if (!day.isEmpty() && !day.equals("null")) {

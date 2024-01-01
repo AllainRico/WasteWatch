@@ -185,7 +185,6 @@
             @Override
             public void onItemClick(int position, String dayText) {
                 if (!dayText.isEmpty() && !dayText.equals("null")) {
-
                     LocalDate clickedDate = selectedDate.withDayOfMonth(Integer.parseInt(dayText));
                     String formattedDate = formatDateForDisplay(clickedDate);
                     dayTextView.setText(formattedDate);
@@ -202,27 +201,18 @@
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
                             String district = snapshot.child("users").child(username).child("district").getValue(String.class);
-                            String day = dayTextView.getText().toString(); // You can set day here based on your logic
+                            String day = dayTextView.getText().toString();
 
                             barangayTextView.setText(district + ", " + barName + " Barangay Hall");
                             String timeString = snapshot.child("Barangay").child(barName).child("Schedule").child(day).getValue(String.class);
+
                             if (timeString != null && !timeString.isEmpty()) {
                                 timeTextView.setText("Starts at: " + timeString);
                             } else {
                                 timeTextView.setText("No Schedule");
                             }
 
-                            daysWithSchedule.clear();
-
-                            // This updates daysWithSchedule based on the retrieved schedule data
-                            for (DataSnapshot scheduleSnapshot : snapshot.child("Barangay").child(barName).child("Schedule").getChildren()) {
-                                String scheduleDay = scheduleSnapshot.getKey();
-                                daysWithSchedule.add(scheduleDay);
-                            }
-
-                            calendarAdapter.updateData(daysInMonthArray(selectedDate), daysWithSchedule, selectedDate);
-
-                            setMonthView();
+                            calendarAdapter.notifyDataSetChanged();
                         }
 
                         @Override
