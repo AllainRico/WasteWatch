@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".user.ScheduleFragment"
     android:id="@+id/fragment_schedule"
     android:padding="50dp">
@@ -81,6 +82,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/weeksHeader"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:paddingTop="5dp"
@@ -168,7 +170,12 @@
             android:id="@+id/calendarRecycleView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginBottom="2dp" />
+            android:layout_marginBottom="2dp"
+            android:layout_below="@id/weeksHeader"
+            android:background="@color/white"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="7"/>
+
 
         <RelativeLayout
             android:layout_width="match_parent"

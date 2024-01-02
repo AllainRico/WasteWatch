@@ -50,14 +50,6 @@ public class UserMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        // Create a NotificationManager instance
-//        ScheduleNotificationManager notificationManager = new ScheduleNotificationManager(this);
-//
-//        // Schedule a notification
-//        String title = "Garbage Collection";
-//        String message = "Make sure your garbage is ready to collect.";
-//        notificationManager.showNotification(title, message);
-
         // This initialized the Firebase Database
         reference = FirebaseDatabase.getInstance().getReference();
 
@@ -236,7 +228,6 @@ public class UserMainActivity extends AppCompatActivity {
             public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
                 WindowInsetsController controller = v.getWindowInsetsController();
                 if (controller != null) {
-                    // Hide system bars using the new API
                     controller.hide(WindowInsets.Type.systemBars());
                     controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
                 }
