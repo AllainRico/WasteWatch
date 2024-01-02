@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -21,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -29,6 +31,7 @@ import androidx.fragment.app.Fragment;
 import com.example.loginandregister.R;
 import com.example.loginandregister.adminCollectionRequests.adminCollectionRequestsFragment;
 import com.example.loginandregister.garbageBin.GarbageBinStatus;
+import com.example.loginandregister.servicepackage.AdminLocationService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,6 +56,8 @@ import java.util.Map;
 
 public class AdminMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
+    private static final long RUNNABLE_INTERVAL = 5000;
+
     private FloatingActionButton fabOptionMenu;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
@@ -64,6 +69,34 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
     private FusedLocationProviderClient fusedLocationProviderClient;
     public static String adminusername;
     public static String requesteeName;
+    private Handler handler;
+    private Runnable periodicTask;
+
+    SharedPreferences preferences2;
+    String username;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        reference = database.getReference();
+
+        preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        username = preferences2.getString("adminFragment", "");
+
+        handler = new Handler();
+        periodicTask = new Runnable() {
+            @Override
+            public void run() {
+                // Log "hello" or perform any other background task here
+                Log.d("AdminMapFragment", "hello");
+//                setCollectorLocation(AdminLocationService.this);
+                getLongValueFromDB();
+                getLatValueFromDB();
+                handler.postDelayed(this, RUNNABLE_INTERVAL);
+            }
+        };
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,6 +104,8 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         View view = inflater.inflate(R.layout.fragment_admin_map, container, false);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         initWidgets(view);
+
+        handler.postDelayed(periodicTask, RUNNABLE_INTERVAL);
 
         fabOptionMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,5 +328,55 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     public interface OnMapReadyListener {
         void onMapReady();
+    }
+
+    public void getLatValueFromDB(){
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Double collectorLatValue = (Double) snapshot.child("collectors").child(username).child("latitude").getValue();
+                setLatvalue(collectorLatValue);
+                Log.d("Collectorvalue", collectorLatValue.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("onCancelled: ", "ERROR ON getLatValueFromDB");
+            }
+        });
+
+    }
+    public double setLatvalue(double latvalue){
+        double _latvalue;
+        _latvalue = latvalue;
+        return _latvalue;
+    }
+
+    public void getLongValueFromDB(){
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Double collectorLongValue = (Double) snapshot.child("collectors").child(username).child("longitude").getValue();
+                setLongvalue(collectorLongValue);
+                Log.d("Collectorvalue", collectorLongValue.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public double setLongvalue(double longvalue){
+        double _longvalue;
+        _longvalue = longvalue;
+        return _longvalue;
+    }
+
+    @Override
+    public void onDestroyView() {
+        handler.removeCallbacks(periodicTask);
+
+        super.onDestroyView();
     }
 }
