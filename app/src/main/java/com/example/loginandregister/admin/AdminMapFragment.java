@@ -71,6 +71,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
     public static String requesteeName;
     private Handler handler;
     private Runnable periodicTask;
+    private Marker adminMarker;
 
     SharedPreferences preferences2;
     String username;
@@ -91,8 +92,9 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                 // Log "hello" or perform any other background task here
                 Log.d("AdminMapFragment", "hello");
 //                setCollectorLocation(AdminLocationService.this);
-                getLongValueFromDB();
-                getLatValueFromDB();
+//                getLongValueFromDB();
+//                getLatValueFromDB();
+                getCollectorLocation();
                 handler.postDelayed(this, RUNNABLE_INTERVAL);
             }
         };
@@ -145,7 +147,6 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                         googleMap.getUiSettings().setZoomGesturesEnabled(true);
                         googleMap.getUiSettings().setAllGesturesEnabled(true);
 
-                        displayAdminLocation(collectorLatValue, collectorLongValue);
                         displayBinLocation();
 
                         onMapLoaded();
@@ -220,19 +221,24 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         _latvalue = collectorlatvalue;
         _longvalue = collectorlongvalue;
 
-
         if (googleMap != null) {
             LatLng adminLocation = new LatLng(_latvalue, _longvalue);
 
             BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
 
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(adminLocation)
-                    .title("Current Location")
-                    .icon(truckIcon);
+            if (adminMarker == null) {
+                // If the marker is null, it means it's the first time, so add a new marker
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(adminLocation)
+                        .title("Collector's Location")
+                        .icon(truckIcon);
 
+                adminMarker = googleMap.addMarker(markerOptions);
+            } else {
+                // If the marker already exists, update its position
+                adminMarker.setPosition(adminLocation);
+            }
 
-            Marker adminMarker= googleMap.addMarker(markerOptions);
             adminMarker.showInfoWindow();
         }
     }
@@ -379,4 +385,34 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
 
         super.onDestroyView();
     }
+
+    private void getCollectorLocation() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Double collectorLatValue = (Double) snapshot.child("collectors").child(username).child("latitude").getValue();
+                Double collectorLongValue = (Double) snapshot.child("collectors").child(username).child("longitude").getValue();
+
+                if (collectorLatValue != null && collectorLongValue != null) {
+                    setLatvalue(collectorLatValue);
+                    setLongvalue(collectorLongValue);
+
+                    // Update the marker on the map
+                    displayAdminLocation(collectorLatValue, collectorLongValue);
+                    moveCameraToLocation(collectorLatValue, collectorLongValue, googleMap.getCameraPosition().zoom);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("onCancelled: ", "ERROR ON getCollectorLocation");
+            }
+        });
+    }
+
+    private void moveCameraToLocation(double latitude, double longitude, float zoomLevel) {
+        LatLng location = new LatLng(latitude, longitude);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
+    }
+
 }
