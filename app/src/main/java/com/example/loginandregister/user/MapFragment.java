@@ -130,7 +130,7 @@ public class MapFragment extends Fragment {
                                     }
                                 }, INTERVAL);
 
-//                                displayAdminLocation(adminLatitude, adminLongitude);
+                                //displayAdminLocation(adminLatitude, adminLongitude);
                                 displayBinLocation(binLatidue,binLongitude);
 
 
@@ -149,8 +149,8 @@ public class MapFragment extends Fragment {
                                 googleMap.getUiSettings().setZoomGesturesEnabled(false);
                                 googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-//                                displayAdminLocation(lat, longi);
-//                                displayBinLocation(binLatidue,binLongitude);
+                                //displayAdminLocation(lat, longi);
+                                //displayBinLocation(binLatidue,binLongitude);
 
                                 onMapLoaded();
                                 handler.postDelayed(new Runnable() {
@@ -162,7 +162,44 @@ public class MapFragment extends Fragment {
                                     }
                                 }, INTERVAL);
                             }
+                        } else if ("Looc Mandaue".equals(bar)) { // Compare strings using .equals()
+                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
+                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
+                            Double binLat = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Latitude").getValue(Double.class);
+                            Double binLong = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Longitude").getValue(Double.class);
+
+                            if (lat != null && longi != null) {
+                                LatLng brgyMap = new LatLng(lat, longi);
+                                float zoomLevel = 15.3f; //Change ZOOM for Centering
+                                //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+
+                                googleMap.getUiSettings().setZoomControlsEnabled(false);
+                                googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                                googleMap.getUiSettings().setAllGesturesEnabled(false);
+                                onMapLoaded();
+
+                                Log.d("DBLatitude: ", String.valueOf(lat));
+                                Log.d("DBLongitude: ", String.valueOf(longi));
+
+                                realtimeLocation();
+
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Call your method to retrieve data here
+                                        realtimeLocation();
+                                        handler.postDelayed(this, INTERVAL);
+                                    }
+                                }, INTERVAL);
+
+                                //displayAdminLocation(adminLatitude, adminLongitude);
+                                displayBinLocation(binLatidue,binLongitude);
+
+
+                            }
                         }
+
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
