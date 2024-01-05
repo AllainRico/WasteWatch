@@ -88,18 +88,35 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        reference = database.getInstance().getReference().child("users");
-
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
         String firstName = preferences2.getString("firstname", " ");
         String lastName = preferences2.getString("lastname", " ");
         String email = preferences2.getString("email", " ");
         String username = preferences2.getString("ProfileUsername","");
+        reference = database.getInstance().getReference().child("users").child(username);
 
         txtFirstName.setText(firstName);
         txtLastName.setText(lastName);
         txtEmail.setText(email);
         txtUsername.setText(username);
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String first = snapshot.child("firstName").getValue(String.class);
+                String last = snapshot.child("lastName").getValue(String.class);
+                String email = snapshot.child("email").getValue(String.class);
+
+                txtFirstName.setText(first);
+                txtLastName.setText(last);
+                txtEmail.setText(email);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,6 +233,8 @@ public class ProfileFragment extends Fragment {
                 reference.child("firstName").setValue(first);
                 reference.child("lastName").setValue(last);
                 reference.child("email").setValue(email3);
+
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
