@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -20,6 +21,7 @@ import android.view.WindowInsetsController;
 import android.widget.Toast;
 
 import com.example.loginandregister.R;
+import com.example.loginandregister.schedule.BackgroundService;
 import com.example.loginandregister.schedule.ScheduleNotificationManager;
 import com.example.loginandregister.databinding.ActivityMainBinding;
 import com.google.firebase.database.DataSnapshot;
@@ -42,29 +44,33 @@ public class UserMainActivity extends AppCompatActivity {
     private String scheduledTime;
     private View decorView;
     ActivityMainBinding binding;
-    private ScheduleNotificationManager notificationManager; // Declare notificationManager
-    private Handler notificationHandler; // Declare notificationHandler
+    private ScheduleNotificationManager notificationManager;
+    private Handler notificationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // This initialized the Firebase Database
+        // Initialization Firebase Database
         reference = FirebaseDatabase.getInstance().getReference();
 
-        // This Creates a NotificationManager instance
+        // NotificationManager instance
         notificationManager = new ScheduleNotificationManager(this);
 
         createNotificationChannel();
 
-        // This Creates a handler to periodically check the time and trigger notifications
+        // A handler to periodically check the time and trigger notifications
         notificationHandler = new Handler(Looper.getMainLooper());
 
-        // Checks for scheduled notifications
+        // Checks for scheduled notifications within the app
         checkScheduledNotifications();
 
-        //Hides the Navigation Bar
+        // Checks for scheduled notifications outside/background
+        Intent backgroundServiceIntent = new Intent(this, BackgroundService.class);
+        BackgroundService.enqueueWork(this, backgroundServiceIntent);
+
+        // Hides the Navigation Bar
         decorView = getWindow().getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             setupSystemBarsForAndroid12AndHigher(decorView);
@@ -99,7 +105,7 @@ public class UserMainActivity extends AppCompatActivity {
     private void checkScheduledNotifications() {
         //delay and frequency of checking
         long initialDelayMillis = 1000; // Initial delay in milliseconds
-        long checkFrequencyMillis = 60000; // Check every 60 seconds
+        long checkFrequencyMillis = 30000; // Check every 30 seconds
 
         notificationHandler.postDelayed(new Runnable() {
             @Override
@@ -123,36 +129,35 @@ public class UserMainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String time = snapshot.child("Barangay").child("Looc").child("Schedule").child(today).getValue(String.class);
                 if (time != null && !time.isEmpty()) {
-                    // Schedule a notification if time is available
+                    // if Schedule is available
                     scheduledTime = time;
                 } else {
                     // No Schedule
-                    scheduledTime = ""; // Default Value
+                    scheduledTime = ""; // Default
                 }
 
                 try {
                     Date scheduledTimeDate = new SimpleDateFormat("hh:mm a", new Locale("en", "PH")).parse(scheduledTime);
 
-                    // Create a calendar instance and set the scheduled time
+                    // Calendar instance and scheduled time
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(scheduledTimeDate);
 
-                    // Subtract 5 minutes for the reminder time
+                    // Subtract # minutes for the reminder time
                     calendar.add(Calendar.MINUTE, -5);
 
-                    // Get the reminder time
+                    // for the reminder time
                     Date reminderTime = calendar.getTime();
 
-                    // Get the current time
-                    String currentTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+                    // for the current time
+                    String currentTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
 
-                    // Format the reminder time
-                    String formattedReminderTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(reminderTime);
+                    // Format
+                    String formattedReminderTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(reminderTime);
 
                     if (currentTime.equals(formattedReminderTime)) {
-                        // Trigger the reminder notification
                         String reminderTitle = "Garbage Collection Reminder";
-                        String reminderMessage = "Garbage collection starts at " + formattedReminderTime + ". Don't forget!";
+                        String reminderMessage = "Garbage collection starts at " + scheduledTimeDate + ". Don't forget!";
                         notificationManager.showNotification(reminderTitle, reminderMessage);
                     }
                 } catch (ParseException e) {
@@ -160,12 +165,13 @@ public class UserMainActivity extends AppCompatActivity {
                     Log.e("MyApp", "Error parsing time: " + e.getMessage());
                 }
 
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
                 String currentTime = timeFormat.format(new Date());
 
                 try {
                     Date scheduledTimeDate = new SimpleDateFormat("hh:mm a", new Locale("en", "PH")).parse(scheduledTime);
-                    String formattedScheduledTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(scheduledTimeDate);
+                    String formattedScheduledTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(scheduledTimeDate);
+
 
                     if (currentTime.equals(formattedScheduledTime)) {
                         String title = "Garbage Collection";
