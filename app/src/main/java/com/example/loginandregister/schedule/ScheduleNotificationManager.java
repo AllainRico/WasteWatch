@@ -40,6 +40,14 @@ public class ScheduleNotificationManager {
         }
     }
 
+//    public void schedulePeriodicNotificationCheck() {
+//        Intent notificationIntent = new Intent(context, NotificationReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        long intervalMillis = 30000; // 30 seconds
+//        alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), intervalMillis, pendingIntent);
+//    }
+
     // Method to schedule and display a notification at a specific time
     public void scheduleNotification(String title, String message, long notificationTimeMillis) {
         Intent notificationIntent = new Intent(context, NotificationReceiver.class);
