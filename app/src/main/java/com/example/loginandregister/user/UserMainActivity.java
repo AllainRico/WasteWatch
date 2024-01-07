@@ -105,7 +105,7 @@ public class UserMainActivity extends AppCompatActivity {
     private void checkScheduledNotifications() {
         //delay and frequency of checking
         long initialDelayMillis = 1000; // Initial delay in milliseconds
-        long checkFrequencyMillis = 30000; // Check every 30 seconds
+        long checkFrequencyMillis = 10000; // Check every 10 seconds
 
         notificationHandler.postDelayed(new Runnable() {
             @Override
@@ -157,7 +157,8 @@ public class UserMainActivity extends AppCompatActivity {
 
                     if (currentTime.equals(formattedReminderTime)) {
                         String reminderTitle = "Garbage Collection Reminder";
-                        String reminderMessage = "Garbage collection starts at " + scheduledTimeDate + ". Don't forget!";
+                        String formattedScheduledTime = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(scheduledTimeDate);
+                        String reminderMessage = "Garbage collection starts at " + formattedScheduledTime + ". Don't forget!";
                         notificationManager.showNotification(reminderTitle, reminderMessage);
                     }
                 } catch (ParseException e) {

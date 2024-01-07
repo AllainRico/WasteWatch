@@ -58,7 +58,7 @@ public class BackgroundService extends JobIntentService {
     private void checkScheduledNotifications() {
         //delay and frequency of checking
         long initialDelayMillis = 1000; // Initial delay in milliseconds
-        long checkFrequencyMillis = 30000; // Check every 30 seconds
+        long checkFrequencyMillis = 10000; // Check every 10 seconds
 
         notificationHandler.postDelayed(new Runnable() {
             @Override
