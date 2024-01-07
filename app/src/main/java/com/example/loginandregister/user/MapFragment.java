@@ -123,11 +123,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 if (barangayLat != null && barangayLong != null) {
                     LatLng brgyMap = new LatLng(barangayLat, barangayLong);
-                    float zoomLevel = 15.3f;
+                    float zoomLevel = 14.3f;
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 //                        googleMap.getUiSettings().setZoomControlsEnabled(true);
-                    googleMap.getUiSettings().setZoomGesturesEnabled(true);
-                    googleMap.getUiSettings().setAllGesturesEnabled(true);
+                    googleMap.getUiSettings().setZoomGesturesEnabled(false);
+                    googleMap.getUiSettings().setAllGesturesEnabled(false);
 
                     onMapLoaded();
                 }
@@ -162,8 +162,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Double collectorLatValue = (Double) snapshot.child("collectors").child(barname + "_Opon-Collector").child("latitude").getValue();
-                Double collectorLongValue = (Double) snapshot.child("collectors").child(barname + "_Opon-Collector").child("longitude").getValue();
+                Double collectorLatValue = (Double) snapshot.child("collectors").child(barname + "-Collector").child("latitude").getValue();
+                Double collectorLongValue = (Double) snapshot.child("collectors").child(barname + "-Collector").child("longitude").getValue();
 
                 if (collectorLatValue != null && collectorLongValue != null) {
                     displayAdminLocation(collectorLatValue, collectorLongValue);
