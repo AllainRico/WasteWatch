@@ -1,9 +1,11 @@
 package com.example.loginandregister.admin;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -12,6 +14,8 @@ import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
@@ -41,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AdminReportFragment extends Fragment {
+    private static final int FILE_PERMISSION_REQUEST_CODE = 1;
     private Button buttonLogout;
     private Button reportbtn;
     private TextView barangay, user;
@@ -117,7 +122,14 @@ public class AdminReportFragment extends Fragment {
                                 //iotdatastring.add(snapshot.getValue().toString()); //this shit gets all the data under the referenced path in firebase
                             }
                         Log.d("Bin names", String.valueOf(iotdatastring));
+                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                == PackageManager.PERMISSION_GRANTED) {
                             getBinNames(iotdatastring);
+                        } else {
+                            ActivityCompat.requestPermissions(requireActivity(),
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    FILE_PERMISSION_REQUEST_CODE);
+                        }
 
                     }
 
