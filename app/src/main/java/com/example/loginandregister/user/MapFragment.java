@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.loginandregister.R;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -36,26 +38,50 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
+    private static final long RUNNABLE_INTERVAL = 5000;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
     private GoogleMap googleMap;
-    double adminLatitude = LocationData.getInstance().getAdminLatitude();
-    double adminLongitude = LocationData.getInstance().getAdminLongitude();
-    //dummy bin Latitude, Longitude
-    double binLatidue = 10.305827;
-    double binLongitude = 123.944845;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
     DatabaseReference adminNameReference;
     DatabaseReference adminLatLongReference;
-    private Handler handler = new Handler();
     private static final int INTERVAL = 2000;
 
     FloatingActionButton requestCollectionBTN;
     private LocationRequest locationRequest;
+    SharedPreferences preferences2;
+    String barname;
+    String collectorname = "";
+    private Marker adminMarker;
+    private Handler handler;
+    private Runnable periodicTask;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        reference = database.getReference();
+        preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
+        barname = preferences2.getString("barName", "");
+
+
+        handler = new Handler();
+        periodicTask = new Runnable() {
+            @Override
+            public void run() {
+                // Log "hello" or perform any other background task here
+                Log.d("AdminMapFragment", "hello");
+//                setCollectorLocation(AdminLocationService.this);
+//                getLongValueFromDB();
+//                getLatValueFromDB();
+                getCollectorLocation();
+                handler.postDelayed(this, RUNNABLE_INTERVAL);
+            }
+        };
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +91,8 @@ public class MapFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         initWidgets(view);
+
+        handler.postDelayed(periodicTask, RUNNABLE_INTERVAL);
 
         requestCollectionBTN = view.findViewById(R.id.requestCollectionbtn);
         requestCollectionBTN.setOnClickListener(new View.OnClickListener() {
@@ -76,150 +104,49 @@ public class MapFragment extends Fragment {
 
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.userMap);
+        supportMapFragment.getMapAsync(this);
 
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+        return view;
+    }
+    @Override
+    public void onMapReady(@NonNull GoogleMap map) {
+        googleMap = map;
+        googleMap.setOnInfoWindowClickListener(this);
+
+        reference = database.getReference();
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onMapReady(GoogleMap map) {
-                googleMap = map;
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Double barangayLat = (Double) snapshot.child("Barangay").child(barname).child("Map").child("Latitude").getValue();
+                Double barangayLong = (Double) snapshot.child("Barangay").child(barname).child("Map").child("Longitude").getValue();
 
-                SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
-                String username = preferences2.getString("ProfileUsername", "");
+                if (barangayLat != null && barangayLong != null) {
+                    LatLng brgyMap = new LatLng(barangayLat, barangayLong);
+                    float zoomLevel = 15.3f;
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+//                        googleMap.getUiSettings().setZoomControlsEnabled(true);
+                    googleMap.getUiSettings().setZoomGesturesEnabled(true);
+                    googleMap.getUiSettings().setAllGesturesEnabled(true);
 
-                Calendar calendar = Calendar.getInstance();
-                int currentYear = calendar.get(Calendar.YEAR);
-                int currentMonth = calendar.get(Calendar.MONTH) + 1;
-                int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+                    onMapLoaded();
+                }
 
-                String year = String.valueOf(currentYear); //setYear();
-                String month = String.valueOf(currentMonth); //setMonth();
-                String day = String.valueOf(currentDay); //setDay();
+            }
 
-                reference = database.getReference();
-                reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String bar = snapshot.child("users").child(username).child("barName").getValue(String.class);
-                        if ("Looc".equals(bar)) { // Compare strings using .equals()
-                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
-                            Double binLat = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Latitude").getValue(Double.class);
-                            Double binLong = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Longitude").getValue(Double.class);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                            if (lat != null && longi != null) {
-                                LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 15.3f;
-                                //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-
-                                googleMap.getUiSettings().setZoomControlsEnabled(false);
-                                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                                googleMap.getUiSettings().setAllGesturesEnabled(false);
-                                onMapLoaded();
-
-                                Log.d("DBLatitude: ", String.valueOf(lat));
-                                Log.d("DBLongitude: ", String.valueOf(longi));
-
-                                realtimeLocation();
-
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Call your method to retrieve data here
-                                        realtimeLocation();
-                                        handler.postDelayed(this, INTERVAL);
-                                    }
-                                }, INTERVAL);
-
-                                //displayAdminLocation(adminLatitude, adminLongitude);
-                                displayBinLocation(binLatidue,binLongitude);
-
-
-
-                            }
-                        } else if ("Basak".equals(bar)) { // Compare strings using .equals()
-                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
-
-                            if (lat != null && longi != null) {
-                                LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 15.3f;
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-
-                                googleMap.getUiSettings().setZoomControlsEnabled(false);
-                                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                                googleMap.getUiSettings().setAllGesturesEnabled(false);
-
-                                //displayAdminLocation(lat, longi);
-                                //displayBinLocation(binLatidue,binLongitude);
-
-                                onMapLoaded();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Call your method to retrieve data here
-                                        realtimeLocation();
-                                        handler.postDelayed(this, INTERVAL);
-                                    }
-                                }, INTERVAL);
-                            }
-                        } else if ("Looc Mandaue".equals(bar)) { // Compare strings using .equals()
-                            Double lat = snapshot.child("Barangay").child(bar).child("Map").child("Latitude").getValue(Double.class);
-                            Double longi = snapshot.child("Barangay").child(bar).child("Map").child("Longitude").getValue(Double.class);
-                            Double binLat = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Latitude").getValue(Double.class);
-                            Double binLong = snapshot.child("Barangay").child(bar).child("Bins").child("bin1").child(year).child(month).child(day).child("Longitude").getValue(Double.class);
-
-                            if (lat != null && longi != null) {
-                                LatLng brgyMap = new LatLng(lat, longi);
-                                float zoomLevel = 15.3f; //Change ZOOM for Centering
-                                //googleMap.addMarker(new MarkerOptions().position(brgyMap).title(bar));
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-
-                                googleMap.getUiSettings().setZoomControlsEnabled(false);
-                                googleMap.getUiSettings().setZoomGesturesEnabled(false);
-                                googleMap.getUiSettings().setAllGesturesEnabled(false);
-                                onMapLoaded();
-
-                                Log.d("DBLatitude: ", String.valueOf(lat));
-                                Log.d("DBLongitude: ", String.valueOf(longi));
-
-                                realtimeLocation();
-
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Call your method to retrieve data here
-                                        realtimeLocation();
-                                        handler.postDelayed(this, INTERVAL);
-                                    }
-                                }, INTERVAL);
-
-                                //displayAdminLocation(adminLatitude, adminLongitude);
-                                displayBinLocation(binLatidue,binLongitude);
-
-
-                            }
-                        }
-
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-
-
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        // Do nothing when clicked on map, effectively disabling any action
-                    }
-                });
             }
         });
 
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                // Do nothing when clicked on map, effectively disabling any action
+            }
+        });
 
-        return view;
     }
 
     private void getUserCollectionFragmentUI() {
@@ -230,6 +157,31 @@ public class MapFragment extends Fragment {
                 .addToBackStack(null) // This allows the user to navigate back to the previous fragment
                 .commit();
     }
+
+    private void getCollectorLocation() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Double collectorLatValue = (Double) snapshot.child("collectors").child(barname + "_Opon-Collector").child("latitude").getValue();
+                Double collectorLongValue = (Double) snapshot.child("collectors").child(barname + "_Opon-Collector").child("longitude").getValue();
+
+                if (collectorLatValue != null && collectorLongValue != null) {
+                    displayAdminLocation(collectorLatValue, collectorLongValue);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("onCancelled: ", "ERROR ON getCollectorLocation");
+            }
+        });
+    }
+
+    private void moveCameraToLocation(double latitude, double longitude, float zoomLevel) {
+        LatLng location = new LatLng(latitude, longitude);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
+    }
+
 
     public void realtimeLocation(){
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
@@ -291,25 +243,30 @@ public class MapFragment extends Fragment {
     }
 
 
-    public void displayAdminLocation(double adminLatitude, double adminLongitude) {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (googleMap != null) {
-                        LatLng adminLocation = new LatLng(adminLatitude, adminLongitude);
+    public void displayAdminLocation(Double collectorlatvalue, Double collectorlongvalue) {
+        double _latvalue, _longvalue;
+        _latvalue = collectorlatvalue;
+        _longvalue = collectorlongvalue;
 
-                        BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
+        if (googleMap != null) {
+            LatLng adminLocation = new LatLng(_latvalue, _longvalue);
 
-                        MarkerOptions markerOptions = new MarkerOptions()
-                                .position(adminLocation)
-                                .title("Admin Location")
-                                .icon(truckIcon);
+            BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
 
-                        googleMap.addMarker(markerOptions);
-                    }
-                }
-            });
+            if (adminMarker == null) {
+                // If the marker is null, it means it's the first time, so add a new marker
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(adminLocation)
+                        .title("Collector's Location")
+                        .icon(truckIcon);
+
+                adminMarker = googleMap.addMarker(markerOptions);
+            } else {
+                // If the marker already exists, update its position
+                adminMarker.setPosition(adminLocation);
+            }
+
+            adminMarker.showInfoWindow();
         }
     }
 
@@ -348,5 +305,18 @@ public class MapFragment extends Fragment {
     public void onMapLoaded() {
         progressBar.setVisibility(View.GONE);
         mapPlaceholder.setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker) {
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        handler.removeCallbacks(periodicTask);
+
+        super.onDestroyView();
     }
 }

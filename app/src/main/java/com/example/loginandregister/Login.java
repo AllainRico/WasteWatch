@@ -229,11 +229,13 @@ public class Login extends AppCompatActivity {
                         String lastName = snapshot.child("users").child(username).child("lastName").getValue(String.class);
                         String email = snapshot.child("users").child(username).child("email").getValue(String.class);
                         String username1 = snapshot.child("users").child(username).child("username").getValue(String.class);
+                        String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
 
                         userProfilePreferences.edit().putString("firstname", firstName).apply();
                         userProfilePreferences.edit().putString("lastname", lastName).apply();
                         userProfilePreferences.edit().putString("email", email).apply();
                         userProfilePreferences.edit().putString("ProfileUsername", username1).apply();
+                        userProfilePreferences.edit().putString("barName", barName).apply();
 
                         startActivity(userIntent);
                         finish();
