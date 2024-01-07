@@ -123,7 +123,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 if (barangayLat != null && barangayLong != null) {
                     LatLng brgyMap = new LatLng(barangayLat, barangayLong);
-                    float zoomLevel = 14.3f;
+                    float zoomLevel = 15.3f;
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
 //                        googleMap.getUiSettings().setZoomControlsEnabled(true);
                     googleMap.getUiSettings().setZoomGesturesEnabled(false);
