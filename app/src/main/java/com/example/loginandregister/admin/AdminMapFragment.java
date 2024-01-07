@@ -206,12 +206,10 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                 .commit();
     }
 
-
-
-    public void displayAdminLocation(Double collectorlatvalue, Double collectorlongvalue) {
-        double _latvalue, _longvalue;
-        _latvalue = collectorlatvalue;
-        _longvalue = collectorlongvalue;
+      public void displayAdminLocation(Double collectorlatvalue, Double collectorlongvalue) {
+            double _latvalue, _longvalue;
+            _latvalue = collectorlatvalue;
+            _longvalue = collectorlongvalue;
 
         if (googleMap != null) {
             LatLng adminLocation = new LatLng(_latvalue, _longvalue);
@@ -235,40 +233,60 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         }
     }
 
-private void displayAllBinsOnMap() {
-    reference.child("Barangay").child("Looc").child("Bins").addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            List<GarbageBinStatusModel> bins = new ArrayList<>();
+    private void displayAllBinsOnMap() {
+        reference.child("Barangay").child("Looc").child("Bins").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<GarbageBinStatusModel> bins = new ArrayList<>();
 
-            for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
-                for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
-                    for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
-                        for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
-                            if (daySnapshot.hasChild("Latitude") && daySnapshot.hasChild("Longitude")) {
-                                double latitude = daySnapshot.child("Latitude").getValue(Double.class);
-                                double longitude = daySnapshot.child("Longitude").getValue(Double.class);
+                for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
+                    GarbageBinStatusModel latestBin = getLatestBin(binSnapshot);
 
-                                GarbageBinStatusModel bin = new GarbageBinStatusModel();
-                                bin.setLatitude(latitude);
-                                bin.setLongitude(longitude);
+                    if (latestBin != null) {
+                        bins.add(latestBin);
+                    }
+                }
 
-                                bins.add(bin);
-                            }
+                displayBinsOnMap(bins);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("AdminMapFragment", "Failed to read bin data from Firebase", databaseError.toException());
+            }
+        });
+    }
+
+    private GarbageBinStatusModel getLatestBin(DataSnapshot binSnapshot) {
+        GarbageBinStatusModel latestBin = null;
+        String binName = binSnapshot.getKey();
+        String latestDate = "";
+
+        for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
+            for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
+                for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
+                    if (daySnapshot.hasChild("Latitude") && daySnapshot.hasChild("Longitude")) {
+                        String date = yearSnapshot.getKey() + monthSnapshot.getKey() + daySnapshot.getKey();
+
+                        if (date.compareTo(latestDate) > 0) {
+                            latestDate = date;
+                            int fillLevel = daySnapshot.child("FillLevel").getValue(Integer.class);
+                            double latitude = daySnapshot.child("Latitude").getValue(Double.class);
+                            double longitude = daySnapshot.child("Longitude").getValue(Double.class);
+
+                            latestBin = new GarbageBinStatusModel();
+                            latestBin.setBin(binName);
+                            latestBin.setFillLevel(fillLevel);
+                            latestBin.setLatitude(latitude);
+                            latestBin.setLongitude(longitude);
                         }
                     }
                 }
             }
-
-            displayBinsOnMap(bins);
         }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.e("AdminMapFragment", "Failed to read bin data from Firebase", databaseError.toException());
-        }
-    });
-}
+        return latestBin;
+    }
 
     private void displayBinsOnMap(List<GarbageBinStatusModel> bins) {
         if (googleMap != null && bins != null && !bins.isEmpty()) {
@@ -290,7 +308,6 @@ private void displayAllBinsOnMap() {
             }
         }
     }
-
 
     private void initWidgets(@NonNull View view) {
         fabOptionMenu = view.findViewById(R.id.fabOptionMenu);

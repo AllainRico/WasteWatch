@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.LocationData;
+import com.example.loginandregister.garbageBin.GarbageBinStatusModel;
 import com.example.loginandregister.requestCollection.userRequestCollectionFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,7 +37,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
@@ -128,6 +131,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 //                        googleMap.getUiSettings().setZoomControlsEnabled(true);
                     googleMap.getUiSettings().setZoomGesturesEnabled(false);
                     googleMap.getUiSettings().setAllGesturesEnabled(false);
+
+                    displayAllBinsOnMap();
 
                     onMapLoaded();
                 }
@@ -270,21 +275,97 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
-    public void displayBinLocation(double binLatidue, double binLongitude) {
-        if (googleMap != null) {
+    private void displayAllBinsOnMap() {
+        reference.child("Barangay").child("Looc").child("Bins").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<GarbageBinStatusModel> bins = new ArrayList<>();
 
-            LatLng binLocation = new LatLng(binLatidue, binLongitude);
+                for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
+                    GarbageBinStatusModel latestBin = getLatestBin(binSnapshot);
 
-            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+                    if (latestBin != null) {
+                        bins.add(latestBin);
+                    }
+                }
 
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(binLocation)
-                    .title("Bin Location")
-                    .icon(binIcon);
+                displayBinsOnMap(bins);
+            }
 
-            googleMap.addMarker(markerOptions);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("AdminMapFragment", "Failed to read bin data from Firebase", databaseError.toException());
+            }
+        });
+    }
+
+    private GarbageBinStatusModel getLatestBin(DataSnapshot binSnapshot) {
+        GarbageBinStatusModel latestBin = null;
+        String binName = binSnapshot.getKey();
+        String latestDate = "";
+
+        for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
+            for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
+                for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
+                    if (daySnapshot.hasChild("Latitude") && daySnapshot.hasChild("Longitude")) {
+                        String date = yearSnapshot.getKey() + monthSnapshot.getKey() + daySnapshot.getKey();
+
+                        if (date.compareTo(latestDate) > 0) {
+                            latestDate = date;
+                            int fillLevel = daySnapshot.child("FillLevel").getValue(Integer.class);
+                            double latitude = daySnapshot.child("Latitude").getValue(Double.class);
+                            double longitude = daySnapshot.child("Longitude").getValue(Double.class);
+
+                            latestBin = new GarbageBinStatusModel();
+                            latestBin.setBin(binName);
+                            latestBin.setFillLevel(fillLevel);
+                            latestBin.setLatitude(latitude);
+                            latestBin.setLongitude(longitude);
+                        }
+                    }
+                }
+            }
+        }
+
+        return latestBin;
+    }
+
+    private void displayBinsOnMap(List<GarbageBinStatusModel> bins) {
+        if (googleMap != null && bins != null && !bins.isEmpty()) {
+            for (GarbageBinStatusModel bin : bins) {
+                double binLatitude = bin.getLatitude();
+                double binLongitude = bin.getLongitude();
+                String binName = bin.getBin();
+
+                LatLng binLocation = new LatLng(binLatitude, binLongitude);
+
+                BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(binLocation)
+                        .title(binName)
+                        .icon(binIcon);
+
+                googleMap.addMarker(markerOptions);
+            }
         }
     }
+
+//    public void displayBinLocation(double binLatidue, double binLongitude) {
+//        if (googleMap != null) {
+//
+//            LatLng binLocation = new LatLng(binLatidue, binLongitude);
+//
+//            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+//
+//            MarkerOptions markerOptions = new MarkerOptions()
+//                    .position(binLocation)
+//                    .title("Bin Location")
+//                    .icon(binIcon);
+//
+//            googleMap.addMarker(markerOptions);
+//        }
+//    }
 
     //    public void updateAdminLocation(double latitude, double longitude) {
 //        if (googleMap != null) {
