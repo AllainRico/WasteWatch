@@ -62,10 +62,6 @@ public class AdminMainActivity extends AppCompatActivity {
     }
     //all related to location requisition
 
-
-
-
-
     //All related to UI
     private void initializeLayout() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());

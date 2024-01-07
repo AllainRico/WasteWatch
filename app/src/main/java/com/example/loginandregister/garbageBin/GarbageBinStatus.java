@@ -1,5 +1,7 @@
 package com.example.loginandregister.garbageBin;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -42,6 +44,9 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
     private List<GarbageBinStatusModel> garbageBinList;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
+    SharedPreferences preferences2;
+    public String OGbarName;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +60,12 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         garbageBinRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         garbageBinAdapter = new GarbageBinStatusAdapter();
         garbageBinRecyclerView.setAdapter(garbageBinAdapter);
+
+        SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        String username = preferences2.getString("adminFragment", "");
+
+
+//        String barName = (String) dataSnapshot.child("users").child(username).child("barName").getValue();
 
         reference = database.getReference()
                 .child("Barangay")
