@@ -9,7 +9,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -46,11 +48,17 @@ public class UserMainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     private ScheduleNotificationManager notificationManager;
     private Handler notificationHandler;
+    SharedPreferences preferences2;
+    String barname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        preferences2 = this.getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
+        barname = preferences2.getString("barName", "");
+
 
         // Initialization Firebase Database
         reference = FirebaseDatabase.getInstance().getReference();
@@ -127,7 +135,7 @@ public class UserMainActivity extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String time = snapshot.child("Barangay").child("Looc").child("Schedule").child(today).getValue(String.class);
+                String time = snapshot.child("Barangay").child(barname).child("Schedule").child(today).getValue(String.class);
                 if (time != null && !time.isEmpty()) {
                     // if Schedule is available
                     scheduledTime = time;
