@@ -57,16 +57,13 @@ public class AddNewGarbageBin extends BottomSheetDialogFragment {
 
                     garbageBinList.add(newBin);
                     garbageBinAdapter.setBin(garbageBinList);
-                    // Log list size before and after adding a new bin
+
                     Log.d("DEBUG", "List size before adding: " + garbageBinList.size());
 
-                    // Notify the adapter that the data has changed
                     garbageBinAdapter.notifyDataSetChanged();
 
-                    // Log list size after adding
                     Log.d("DEBUG", "List size after adding: " + garbageBinList.size());
 
-                    // Close the dialog
                     Toast.makeText(getActivity(), "Bin Added", Toast.LENGTH_SHORT).show();
                     dismiss();
                 } else {

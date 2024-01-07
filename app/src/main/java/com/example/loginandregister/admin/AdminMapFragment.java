@@ -2,13 +2,10 @@
 
 package com.example.loginandregister.admin;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -24,14 +21,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.adminCollectionRequests.adminCollectionRequestsFragment;
 import com.example.loginandregister.garbageBin.GarbageBinStatus;
-import com.example.loginandregister.servicepackage.AdminLocationService;
+import com.example.loginandregister.garbageBin.GarbageBinStatusModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,7 +38,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,13 +45,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private static final long RUNNABLE_INTERVAL = 5000;
-
     private FloatingActionButton fabOptionMenu;
     private ProgressBar progressBar;
     private ImageView mapPlaceholder;
@@ -72,7 +65,6 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
     private Handler handler;
     private Runnable periodicTask;
     private Marker adminMarker;
-
     SharedPreferences preferences2;
     String username;
 
@@ -147,7 +139,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                         googleMap.getUiSettings().setZoomGesturesEnabled(true);
                         googleMap.getUiSettings().setAllGesturesEnabled(true);
 
-                        displayBinLocation();
+                        displayAllBinsOnMap();
 
                         onMapLoaded();
                     }
@@ -243,23 +235,62 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         }
     }
 
-    public void displayBinLocation() {
-        if (googleMap != null) {
-            double binLatidue = 10.305827;
-            double binLongitude = 123.944845;
+private void displayAllBinsOnMap() {
+    reference.child("Barangay").child("Looc").child("Bins").addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            List<GarbageBinStatusModel> bins = new ArrayList<>();
 
-            LatLng binLocation = new LatLng(binLatidue, binLongitude);
+            for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
+                    for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
+                        for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
+                            if (daySnapshot.hasChild("Latitude") && daySnapshot.hasChild("Longitude")) {
+                                double latitude = daySnapshot.child("Latitude").getValue(Double.class);
+                                double longitude = daySnapshot.child("Longitude").getValue(Double.class);
 
-            BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+                                GarbageBinStatusModel bin = new GarbageBinStatusModel();
+                                bin.setLatitude(latitude);
+                                bin.setLongitude(longitude);
 
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(binLocation)
-                    .title("Bin Location")
-                    .icon(binIcon);
+                                bins.add(bin);
+                            }
+                        }
+                    }
+                }
+            }
 
-            googleMap.addMarker(markerOptions);
+            displayBinsOnMap(bins);
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+            Log.e("AdminMapFragment", "Failed to read bin data from Firebase", databaseError.toException());
+        }
+    });
+}
+
+    private void displayBinsOnMap(List<GarbageBinStatusModel> bins) {
+        if (googleMap != null && bins != null && !bins.isEmpty()) {
+            for (GarbageBinStatusModel bin : bins) {
+                double binLatitude = bin.getLatitude();
+                double binLongitude = bin.getLongitude();
+                String binName = bin.getBin();
+
+                LatLng binLocation = new LatLng(binLatitude, binLongitude);
+
+                BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
+
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(binLocation)
+                        .title(binName)
+                        .icon(binIcon);
+
+                googleMap.addMarker(markerOptions);
+            }
         }
     }
+
 
     private void initWidgets(@NonNull View view) {
         fabOptionMenu = view.findViewById(R.id.fabOptionMenu);

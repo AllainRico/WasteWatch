@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.loginandregister.R;
+import com.example.loginandregister.admin.AdminMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -63,13 +64,13 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Use a HashMap to keep track of the latest date for each bin
+                // HashMap to keep track of the latest date for each bin
                 HashMap<String, String> latestBinDates = new HashMap<>();
 
                 for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
                     String binName = binSnapshot.getKey();
                     updateBinForCurrentDate(binName);
-                    String latestDate = ""; // Initialize to an empty string
+                    String latestDate = "";
 
                     for (DataSnapshot yearSnapshot : binSnapshot.getChildren()) {
                         for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
@@ -79,7 +80,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                                         daySnapshot.hasChild("Longitude")) {
                                     String date = yearSnapshot.getKey() + monthSnapshot.getKey() + daySnapshot.getKey();
 
-                                    // Check if this date is newer than the existing one (if any)
+                                    // Check if date is newer than the existing one
                                     if (date.compareTo(latestDate) > 0) {
                                         latestDate = date; // Update the latest date
                                     }
@@ -88,14 +89,13 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                         }
                     }
 
-                    // Now, you have the latest date for this bin
+                    // latest date for this bin
                     latestBinDates.put(binName, latestDate);
                 }
 
-                // Create a new list to store the latest bin entries
                 List<GarbageBinStatusModel> latestBinEntries = new ArrayList<>();
 
-                // Iterate through the bins and get the latest entry for each bin
+                // Iteration of the bins and latest entry for each bin
                 for (DataSnapshot binSnapshot : dataSnapshot.getChildren()) {
                     String binName = binSnapshot.getKey();
                     String latestDate = latestBinDates.get(binName); // Get the latest date
@@ -108,7 +108,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                                         daySnapshot.hasChild("Longitude")) {
                                     String date = yearSnapshot.getKey() + monthSnapshot.getKey() + daySnapshot.getKey();
 
-                                    // Check if this entry corresponds to the latest date for the bin
+                                    // Checking of entry corresponds to the latest date for the bin
                                     if (date.equals(latestDate)) {
                                         int fillLevel = daySnapshot.child("FillLevel").getValue(Integer.class);
                                         double latitude = daySnapshot.child("Latitude").getValue(Double.class);
@@ -129,7 +129,6 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                     }
                 }
 
-                // Clear the old data and set the new data in garbageBinList
                 garbageBinList.clear();
                 garbageBinList.addAll(latestBinEntries);
 
@@ -241,7 +240,6 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
                 Log.d("DeleteBin", "Deleting bin at position: " + position);
 
-                // Ensure that position is valid
                 if (position >= 0 && position < garbageBinList.size()) {
 
                     GarbageBinStatusModel binToDelete = garbageBinList.get(position);
@@ -294,9 +292,9 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
-                    // If the bin for the current date doesn't exist, create it
+                    // Creates bin when current date doesn't exist
 
-                    // Get the data from the previous day (assuming it exists)
+                    // Get the data from the previous day
                     DatabaseReference previousDayRef = database.getReference()
                             .child("Barangay")
                             .child("Looc")
@@ -304,29 +302,28 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                             .child(binName)
                             .child(year)
                             .child(month)
-                            .child(String.valueOf(currentDay - 1)); // Get data from the previous day
+                            .child(String.valueOf(currentDay - 1)); //data from the previous day
 
                     previousDayRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot previousDaySnapshot) {
-                            // Check if the previous day's data exists
                             if (previousDaySnapshot.exists()) {
-                                // Get the data from the previous day
+                                // data from the previous day
                                 int fillLevel = previousDaySnapshot.child("FillLevel").getValue(Integer.class);
                                 double latitude = previousDaySnapshot.child("Latitude").getValue(Double.class);
                                 double longitude = previousDaySnapshot.child("Longitude").getValue(Double.class);
 
-                                // Create the new entry for the current day and set it to the previous day's values
+                                // Creates the new entry for the current day and set it to the previous day's values
                                 DatabaseReference binRef = currentBinRef;
                                 binRef.child("FillLevel").setValue(fillLevel);
                                 binRef.child("Latitude").setValue(latitude);
                                 binRef.child("Longitude").setValue(longitude);
                             } else {
-                                // If there is no data for the previous day, set default values
+                                // no data, default values
                                 DatabaseReference binRef = currentBinRef;
-                                binRef.child("FillLevel").setValue(0); // Set FillLevel as needed
-                                binRef.child("Latitude").setValue(0.0); // Set Latitude as needed
-                                binRef.child("Longitude").setValue(0.0); // Set Longitude as needed
+                                binRef.child("FillLevel").setValue(0);
+                                binRef.child("Latitude").setValue(0.0);
+                                binRef.child("Longitude").setValue(0.0);
                             }
                         }
 
