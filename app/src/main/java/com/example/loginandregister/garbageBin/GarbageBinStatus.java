@@ -35,7 +35,7 @@ import java.util.List;
 public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
     private Button backButton;
-    private FloatingActionButton addGarbageBin;
+    //private FloatingActionButton addGarbageBin;
     private RecyclerView garbageBinRecyclerView;
     private GarbageBinStatusAdapter garbageBinAdapter;
     private List<GarbageBinStatusModel> garbageBinList;
@@ -143,12 +143,12 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
             }
         });
 
-        addGarbageBin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddBinDialog();
-            }
-        });
+//        addGarbageBin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showAddBinDialog();
+//            }
+//        });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -378,7 +378,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
     private void initWidgets(View view){
         backButton = view.findViewById(R.id.backButton);
         garbageBinRecyclerView = view.findViewById(R.id.garbageBinRecyclerView);
-        addGarbageBin = view.findViewById(R.id.addGarbageBin);
+        //addGarbageBin = view.findViewById(R.id.addGarbageBin);
     }
     @Override
     public void handleDialogClose(DialogInterface dialog) {

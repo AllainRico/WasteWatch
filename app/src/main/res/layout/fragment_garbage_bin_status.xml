@@ -44,16 +44,16 @@
             android:nestedScrollingEnabled="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addGarbageBin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:backgroundTint="@color/background_green"
-            android:contentDescription="@string/add_garbage_bin"
-            android:src="@drawable/ic_add"
-            app:maxImageSize="40dp"/>
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/addGarbageBin"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:backgroundTint="@color/background_green"-->
+<!--            android:contentDescription="@string/add_garbage_bin"-->
+<!--            android:src="@drawable/ic_add"-->
+<!--            app:maxImageSize="40dp"/>-->
 
     </RelativeLayout>
 
