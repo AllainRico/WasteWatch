@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.loginandregister.admin.AdminMainActivity;
+import com.example.loginandregister.garbageBin.GarbageBinStatus;
 import com.example.loginandregister.internet.InternetReceiver;
 import com.example.loginandregister.user.UserMainActivity;
 import com.google.android.material.textfield.TextInputEditText;
@@ -196,7 +197,9 @@ public class Login extends AppCompatActivity {
 
                             SharedPreferences adminPreferences = getSharedPreferences("AdminHomeFragment", MODE_PRIVATE);
                             String adminUsername = snapshot.child("collectors").child(username).child("username").getValue(String.class);
+                            String adminBarname = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
                             AdminMainActivity.globalusername = username;
+                            GarbageBinStatus.barName = adminBarname;
 
                             reference.child("collectors").child(username).child("isOnline").setValue(true);
                             adminPreferences.edit().putString("adminFragment", adminUsername).apply();

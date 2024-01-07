@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
+    public static String barName;
     private Button backButton;
     private FloatingActionButton addGarbageBin;
     private RecyclerView garbageBinRecyclerView;
@@ -58,7 +59,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
         reference = database.getReference()
                 .child("Barangay")
-                .child("Looc")
+                .child(barName)
                 .child("Bins");
 
         reference.addValueEventListener(new ValueEventListener() {
