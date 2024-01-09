@@ -74,4 +74,8 @@
     <string name="collection_requests">Collection Requests</string>
     <string name="requestee">Requestee:</string>
     <string name="address">Address:</string>
+    <string name="verify_residents">Verify Residents</string>
+    <string name="bin_name">Bin Name:</string>
+    <string name="first_name_verify">First Name:</string>
+    <string name="last_name_verify">Last Name:</string>
 </resources>

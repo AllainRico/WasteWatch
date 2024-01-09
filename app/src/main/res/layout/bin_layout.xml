@@ -18,7 +18,7 @@
             android:id="@+id/bin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bin Name"
+            android:text="@string/bin_name"
             android:textColor="@color/black"
             android:textSize="16dp"
             android:textStyle="bold"/>
