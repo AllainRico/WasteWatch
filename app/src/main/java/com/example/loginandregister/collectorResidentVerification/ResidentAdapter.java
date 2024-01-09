@@ -31,11 +31,9 @@ public class ResidentAdapter extends RecyclerView.Adapter<ResidentAdapter.Reside
     public void onBindViewHolder(@NonNull ResidentViewHolder holder, int position) {
         ResidentModel resident = residentList.get(position);
 
-        // Bind data to your ViewHolder views
         holder.firstNameTextView.setText(resident.getFirstName());
         holder.lastNameTextView.setText(resident.getLastName());
 
-        // You can add more bindings based on your layout
     }
 
     @Override
@@ -51,8 +49,6 @@ public class ResidentAdapter extends RecyclerView.Adapter<ResidentAdapter.Reside
             super(itemView);
             firstNameTextView = itemView.findViewById(R.id.firstNameTextView);
             lastNameTextView = itemView.findViewById(R.id.lastNameTextView);
-
-            // Add more TextViews or views if needed
         }
     }
 }
