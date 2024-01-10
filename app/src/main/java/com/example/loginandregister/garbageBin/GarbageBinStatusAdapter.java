@@ -3,6 +3,7 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStatusAdapter.ViewHolder> {
+    private Button collectBinButton;
     private List<GarbageBinStatusModel> binStatusModel;
     private OnItemLongClickListener longClickListener;
     public interface OnItemLongClickListener {
@@ -48,6 +50,7 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
             fillLevelImageResource = R.drawable.half;
         } else if (fillLevel >= 50 && fillLevel <= 100){
             fillLevelImageResource = R.drawable.full;
+            holder.collectBinButton.setVisibility(View.VISIBLE);
         } else {
             fillLevelImageResource = R.drawable.full;
         }
@@ -79,11 +82,16 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView bin;
         ImageView fillLevel;
+        Button collectBinButton;
 
         ViewHolder(View view){
             super(view);
             bin = view.findViewById(R.id.bin);
             fillLevel = view.findViewById(R.id.fillLevel);
+            collectBinButton = view.findViewById(R.id.collectBinButton);
+
+            collectBinButton.setVisibility(View.GONE);
+
         }
     }
 }
