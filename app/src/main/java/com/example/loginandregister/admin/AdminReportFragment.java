@@ -352,21 +352,21 @@ public class AdminReportFragment extends Fragment {
         }
     }
 
-    private int getYear(){
+    public static int getYear(){
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
 
         return year;
     }
 
-    private int getMonth(){
+    public static int getMonth(){
         Calendar calendar = Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH) + 1;
 
         return month;
     }
 
-    private int getDate(){
+    public static int getDate(){
         Calendar calendar = Calendar.getInstance();
         int date = calendar.get(Calendar.DATE);
         return date;

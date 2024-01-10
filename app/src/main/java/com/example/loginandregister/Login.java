@@ -200,6 +200,7 @@ public class Login extends AppCompatActivity {
                             String adminBarname = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
                             AdminMainActivity.globalusername = username;
                             GarbageBinStatus.barName = adminBarname;
+                            AdminMainActivity.barname = adminBarname;
 
                             reference.child("collectors").child(username).child("isOnline").setValue(true);
                             adminPreferences.edit().putString("adminFragment", adminUsername).apply();

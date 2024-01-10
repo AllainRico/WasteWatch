@@ -1,15 +1,20 @@
 package com.example.loginandregister.admin;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -18,9 +23,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.databinding.ActivityMainBinding;
+import com.example.loginandregister.schedule.ScheduleNotificationManager;
 import com.example.loginandregister.servicepackage.AdminLocationService;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AdminMainActivity extends AppCompatActivity {
     private String TAG = "Admin Main Activity";
@@ -28,9 +37,12 @@ public class AdminMainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     private static final int PERMISSION_REQUEST_CODE = 1;
     public static boolean isOnline = false;
+    private ScheduleNotificationManager notificationManager;
+    private Handler notificationHandler;
     DatabaseReference reference;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+    public static String barname;
     public static String globalusername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,12 @@ public class AdminMainActivity extends AppCompatActivity {
         // Retrieve the isOnline value from the Intent
         isOnline = getIntent().getBooleanExtra("isOnline", false);
         AdminMapFragment.adminusername = globalusername;
+
+        notificationManager = new ScheduleNotificationManager(this);
+        createNotificationChannel();
+
+        notificationHandler = new Handler(Looper.getMainLooper());
+        checkScheduledNotifications();
 
         //Hide the Navigation Bar
         decorView = getWindow().getDecorView();
@@ -60,11 +78,6 @@ public class AdminMainActivity extends AppCompatActivity {
         startService();
         //startThread();
     }
-    //all related to location requisition
-
-
-
-
 
     //All related to UI
     private void initializeLayout() {
@@ -202,6 +215,90 @@ public class AdminMainActivity extends AppCompatActivity {
         return isEnabled;
     }
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Waste Watch";
+            String description = "Garbage Collection Schedule";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(ScheduleNotificationManager.CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void checkScheduledNotifications() {
+        //delay and frequency of checking
+        long initialDelayMillis = 1000; // Initial delay in milliseconds
+        long checkFrequencyMillis = 10000; // Check every 10 seconds
+
+        notificationHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkAndNotifyifBinisFull();
+                notificationHandler.postDelayed(this, checkFrequencyMillis);
+            }
+        }, initialDelayMillis);
+    }
+
+
+    private void checkAndNotifyifBinisFull(){
+        int year = AdminReportFragment.getYear();
+        int month = AdminReportFragment.getMonth();
+        int date = AdminReportFragment.getDate();
+
+        reference = database.getReference();
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //count the bins inside the barangay
+                //path == Barangay/Looc/Bins
+                DataSnapshot binsSnapshot = snapshot.child("Barangay").child(barname).child("Bins");
+                for (DataSnapshot binSnapshot : binsSnapshot.getChildren()){
+                    String binName = binSnapshot.getKey();
+
+                    if (binSnapshot.exists()) {
+                        ///path = Barangay/Looc/Bins/bin1/2024/1/10/FillLevel
+                        Double fillLevel = binSnapshot.child(String.valueOf(year)).child(String.valueOf(month)).child(String.valueOf(date)).child("FillLevel").getValue(Double.class);
+
+                        if (fillLevel >= 90) {
+                            // Send notification for the full bin
+                            Log.d(TAG, "fill level: "+fillLevel);
+                            sendNotification(binName);
+                        }
+                    } else {
+                        // Handle the case where the binSnapshot doesn't exist
+                        Log.e(TAG, "Bin " + binName + " does not exist!");
+                    }
+
+                }
+
+                //else check count
+                //loop while i != count
+                //each i is checked if filllevel == 100
+                //if true; send notification
+                //else exit
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void sendNotification(String binName) {
+        // Implement your notification logic here
+        // You can use NotificationCompat or any other notification mechanism
+        // to show a notification to the user.
+        // For simplicity, you can log the message for now.
+        Log.d(TAG, "Notification: " + binName);
+
+        String notificationTitle = "Bin Full Alert!";
+        String notificationMessage = "Bin " + binName + " is at full capacity. It's time to empty the bin.";
+        notificationManager.showNotification(notificationTitle, notificationMessage);
+    }
 
     //end
 }
