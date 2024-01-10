@@ -191,7 +191,7 @@ public class Login extends AppCompatActivity {
                     // User with username "admin" exists, check password
                     String adminPasswordFromDB = snapshot.child("collectors").child(username).child("password").getValue(String.class);
                     if (adminPasswordFromDB.equals(password)) {
-                        // Admin login successful
+
                         if (locationPermissionGranted) {
                             Intent adminIntent = new Intent(Login.this, AdminMainActivity.class);
                             adminIntent.putExtra("isOnline", true);
@@ -220,32 +220,35 @@ public class Login extends AppCompatActivity {
                 } else if (snapshot.child("users").child(username).exists()) {
                     // User with given username exists, check password
                     String passwordFromDB = snapshot.child("users").child(username).child("password").getValue(String.class);
+                    boolean isVerify = snapshot.child("users").child(username).child("isVerify").getValue(Boolean.class);
                     if (passwordFromDB.equals(password)) {
-                        // User login successful
-                        // Launch the main user activity or perform other actions as needed
-                        Intent userIntent = new Intent(Login.this, UserMainActivity.class);
+                        if (isVerify) {
+                            Intent userIntent = new Intent(Login.this, UserMainActivity.class);
 
-                        SharedPreferences userPreferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
-                        String firstname = snapshot.child("firstName").getValue(String.class);
-                        userPreferences.edit().putString("firstname", firstname).apply();
+                            SharedPreferences userPreferences = getSharedPreferences("HomeFragment", MODE_PRIVATE);
+                            String firstname = snapshot.child("firstName").getValue(String.class);
+                            userPreferences.edit().putString("firstname", firstname).apply();
 
-                        SharedPreferences userProfilePreferences = getSharedPreferences("ProfileFragment", MODE_PRIVATE);
-                        String firstName = snapshot.child("users").child(username).child("firstName").getValue(String.class);
-                        String lastName = snapshot.child("users").child(username).child("lastName").getValue(String.class);
-                        String email = snapshot.child("users").child(username).child("email").getValue(String.class);
-                        String username1 = snapshot.child("users").child(username).child("username").getValue(String.class);
-                        String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
+                            SharedPreferences userProfilePreferences = getSharedPreferences("ProfileFragment", MODE_PRIVATE);
+                            String firstName = snapshot.child("users").child(username).child("firstName").getValue(String.class);
+                            String lastName = snapshot.child("users").child(username).child("lastName").getValue(String.class);
+                            String email = snapshot.child("users").child(username).child("email").getValue(String.class);
+                            String username1 = snapshot.child("users").child(username).child("username").getValue(String.class);
+                            String barName = snapshot.child("users").child(username).child("barName").getValue(String.class);
 
-                        userProfilePreferences.edit().putString("firstname", firstName).apply();
-                        userProfilePreferences.edit().putString("lastname", lastName).apply();
-                        userProfilePreferences.edit().putString("email", email).apply();
-                        userProfilePreferences.edit().putString("ProfileUsername", username1).apply();
-                        userProfilePreferences.edit().putString("barName", barName).apply();
+                            userProfilePreferences.edit().putString("firstname", firstName).apply();
+                            userProfilePreferences.edit().putString("lastname", lastName).apply();
+                            userProfilePreferences.edit().putString("email", email).apply();
+                            userProfilePreferences.edit().putString("ProfileUsername", username1).apply();
+                            userProfilePreferences.edit().putString("barName", barName).apply();
 
-                        startActivity(userIntent);
-                        finish();
+                            startActivity(userIntent);
+                            finish();
 
-                        editTextPassword.setError(null);
+                            editTextPassword.setError(null);
+                        } else {
+                            Toast.makeText(Login.this, "This account is not verified", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         editTextPassword.setError("Invalid password");
                         hidePasswordToggle();
