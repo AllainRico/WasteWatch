@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.loginandregister.Login;
 import com.example.loginandregister.R;
+import com.example.loginandregister.servicepackage.AdminLocationService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -230,6 +231,9 @@ public class AdminReportFragment extends Fragment {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent serviceIntent = new Intent(getActivity(), AdminLocationService.class);
+                getActivity().stopService(serviceIntent);
+
                 Intent intent = new Intent(getActivity(), Login.class);
                 startActivity(intent);
                 getActivity().finish();
@@ -237,6 +241,7 @@ public class AdminReportFragment extends Fragment {
                 reference.child("isOnline").setValue(false);
                 reference.child("latitude").setValue(0.00);
                 reference.child("longitude").setValue(0.00);
+
 
                 alertDialog.dismiss();
             }

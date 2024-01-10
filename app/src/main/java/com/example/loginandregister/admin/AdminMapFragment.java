@@ -128,20 +128,22 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Double collectorLatValue = (Double) snapshot.child("collectors").child(username).child("latitude").getValue();
-                Double collectorLongValue = (Double) snapshot.child("collectors").child(username).child("longitude").getValue();
+                Object latValueObj = snapshot.child("collectors").child(username).child("latitude").getValue();
+                Object longValueObj = snapshot.child("collectors").child(username).child("longitude").getValue();
 
-                    if (collectorLatValue != null && collectorLongValue != null) {
-                        LatLng brgyMap = new LatLng(collectorLatValue, collectorLongValue);
-                        float zoomLevel = 15.3f;
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
-//                        googleMap.getUiSettings().setZoomControlsEnabled(true);
-                        googleMap.getUiSettings().setZoomGesturesEnabled(true);
-                        googleMap.getUiSettings().setAllGesturesEnabled(true);
+                Double collectorLatValue = convertToDouble(latValueObj);
+                Double collectorLongValue = convertToDouble(longValueObj);
 
-                        displayAllBinsOnMap();
+                if (collectorLatValue != null && collectorLongValue != null) {
+                    LatLng brgyMap = new LatLng(collectorLatValue, collectorLongValue);
+                    float zoomLevel = 15.3f;
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brgyMap, zoomLevel));
+                    googleMap.getUiSettings().setZoomGesturesEnabled(true);
+                    googleMap.getUiSettings().setAllGesturesEnabled(true);
 
-                        onMapLoaded();
+                    displayAllBinsOnMap();
+
+                    onMapLoaded();
                     }
 
             }
@@ -461,6 +463,15 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
     private void moveCameraToLocation(double latitude, double longitude, float zoomLevel) {
         LatLng location = new LatLng(latitude, longitude);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
+    }
+
+    private Double convertToDouble(Object value) {
+        if (value instanceof Double) {
+            return (Double) value;
+        } else if (value instanceof Long) {
+            return ((Long) value).doubleValue();
+        }
+        return null; // Handle other cases or return a default value as needed
     }
 
 }

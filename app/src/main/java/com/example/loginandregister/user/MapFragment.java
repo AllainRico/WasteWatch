@@ -167,8 +167,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Double collectorLatValue = (Double) snapshot.child("collectors").child(barname + "-Collector").child("latitude").getValue();
-                Double collectorLongValue = (Double) snapshot.child("collectors").child(barname + "-Collector").child("longitude").getValue();
+                Object latValueObj = snapshot.child("collectors").child(barname + "-Collector").child("latitude").getValue();
+                Object longValueObj = snapshot.child("collectors").child(barname + "-Collector").child("longitude").getValue();
+
+                Double collectorLatValue = convertToDouble(latValueObj);
+                Double collectorLongValue = convertToDouble(longValueObj);
 
                 if (collectorLatValue != null && collectorLongValue != null) {
                     displayAdminLocation(collectorLatValue, collectorLongValue);
@@ -399,5 +402,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         handler.removeCallbacks(periodicTask);
 
         super.onDestroyView();
+    }
+
+    private Double convertToDouble(Object value) {
+        if (value instanceof Double) {
+            return (Double) value;
+        } else if (value instanceof Long) {
+            return ((Long) value).doubleValue();
+        }
+        return null; // Handle other cases or return a default value as needed
     }
 }
