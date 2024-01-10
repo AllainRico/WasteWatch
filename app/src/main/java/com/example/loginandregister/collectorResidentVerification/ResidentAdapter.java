@@ -1,6 +1,7 @@
 package com.example.loginandregister.collectorResidentVerification;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.loginandregister.R;
@@ -20,14 +22,15 @@ import java.util.List;
 public class ResidentAdapter extends RecyclerView.Adapter<ResidentAdapter.ResidentViewHolder> {
 
     private List<ResidentModel> residentList;
-
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private Activity activity;
 
     private DatabaseReference databaseReference;
 
-    public ResidentAdapter(List<ResidentModel> residentList, DatabaseReference reference) {
+    public ResidentAdapter(List<ResidentModel> residentList, DatabaseReference reference, Activity activity) {
         this.residentList = residentList;
         this.databaseReference = database.getReference().child("users");
+        this.activity = activity;
     }
 
     @NonNull
@@ -48,16 +51,30 @@ public class ResidentAdapter extends RecyclerView.Adapter<ResidentAdapter.Reside
         holder.verifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleVerification(resident);
-                Toast.makeText(v.getContext(),"Verified "+resident.getFirstName()+" "+resident.getLastName(), Toast.LENGTH_SHORT).show();
+                showConfirmationDialog("Are you sure you want to verify "+ resident.getFirstName() + " " + resident.getLastName() + "?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            handleVerification(resident);
+                            Toast.makeText(v.getContext(), "Verified " + resident.getFirstName() + " " + resident.getLastName(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
         holder.denyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleDeny(resident);
-                Toast.makeText(v.getContext(),"Denied "+resident.getFirstName()+" "+resident.getLastName(), Toast.LENGTH_SHORT).show();
+                showConfirmationDialog("Are you sure you want to deny "+ resident.getFirstName() + " " + resident.getLastName() + "?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            handleDeny(resident);
+                            Toast.makeText(v.getContext(), "Denied " + resident.getFirstName() + " " + resident.getLastName(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }
@@ -72,6 +89,14 @@ public class ResidentAdapter extends RecyclerView.Adapter<ResidentAdapter.Reside
         databaseReference.child(resident.getUsername()).removeValue();
         residentList.remove(resident);
         notifyDataSetChanged();
+    }
+
+    private void showConfirmationDialog(String message, DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity); // Pass your activity reference
+        builder.setMessage(message)
+                .setPositiveButton("Yes", onClickListener)
+                .setNegativeButton("No", onClickListener)
+                .show();
     }
 
     @Override

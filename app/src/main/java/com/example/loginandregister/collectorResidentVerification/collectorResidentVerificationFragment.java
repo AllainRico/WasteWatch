@@ -49,7 +49,7 @@ public class collectorResidentVerificationFragment extends Fragment {
 
         residentList = new ArrayList<>();
         verifyListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        residentAdapter = new ResidentAdapter(residentList, reference);
+        residentAdapter = new ResidentAdapter(residentList, reference, getActivity());
         verifyListRecyclerView.setAdapter(residentAdapter);
 
         database = FirebaseDatabase.getInstance();
