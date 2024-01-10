@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.adminCollectionRequests.UserDataModel;
@@ -35,7 +36,7 @@ public class collectorResidentVerificationFragment extends Fragment {
     private RecyclerView verifyListRecyclerView;
     private ResidentAdapter residentAdapter;
     private List<ResidentModel> residentList;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseDatabase database;
     DatabaseReference reference;
 
     @Override
@@ -48,7 +49,7 @@ public class collectorResidentVerificationFragment extends Fragment {
 
         residentList = new ArrayList<>();
         verifyListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        residentAdapter = new ResidentAdapter(residentList);
+        residentAdapter = new ResidentAdapter(residentList, reference);
         verifyListRecyclerView.setAdapter(residentAdapter);
 
         database = FirebaseDatabase.getInstance();
@@ -62,11 +63,21 @@ public class collectorResidentVerificationFragment extends Fragment {
                 List<ResidentModel> residents = new ArrayList<>();
 
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String username = userSnapshot.child("username").getValue(String.class);
                     String firstName = userSnapshot.child("firstName").getValue(String.class);
                     String lastName = userSnapshot.child("lastName").getValue(String.class);
+                    Boolean isVerify = userSnapshot.child("isVerify").getValue(Boolean.class);
+                    //Boolean isDenied = userSnapshot.child("isDenied").getValue(Boolean.class);
 
-                    ResidentModel resident = new ResidentModel(firstName, lastName);
-                    residents.add(resident);
+                    if (!isVerify) {
+                        ResidentModel resident = new ResidentModel(username, firstName, lastName);
+                        residents.add(resident);
+                    }
+
+//                    if (!isVerify && !isDenied) {
+//                        ResidentModel resident = new ResidentModel(username, firstName, lastName);
+//                        residents.add(resident);
+//                    }
                 }
 
                 residentList.clear();
@@ -78,7 +89,7 @@ public class collectorResidentVerificationFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(getActivity(), "Database Error", Toast.LENGTH_SHORT).show();
             }
         });
 
