@@ -115,8 +115,8 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         });
 
 
-        String address = "District Camia";
-        holder.place.setText("Location: " + address);
+        String address = "Barangay Looc";
+        holder.place.setText(address);
     }
     private void updateIsCollectedValue(int position) {
         String binName = binStatusModel.get(position).getBin();
