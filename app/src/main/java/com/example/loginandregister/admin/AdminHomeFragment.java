@@ -134,53 +134,47 @@ public class AdminHomeFragment extends Fragment {
     public void setCollectorLocation() {
         if (isLocationPermissionGranted(getActivity())) {
             Log.d("setCollectorLocation: ", "location permission granted");
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
 
-            LocationServices.getFusedLocationProviderClient(getActivity()).requestLocationUpdates(locationRequest, new LocationCallback() {
-                @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
-                    LocationServices.getFusedLocationProviderClient(getActivity())
-                            .removeLocationUpdates(this);
+            // Check if the fragment is attached to an activity and if the activity is not null
+            if (isAdded() && getActivity() != null) {
+                // Check for location permissions
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
 
-                    if(locationResult != null && locationResult.getLocations().size() > 0)
-                        {
-                            int index = locationResult.getLocations().size() - 1;
-                            Double collector_lat_value = locationResult.getLocations().get(index).getLatitude();
-                            Double collector_long_value = locationResult.getLocations().get(index).getLongitude();
-                            sendLocationToDB(collector_lat_value, collector_long_value);
-                            Log.d( "onLocationResult: Lat value:", collector_lat_value.toString());
-                            Log.d( "onLocationResult: Long value:", collector_long_value.toString());
-//                            Toast.makeText(getActivity(), "Latitude = " + collector_lat_value + " Longitude = " + collector_long_value, Toast.LENGTH_SHORT).show();
-                        }
+                    FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+                    if (fusedLocationProviderClient != null) {
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+                            @Override
+                            public void onLocationResult(@NonNull LocationResult locationResult) {
+                                super.onLocationResult(locationResult);
+                                fusedLocationProviderClient.removeLocationUpdates(this);
+
+                                if (locationResult != null && locationResult.getLocations().size() > 0) {
+                                    int index = locationResult.getLocations().size() - 1;
+                                    Double collector_lat_value = locationResult.getLocations().get(index).getLatitude();
+                                    Double collector_long_value = locationResult.getLocations().get(index).getLongitude();
+                                    sendLocationToDB(collector_lat_value, collector_long_value);
+                                    Log.d("onLocationResult: Lat value:", collector_lat_value.toString());
+                                    Log.d("onLocationResult: Long value:", collector_long_value.toString());
+                                }
+                            }
+                        }, Looper.getMainLooper());
+                    } else {
+                        Log.d("setCollectorLocation: ", "FusedLocationProviderClient is null");
+                    }
+                } else {
+                    Log.d("setCollectorLocation: ", "Location permission not granted");
+                    // You may want to request the location permission here
                 }
-            }, Looper.getMainLooper());
-
-//            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-//                @Override
-//                public void onSuccess(Location location) {
-//                    Log.d("onSuccess: ", location.toString());
-//                    if (location != null) {
-//
-//                        Double user_lat_value = location.getLatitude();
-//                        Double user_long_value = location.getLongitude();
-//                        Toast.makeText(getActivity(), "Latitude = " + user_lat_value + " Longitude = " + user_long_value, Toast.LENGTH_SHORT).show();
-//                        sendLocationToDB(user_lat_value, user_long_value);
-////                        displayAdminLocation(user_lat_value, user_long_value);
-//
-//                    } else {
-//                        Toast.makeText(getActivity(), "!!!!!", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-        }
-        else{
+            } else {
+                Log.d("setCollectorLocation: ", "Fragment not attached to an activity");
+            }
+        } else {
             Log.d("setCollectorLocation: ", "location permission not granted");
         }
     }
+
 
 
     public static void sendLocationToDB(Double _lat, Double _long) {
