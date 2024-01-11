@@ -54,7 +54,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
         garbageBinList = new ArrayList<>();
         garbageBinRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        garbageBinAdapter = new GarbageBinStatusAdapter();
+        garbageBinAdapter = new GarbageBinStatusAdapter(getContext());
         garbageBinRecyclerView.setAdapter(garbageBinAdapter);
 
         reference = database.getReference()

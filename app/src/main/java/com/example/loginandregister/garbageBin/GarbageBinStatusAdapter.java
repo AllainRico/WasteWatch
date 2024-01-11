@@ -1,6 +1,7 @@
 package com.example.loginandregister.garbageBin;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
@@ -35,9 +36,15 @@ import java.util.Locale;
 
 public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStatusAdapter.ViewHolder> {
     private Button collectBinButton;
-    private static Geocoder geocoder;
+    private Geocoder geocoder;
     private List<GarbageBinStatusModel> binStatusModel;
     private OnItemLongClickListener longClickListener;
+
+//    public GarbageBinStatusAdapter(Context context) {
+//        geocoder = new Geocoder(context, Locale.getDefault());
+//    }
+
+
     public interface OnItemLongClickListener {
         void onItemLongClick(int position);
     }
@@ -46,8 +53,9 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         this.longClickListener = listener;
     }
 
-    public GarbageBinStatusAdapter(){
+    public GarbageBinStatusAdapter(Context context){
         this.binStatusModel = new ArrayList<>();
+        geocoder = new Geocoder(context, Locale.getDefault());
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -115,7 +123,7 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         });
 
 
-        String address = "Barangay Looc";
+        String address = getAddress(item.getLatitude(), item.getLongitude());
         holder.place.setText(address);
     }
     private void updateIsCollectedValue(int position) {
@@ -211,15 +219,22 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
             List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
             if (addresses != null && addresses.size() > 0) {
                 Address address = addresses.get(0);
+
+                // Extract relevant address components
+                String locality = address.getLocality(); // Lapu-Lapu City
+                String subAdminArea = address.getSubAdminArea(); //Cebu
+
                 StringBuilder sb = new StringBuilder();
-                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                    sb.append(address.getAddressLine(i)).append(" ");
-                }
+
+                sb.append(locality).append(", ");
+                sb.append(subAdminArea);
+
                 return sb.toString();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return "Address not available";
     }
 
