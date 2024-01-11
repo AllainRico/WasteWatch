@@ -161,9 +161,9 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
 
     private void addEntryToCollectionHistory(DatabaseReference binRef) {
         String currentTime = (String) currentTime();
-
+        //butang ta collection size ari para mahibaloan unsa sunod nga collection
         // Add a new entry to the "Collection History"
-        binRef.child("Collection History").child(currentTime).setValue("N/A")
+        binRef.child("Collection History").child("Collection1").setValue(currentTime)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
