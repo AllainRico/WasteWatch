@@ -1,0 +1,85 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    app:cardCornerRadius="8dp"
+    app:cardUseCompatPadding="true"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardPreventCornerOverlap="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/firstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/first_name_verify"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:paddingEnd="3dp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/firstNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_toEndOf="@id/firstName"/>
+
+            <TextView
+                android:id="@+id/lastName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_name_verify"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:paddingEnd="5dp"
+                android:layout_marginTop="30dp"/>
+
+            <TextView
+                android:id="@+id/lastNameTextView"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_toEndOf="@id/lastName"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                android:id="@+id/deny_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:textColor="@color/white"
+                android:background="@drawable/button_deny"
+                android:text="@string/blank"
+                android:drawableStart="@drawable/ic_deny"
+                android:layout_toStartOf="@id/verify_btn"
+                android:layout_marginEnd="5dp"/>
+
+            <Button
+                android:id="@+id/verify_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:textColor="@color/white"
+                android:background="@drawable/button"
+                android:text="@string/blank"
+                android:drawableStart="@drawable/ic_verify"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

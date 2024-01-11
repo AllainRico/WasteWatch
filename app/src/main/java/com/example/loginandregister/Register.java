@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 
 public class Register extends AppCompatActivity {
     private View decorView;
@@ -96,7 +98,7 @@ public class Register extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (!snapshot.child(username).exists()) {
                                 if (username.equals("admin")) {
-                                    Toast.makeText(Register.this, "Choose another username", Toast.LENGTH_SHORT).show();
+                                    editTextUsername.setError("Choose another username");
                                 } else {
                                     String firstName = editTextFirstName.getText().toString().trim();
                                     String lastName = editTextLastName.getText().toString().trim();
@@ -106,11 +108,27 @@ public class Register extends AppCompatActivity {
                                     String barangay = preferences.getString("barangay", " ");
                                     SharedPreferences preferences1 = getSharedPreferences("MyPrefsBarangayDistrict", Context.MODE_PRIVATE);
                                     String district = preferences1.getString("district", " ");
-                                    User user = new User(firstName, lastName, username, email, password, barangay, district);
-                                    reference.child(username).setValue(user);
-                                    Toast.makeText(Register.this, "Successful", Toast.LENGTH_LONG).show();
+                                    boolean isVerify = false;
+
+                                    User user = new User(firstName, lastName, username, email, password, barangay, district, isVerify);
+
+                                    HashMap<String, Object> userMap = new HashMap<>();
+                                    userMap.put("isVerify", user.isVerify());
+                                    userMap.put("firstName", user.getFirstName());
+                                    userMap.put("lastName", user.getLastName());
+                                    userMap.put("username", user.getUsername());
+                                    userMap.put("email", user.getEmail());
+                                    userMap.put("password", user.getPassword());
+                                    userMap.put("barName", user.getBarName());
+                                    userMap.put("district", user.getDistrict());
+
+                                    reference.child(username).setValue(userMap);
+
+                                    Toast.makeText(Register.this, "Account Registered Successfully", Toast.LENGTH_LONG).show();
+
                                     Intent intent = new Intent(Register.this, Login.class);
                                     startActivity(intent);
+                                    finish();
                                 }
                             } else {
                                 editTextUsername.setError("Username already exists");

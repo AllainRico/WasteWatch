@@ -29,6 +29,10 @@ import android.widget.Toast;
 
 import com.example.loginandregister.Login;
 import com.example.loginandregister.R;
+import com.example.loginandregister.collectorResidentVerification.collectorResidentVerificationFragment;
+import com.example.loginandregister.requestCollection.userRequestCollectionFragment;
+import com.example.loginandregister.user.ProfileFragment;
+import com.example.loginandregister.user.UserMainActivity;
 import com.example.loginandregister.servicepackage.AdminLocationService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +53,7 @@ public class AdminReportFragment extends Fragment {
     private static final int FILE_PERMISSION_REQUEST_CODE = 1;
     private Button buttonLogout;
     private Button reportbtn;
+    private Button verifybtn;
     private TextView barangay, user;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
@@ -70,10 +75,8 @@ public class AdminReportFragment extends Fragment {
         // Initialize SharedPreferences for Location Permission
         sharedPreferences = getActivity().getSharedPreferences("LocationPermission", Context.MODE_PRIVATE);
 
-        reportbtn = view.findViewById(R.id.btn_report);
-        buttonLogout = view.findViewById(R.id.btn_logout);
-        barangay = view.findViewById(R.id.barangay);
-        user = view.findViewById(R.id.username);
+        //Initialize UI
+        initWidgets(view);
 
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment","");
@@ -102,6 +105,18 @@ public class AdminReportFragment extends Fragment {
                 clearLocationPermissionStatus();
                 Intent intent = new Intent(getActivity(), Login.class);
                 showLogoutConfirmationDialog();
+            }
+        });
+
+        verifybtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                collectorResidentVerificationFragment VerificationFragment = new collectorResidentVerificationFragment();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frameLayout, VerificationFragment)
+                        .addToBackStack(null) // This allows the user to navigate back to the previous fragment
+                        .commit();
             }
         });
 
@@ -393,5 +408,13 @@ public class AdminReportFragment extends Fragment {
             default:
                 return "Invalid Day";
         }
+    }
+
+    private void initWidgets(View view){
+        verifybtn = view.findViewById(R.id.btn_verify);
+        reportbtn = view.findViewById(R.id.btn_report);
+        buttonLogout = view.findViewById(R.id.btn_logout);
+        barangay = view.findViewById(R.id.barangay);
+        user = view.findViewById(R.id.username);
     }
 }

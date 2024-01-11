@@ -2,8 +2,9 @@ package com.example.loginandregister;
 
 public class User {
     String firstName, lastName, username, email, password, barName, district;
+    boolean isVerify;
 
-    public User(String firstName, String lastName, String username, String email, String password, String barName, String district){
+    public User(String firstName, String lastName, String username, String email, String password, String barName, String district, boolean isVerify){
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -11,6 +12,7 @@ public class User {
         this.password = password;
         this.barName = barName;
         this.district = district;
+        this.isVerify = false;
     }
 
     public User() {
@@ -70,5 +72,13 @@ public class User {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    public boolean isVerify() {
+        return isVerify;
+    }
+
+    public void setVerify(boolean verify) {
+        isVerify = verify;
     }
 }

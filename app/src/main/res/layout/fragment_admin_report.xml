@@ -46,22 +46,30 @@
         android:layout_marginTop="50dp">
 
         <Button
+            android:id="@+id/btn_verify"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/button"
+            android:text="@string/verify_residents"
+            android:textColor="@color/white"
+            android:layout_marginBottom="30dp"/>
+
+        <Button
             android:id="@+id/btn_report"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:background="@drawable/button"
             android:text="@string/generate_report"
             android:textColor="@color/white"
-            android:layout_marginBottom="50dp"/>
+            android:layout_marginBottom="30dp"/>
 
         <Button
             android:id="@+id/btn_logout"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:background="@drawable/button"
             android:text="@string/logout"
             android:textColor="@color/white" />

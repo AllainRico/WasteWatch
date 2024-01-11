@@ -89,7 +89,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
@@ -97,7 +96,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         handler.postDelayed(periodicTask, RUNNABLE_INTERVAL);
 
-        requestCollectionBTN = view.findViewById(R.id.requestCollectionbtn);
         requestCollectionBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -384,6 +382,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private void initWidgets(View view) {
         progressBar = view.findViewById(R.id.progressBar);
         mapPlaceholder = view.findViewById(R.id.mapPlaceholder);
+        requestCollectionBTN = view.findViewById(R.id.requestCollectionbtn);
     }
 
     public void onMapLoaded() {
