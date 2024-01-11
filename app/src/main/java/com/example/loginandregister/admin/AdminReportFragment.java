@@ -152,7 +152,7 @@ public class AdminReportFragment extends Fragment {
         for(int i = 0; i < numBins; i++) {
             String currentBin = (String) iotdatastring.get(i);
             for (int ii = 0; ii < 7; ii++) {
-                String binDataPath = "/Barangay/"+ barrangayName +"/Bins/"+ currentBin + "/" + getYear() + "/"+ getMonth() + "/" + weekDates.get(ii) + "/FillLevel";
+                String binDataPath = "/Barangay/"+ barrangayName +"/Bins/"+ currentBin + "/" + getYear() + "/"+ getMonth() + "/" + weekDates.get(ii) + "/Collection History/Collection1";
                 Log.d("path", binDataPath);
                 int finalI = i;
                 int finalIi = ii;
@@ -199,8 +199,8 @@ public class AdminReportFragment extends Fragment {
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // Start with Sunday
 
         for (int i = 0; i < 7; i++) {
-            dayNumbers.add(calendar.get(Calendar.DAY_OF_MONTH));
-            calendar.add(Calendar.DAY_OF_WEEK, 1); // Move to the next day
+            dayNumbers.add((calendar.get(Calendar.DAY_OF_MONTH))-7);
+            calendar.add(Calendar.DAY_OF_MONTH, 1); // Move to the next day
         }
 
         return dayNumbers;
@@ -296,18 +296,18 @@ public class AdminReportFragment extends Fragment {
         forLinePaint.setPathEffect(new DashPathEffect(new float[]{2,2}, 0));
         forLinePaint.setStrokeWidth(1);
         forLinePaint.setColor(Color.rgb(0, 50, 250));
-        canvas.drawLine(20, 85, 230, 85, forLinePaint);
+        canvas.drawLine(20, 85, 250, 85, forLinePaint);
 
-        canvas.drawText("Bin fill level Report ", 20, 92, paint);
+        canvas.drawText("Weekly Bin Collection Summary Report ", 20, 92, paint);
         //make the days
-        canvas.drawText("MON", 67, 109, paint);
-        canvas.drawText("TUE", 87, 109, paint);
+        canvas.drawText("MON", 47, 109, paint);
+        canvas.drawText("TUE", 77, 109, paint);
         canvas.drawText("WED", 107, 109, paint);
-        canvas.drawText("THU", 127, 109, paint);
-        canvas.drawText("FRI", 147, 109, paint);
-        canvas.drawText("SAT", 167, 109, paint);
-        canvas.drawText("SUN", 187, 109, paint);
-        canvas.drawText("Average", 207, 109, paint);
+        canvas.drawText("THU", 137, 109, paint);
+        canvas.drawText("FRI", 167, 109, paint);
+        canvas.drawText("SAT", 197, 109, paint);
+        canvas.drawText("SUN", 227, 109, paint);
+//        canvas.drawText("Average", 207, 109, paint);
 
 
         //bin names
@@ -322,7 +322,7 @@ public class AdminReportFragment extends Fragment {
             String fillLevel = (String) databinList.get(i);
 
             // Calculate x and y coordinates
-            int x = 67 + (i % 7) * 20;
+            int x = 47 + (i % 7) * 30;
             int y = 126 + (i / 7) * 17;
 
             canvas.drawText("" + fillLevel, x, y, paint);
