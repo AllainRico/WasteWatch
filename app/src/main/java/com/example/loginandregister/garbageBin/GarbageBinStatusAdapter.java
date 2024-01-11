@@ -1,11 +1,16 @@
 package com.example.loginandregister.garbageBin;
+
 import android.annotation.SuppressLint;
+import android.location.Address;
+import android.location.Geocoder;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +35,7 @@ import java.util.Locale;
 
 public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStatusAdapter.ViewHolder> {
     private Button collectBinButton;
+    private static Geocoder geocoder;
     private List<GarbageBinStatusModel> binStatusModel;
     private OnItemLongClickListener longClickListener;
     public interface OnItemLongClickListener {
@@ -53,7 +60,7 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
     @Override
     public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int position){
         GarbageBinStatusModel item = binStatusModel.get(position);
-        holder.bin.setText(item.getBin());
+        holder.bin.setText("Bin Name: " + item.getBin());
 
         int fillLevel = binStatusModel.get(holder.getAdapterPosition()).getFillLevel();
 
@@ -80,6 +87,22 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
 
         holder.fillLevel.setImageResource(fillLevelImageResource);
 
+        //for button visible or gone
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, holder.itemView.getResources().getDisplayMetrics()), // Width
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, holder.itemView.getResources().getDisplayMetrics())  // Height
+        );
+
+        if (holder.collectBinButton.getVisibility() == View.VISIBLE) {
+            params.addRule(RelativeLayout.START_OF, holder.collectBinButton.getId());
+            params.setMarginEnd((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, holder.itemView.getResources().getDisplayMetrics())); // Add margin
+        } else {
+            params.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+        }
+
+        holder.fillLevel.setLayoutParams(params);
+
+
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -90,6 +113,10 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
                 return false;
             }
         });
+
+
+        String address = "District Camia";
+        holder.place.setText("Location: " + address);
     }
     private void updateIsCollectedValue(int position) {
         String binName = binStatusModel.get(position).getBin();
@@ -167,16 +194,33 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         TextView bin;
         ImageView fillLevel;
         Button collectBinButton;
+        TextView place;
 
         ViewHolder(View view){
             super(view);
             bin = view.findViewById(R.id.bin);
             fillLevel = view.findViewById(R.id.fillLevel);
             collectBinButton = view.findViewById(R.id.collectBinButton);
-
+            place = view.findViewById(R.id.place);
             collectBinButton.setVisibility(View.GONE);
-
         }
+    }
+
+    private String getAddress(double lat, double lon) {
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get(0);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                    sb.append(address.getAddressLine(i)).append(" ");
+                }
+                return sb.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Address not available";
     }
 
     private int getYear(){

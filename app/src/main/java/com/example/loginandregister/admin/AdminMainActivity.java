@@ -57,7 +57,7 @@ public class AdminMainActivity extends AppCompatActivity {
         createNotificationChannel();
 
         notificationHandler = new Handler(Looper.getMainLooper());
-        checkScheduledNotifications();
+//        checkScheduledNotifications();
 
         //Hide the Navigation Bar
         decorView = getWindow().getDecorView();

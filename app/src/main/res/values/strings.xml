@@ -78,4 +78,6 @@
     <string name="bin_name">Bin Name:</string>
     <string name="first_name_verify">First Name:</string>
     <string name="last_name_verify">Last Name:</string>
+    <string name="collect">COLLECT</string>
+    <string name="near">Near</string>
 </resources>

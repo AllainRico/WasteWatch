@@ -14,43 +14,53 @@
         android:layout_height="match_parent"
         android:padding="8dp">
 
-        <TextView
-            android:id="@+id/bin"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bin_name"
-            android:textColor="@color/black"
-            android:textSize="16dp"
-            android:textStyle="bold"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/place"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/bin"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="Near Looc Barangay Hall"/>
+            <TextView
+                android:id="@+id/bin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bin_name"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/place"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/bin"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="@string/near"/>
+
+        </LinearLayout>
+
 
         <ImageView
             android:id="@+id/fillLevel"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_alignParentEnd="true"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/collectBinButton"
             android:scaleType="fitCenter" />
 
         <Button
             android:id="@+id/collectBinButton"
-            android:layout_width="67dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="3dp"
-            android:layout_toStartOf="@+id/fillLevel"
-            android:text="collect"
-            android:textSize="8dp" />
-        <!--android:src="@drawable/empty"-->
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:background="@drawable/button"
+            android:text="@string/blank"
+            android:textColor="@color/white"
+            android:drawableStart="@drawable/ic_collect"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
