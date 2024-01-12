@@ -1,5 +1,9 @@
 package com.example.loginandregister.garbageBin;
+import static com.google.android.material.color.utilities.MaterialDynamicColors.error;
+
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.AdminMapFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,6 +49,8 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
     private List<GarbageBinStatusModel> garbageBinList;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference;
+    SharedPreferences preferences2;
+    String username;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +59,9 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         View view = inflater.inflate(R.layout.fragment_garbage_bin_status, container, false);
 
         initWidgets(view);
+
+        preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        username = preferences2.getString("adminFragment", "");
 
         garbageBinList = new ArrayList<>();
         garbageBinRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -146,7 +157,25 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         addGarbageBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAddBinDialog();
+
+                reference = database.getReference();
+
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Double adminLatitude = (Double) snapshot.child("collectors").child(username).child("latitude").getValue();
+                        Double adminLongitude = (Double) snapshot.child("collectors").child(username).child("longitude").getValue();
+
+
+                        showAddBinDialog(adminLatitude, adminLongitude);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
         });
 
@@ -167,7 +196,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
         return view;
     }
 
-    private void showAddBinDialog() {
+    private void showAddBinDialog(final double adminLatitude, final double adminLongitude) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Add New Bin");
 
@@ -192,8 +221,8 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
 
                 HashMap<String, Object> bin = new HashMap<>();
                 bin.put("FillLevel", 0); //getFillLevel();
-                bin.put("Latitude", 0); //getLatitude();
-                bin.put("Longitude", 0); //getLongitude();
+                bin.put("Latitude", adminLatitude); //getLatitude();
+                bin.put("Longitude", adminLongitude); //getLongitude();
 
                 database.getReference()
                         .child("Barangay")
