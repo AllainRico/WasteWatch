@@ -8,3 +8,4 @@ Develop an IoT-Based Garbage Management and Monitoring System that will:
 4 Update the real-time status of Garbage bins;
 5 Generate reports regarding proper garbage retrieval.
 
+``

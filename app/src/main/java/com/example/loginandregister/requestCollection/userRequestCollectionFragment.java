@@ -83,6 +83,7 @@ public class userRequestCollectionFragment extends Fragment {
                                         Toast.makeText(getActivity(), "Latitude = "+ user_lat_value + " Longitude = " + user_long_value, Toast.LENGTH_SHORT).show();
                                         sendLocationToDB(user_lat_value, user_long_value);
 
+
                                     }
                                     else
                                     {
@@ -172,8 +173,6 @@ public class userRequestCollectionFragment extends Fragment {
                         } else {
                             // Data added successfully
                             Log.d("Firebase", "Data saved successfully.");
-
-                            redirectToHomeFragment();
                         }
                     }
                 });

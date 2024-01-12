@@ -164,6 +164,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
             }
         });
 
+
         return view;
     }
 
@@ -195,7 +196,7 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                 bin.put("Latitude", 0); //getLatitude();
                 bin.put("Longitude", 0); //getLongitude();
 
-                database.getReference()
+                     database.getReference()
                         .child("Barangay")
                         .child("Looc")
                         .child("Bins")
@@ -289,6 +290,9 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                 .child(month)
                 .child(day);
 
+
+
+
         currentBinRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -321,8 +325,10 @@ public class GarbageBinStatus extends Fragment implements DialogCloseListener {
                                 binRef.child("Longitude").setValue(longitude);
                             } else {
                                 // no data, default values
+                                int value;
                                 DatabaseReference binRef = currentBinRef;
                                 binRef.child("FillLevel").setValue(0);
+
                                 binRef.child("Latitude").setValue(0.0);
                                 binRef.child("Longitude").setValue(0.0);
                             }
