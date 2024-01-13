@@ -16,8 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.loginandregister.R;
+import com.example.loginandregister.admin.AdminMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -86,6 +89,10 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
                 public void onClick(View v) {
                     // Call a method to update the isCollected value in Firebase
                     updateIsCollectedValue(position);
+                    Toast.makeText(v.getContext(), "Collected", Toast.LENGTH_SHORT).show();
+
+                    switchToAdminMapFragment(v.getContext());
+
                 }
             });
 
@@ -125,6 +132,20 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
 
         String address = getAddress(item.getLatitude(), item.getLongitude());
         holder.place.setText(address);
+    }
+
+
+    private void switchToAdminMapFragment(Context context) {
+        // Navigate to AdminMapFragment
+        if (context instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) context;
+            Fragment adminMapFragment = new AdminMapFragment();
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frameLayout, adminMapFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
     private void updateIsCollectedValue(int position) {
         String binName = binStatusModel.get(position).getBin();
