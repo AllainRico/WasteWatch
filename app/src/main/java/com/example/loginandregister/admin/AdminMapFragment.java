@@ -59,7 +59,7 @@ import java.util.List;
 
 import kotlin.LateinitKt;
 
-public class AdminMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, RouteListener {
+public class AdminMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, RouteListener{
 
     private static final long RUNNABLE_INTERVAL = 5000;
     private FloatingActionButton fabOptionMenu;
@@ -185,14 +185,28 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         if (requestLat != 0 && requestLon != 0) {
             displayRequesteeLocationOnMap(requestLat, requestLon);
         }
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (marker.getTitle().equals("Collector's Location")) {
+                    // Handle collector marker click
+                } else {
+                    // Handle bin marker click
+                    LatLng binLocation = marker.getPosition();
+                    getRoutePoints(userlocation, binLocation);
+                }
+                return false;
+            }
+        });
     }
 
-    private void getRoutePoints(LatLng userlocation, LatLng destine) {
+    private void getRoutePoints(LatLng userlocation, LatLng destination) {
         RouteDrawing routeDrawing = new RouteDrawing.Builder()
                 .context(getActivity())  // pass your activity or fragment's context
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
                 .withListener(this).alternativeRoutes(true)
-                .waypoints(userlocation, destine)
+                .waypoints(userlocation, destination)
                 .build();
         routeDrawing.execute();
     }
@@ -338,6 +352,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                         .icon(binIcon);
 
                 googleMap.addMarker(markerOptions);;
+
             }
         }
     }
@@ -435,8 +450,8 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         for (int i = 0; i < list.size(); i++) {
             if (i == indexing) {
                 Log.e("TAG", "onRoutingSuccess: routeIndexing" + indexing);
-                polylineOptions.color(Color.BLACK);
-                polylineOptions.width(12);
+                polylineOptions.color(Color.BLUE);
+                polylineOptions.width(15);
                 polylineOptions.addAll(list.get(indexing).getPoints());
                 polylineOptions.startCap(new RoundCap());
                 polylineOptions.endCap(new RoundCap());
