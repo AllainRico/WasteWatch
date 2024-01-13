@@ -220,14 +220,16 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
             if (addresses != null && addresses.size() > 0) {
                 Address address = addresses.get(0);
 
-                // Extract relevant address components
                 String locality = address.getLocality(); // Lapu-Lapu City
-                String subAdminArea = address.getSubAdminArea(); //Cebu
+                String subAdminArea = address.getSubAdminArea(); // Cebu
 
                 StringBuilder sb = new StringBuilder();
 
-                sb.append(locality).append(", ");
-                sb.append(subAdminArea);
+                sb.append(locality);
+                
+                if (subAdminArea != null && !subAdminArea.isEmpty()) {
+                    sb.append(", ").append(subAdminArea);
+                }
 
                 return sb.toString();
             }
