@@ -1,5 +1,7 @@
 package com.example.loginandregister.adminCollectionRequests;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.AdminMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -89,6 +92,7 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
         AdminMapFragment adminMapFragment = new AdminMapFragment();
         adminMapFragment.setRequestLocations(clickedItem.getLat(), clickedItem.getLon());
         adminMapFragment.requesteeName = clickedItem.getUsername();
+        adminMapFragment.setUserLocation(getCollectorLocation());
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -96,7 +100,15 @@ public class adminCollectionRequestsFragment extends Fragment implements UserDat
                 .addToBackStack(null)
                 .commit();
     }
+    private LatLng getCollectorLocation() {
+        // Retrieve the collector's location from your data source
+        // For example, if you have it stored in SharedPreferences
+        SharedPreferences preferences = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
+        double collectorLat = preferences.getFloat("collectorLat", 0.0f);
+        double collectorLon = preferences.getFloat("collectorLon", 0.0f);
 
+        return new LatLng(collectorLat, collectorLon);
+    }
     @Override
     public void onMapReady() {
         AdminMapFragment adminMapFragment = (AdminMapFragment) getActivity().getSupportFragmentManager()

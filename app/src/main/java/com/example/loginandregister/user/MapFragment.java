@@ -12,11 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.directions.route.AbstractRouting;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.example.loginandregister.R;
 import com.example.loginandregister.admin.LocationData;
 import com.example.loginandregister.garbageBin.GarbageBinStatusModel;
@@ -30,6 +34,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener{
 
     private static final long RUNNABLE_INTERVAL = 5000;
     private ProgressBar progressBar;
@@ -61,10 +66,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private Marker adminMarker;
     private Handler handler;
     private Runnable periodicTask;
+    private List<Polyline> polylines=null;
+    private LatLng destination, userlocation;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         reference = database.getReference();
         preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
@@ -77,6 +86,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             public void run() {
                 // Log "hello" or perform any other background task here
                 Log.d("AdminMapFragment", "hello");
+
+
 //                setCollectorLocation(AdminLocationService.this);
 //                getLongValueFromDB();
 //                getLatValueFromDB();
@@ -114,6 +125,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         googleMap = map;
         googleMap.setOnInfoWindowClickListener(this);
 
+
+
         reference = database.getReference();
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -129,6 +142,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 //                        googleMap.getUiSettings().setZoomControlsEnabled(true);
                     googleMap.getUiSettings().setZoomGesturesEnabled(false);
                     googleMap.getUiSettings().setAllGesturesEnabled(false);
+
 
                     displayAllBinsOnMap();
 
@@ -173,13 +187,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 if (collectorLatValue != null && collectorLongValue != null) {
                     displayAdminLocation(collectorLatValue, collectorLongValue);
+
+
                 }
+
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.w("onCancelled: ", "ERROR ON getCollectorLocation");
             }
+
         });
     }
 
@@ -187,7 +206,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         LatLng location = new LatLng(latitude, longitude);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel));
     }
-
 
     public void realtimeLocation(){
         SharedPreferences preferences2 = getActivity().getSharedPreferences("ProfileFragment", Context.MODE_PRIVATE);
@@ -256,6 +274,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         if (googleMap != null) {
             LatLng adminLocation = new LatLng(_latvalue, _longvalue);
+            userlocation = new LatLng(_latvalue, _longvalue);
 
             BitmapDescriptor truckIcon = BitmapDescriptorFactory.fromResource(R.drawable.truck_icon);
 
@@ -339,6 +358,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 String binName = bin.getBin();
 
                 LatLng binLocation = new LatLng(binLatitude, binLongitude);
+                destination = new LatLng(binLatitude, binLongitude);
 
                 BitmapDescriptor binIcon = BitmapDescriptorFactory.fromResource(R.drawable.bin_icon);
 

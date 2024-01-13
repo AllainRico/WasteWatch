@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +24,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
+import com.codebyashish.googledirectionapi.AbstractRouting;
+import com.codebyashish.googledirectionapi.ErrorHandling;
+import com.codebyashish.googledirectionapi.RouteDrawing;
+import com.codebyashish.googledirectionapi.RouteInfoModel;
+import com.codebyashish.googledirectionapi.RouteListener;
 import com.example.loginandregister.R;
 import com.example.loginandregister.adminCollectionRequests.adminCollectionRequestsFragment;
 import com.example.loginandregister.garbageBin.GarbageBinStatus;
@@ -38,6 +44,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,7 +57,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+import kotlin.LateinitKt;
+
+public class AdminMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, RouteListener{
 
     private static final long RUNNABLE_INTERVAL = 5000;
     private FloatingActionButton fabOptionMenu;
@@ -67,6 +78,12 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
     private Marker adminMarker;
     SharedPreferences preferences2;
     String username;
+    private LatLng userlocation;
+    private ArrayList<Polyline> polyline = null;
+    private LatLng destination2 = new LatLng(10.305288, 123.945102);  // Sample destination2
+    private LatLng destination = new LatLng(10.305290, 123.941986);  // Sample destination
+    private LatLng userLocation;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +99,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
             @Override
             public void run() {
                 // Log "hello" or perform any other background task here
-                Log.d("AdminMapFragment", "hello");
+                Log.d("AdminMapFragment", "Aijem");
 //                setCollectorLocation(AdminLocationService.this);
 //                getLongValueFromDB();
 //                getLatValueFromDB();
@@ -123,6 +140,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         SharedPreferences preferences2 = getActivity().getSharedPreferences("AdminHomeFragment", Context.MODE_PRIVATE);
         String username = preferences2.getString("adminFragment", "");
 
+
         reference = database.getReference();
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -144,6 +162,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                     displayAllBinsOnMap();
 
                     onMapLoaded();
+
                     }
 
             }
@@ -152,18 +171,44 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
 
+        });
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onMapClick(LatLng latLng) {
-                // Do nothing when clicked on map, effectively disabling any action
+            public void onMapClick(@NonNull LatLng latLng) {
+
             }
         });
+
+
 
         if (requestLat != 0 && requestLon != 0) {
             displayRequesteeLocationOnMap(requestLat, requestLon);
         }
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (marker.getTitle().equals("Collector's Location")) {
+                    // Handle collector marker click
+                } else {
+                    // Handle bin marker click
+                    LatLng binLocation = marker.getPosition();
+                    getRoutePoints(userlocation, binLocation);
+                }
+                return false;
+            }
+        });
+    }
+
+    private void getRoutePoints(LatLng userlocation, LatLng destination) {
+        RouteDrawing routeDrawing = new RouteDrawing.Builder()
+                .context(getActivity())  // pass your activity or fragment's context
+                .travelMode(AbstractRouting.TravelMode.DRIVING)
+                .withListener(this).alternativeRoutes(true)
+                .waypoints(userlocation, destination)
+                .build();
+        routeDrawing.execute();
     }
 
     private void showFabOptionsMenu(View view) {
@@ -306,7 +351,8 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                         .title(binName)
                         .icon(binIcon);
 
-                googleMap.addMarker(markerOptions);
+                googleMap.addMarker(markerOptions);;
+
             }
         }
     }
@@ -351,6 +397,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         if(marker.getTitle() == "Current Location"){
             marker.hideInfoWindow();
 
+
         }//if marker kay dili request
         else {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -372,6 +419,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
             final AlertDialog alertDialog = builder.create();
             alertDialog.show();
         }
+
     }
 
     private void deleteThisRequest(String _username) {
@@ -380,6 +428,52 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
         database = FirebaseDatabase.getInstance();
         reference = database.getReference().child(path);
         reference.child(_username).removeValue();
+    }
+
+    @Override
+    public void onRouteFailure(ErrorHandling e) {
+        Toast.makeText(getContext(), "Route Failed", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onRouteStart() {
+        Toast.makeText(getContext(), "Route Started", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onRouteSuccess(ArrayList<RouteInfoModel> list, int indexing) {
+        Toast.makeText(getContext(), "Route Success", Toast.LENGTH_SHORT).show();
+        PolylineOptions polylineOptions = new PolylineOptions();
+        ArrayList<Polyline> polylines = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if (i == indexing) {
+                Log.e("TAG", "onRoutingSuccess: routeIndexing" + indexing);
+                polylineOptions.color(Color.BLUE);
+                polylineOptions.width(15);
+                polylineOptions.addAll(list.get(indexing).getPoints());
+                polylineOptions.startCap(new RoundCap());
+                polylineOptions.endCap(new RoundCap());
+                Polyline polyline = googleMap.addPolyline(polylineOptions);
+                polylines.add(polyline);
+            }
+        }
+
+    }
+    public void setUserLocation(LatLng location) {
+        userLocation = location;
+    }
+
+
+    @Override
+    public void onRouteCancelled() {
+        Toast.makeText(getContext(), "Route Canceled", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public LatLng getUserLocation() {
+        return userLocation;
     }
 
     public interface OnMapReadyListener {
@@ -446,10 +540,20 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback, Go
                 if (collectorLatValue != null && collectorLongValue != null) {
                     setLatvalue(collectorLatValue);
                     setLongvalue(collectorLongValue);
+                    userlocation = new LatLng(collectorLatValue,collectorLongValue);
 
                     // Update the marker on the map
                     displayAdminLocation(collectorLatValue, collectorLongValue);
                     moveCameraToLocation(collectorLatValue, collectorLongValue, googleMap.getCameraPosition().zoom);
+
+                }
+                if (requestLat != 0 && requestLon != 0) {
+                    displayRequesteeLocationOnMap(requestLat, requestLon);
+
+                    // Calculate and display the route
+                    if (userlocation != null) {
+                        getRoutePoints(userlocation, new LatLng(requestLat, requestLon));
+                    }
                 }
             }
 
