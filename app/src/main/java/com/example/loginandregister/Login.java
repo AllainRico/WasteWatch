@@ -200,6 +200,7 @@ public class Login extends AppCompatActivity {
                             String adminUsername = snapshot.child("collectors").child(username).child("username").getValue(String.class);
                             String adminBarName = snapshot.child("collectors").child(username).child("barName").getValue(String.class);
                             AdminMainActivity.globalusername = username;
+                            AdminMainActivity.barname = adminBarName;
                             GarbageBinStatus.barName = adminBarName;
                             collectorResidentVerificationFragment.barName = adminBarName;
 
