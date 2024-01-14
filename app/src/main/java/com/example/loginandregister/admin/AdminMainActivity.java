@@ -261,7 +261,10 @@ public class AdminMainActivity extends AppCompatActivity {
                     if (binSnapshot.exists()) {
                         ///path = Barangay/Looc/Bins/bin1/2024/1/10/FillLevel
                         Double fillLevel = binSnapshot.child(String.valueOf(year)).child(String.valueOf(month)).child(String.valueOf(date)).child("FillLevel").getValue(Double.class);
-
+                        if (fillLevel == null)
+                        {
+                            fillLevel = Double.valueOf(0);
+                        }
                         if (fillLevel >= 90) {
                             // Send notification for the full bin
                             Log.d(TAG, "fill level: "+fillLevel);
