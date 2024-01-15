@@ -204,7 +204,7 @@ public class GarbageBinStatusAdapter extends RecyclerView.Adapter<GarbageBinStat
         Button collectBinButton;
         TextView place;
 
-        ViewHolder(View view){
+        ViewHolder(View view) {
             super(view);
             bin = view.findViewById(R.id.bin);
             fillLevel = view.findViewById(R.id.fillLevel);

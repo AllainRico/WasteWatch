@@ -23,6 +23,7 @@ import android.view.WindowInsetsController;
 import android.widget.Toast;
 
 import com.example.loginandregister.R;
+import com.example.loginandregister.admin.AdminReportFragment;
 import com.example.loginandregister.schedule.BackgroundService;
 import com.example.loginandregister.schedule.ScheduleNotificationManager;
 import com.example.loginandregister.databinding.ActivityMainBinding;
@@ -73,6 +74,7 @@ public class UserMainActivity extends AppCompatActivity {
 
         // Checks for scheduled notifications within the app
         checkScheduledNotifications();
+        checkBinCollectedNotifications();
 
         // Checks for scheduled notifications outside/background
         Intent backgroundServiceIntent = new Intent(this, BackgroundService.class);
@@ -122,6 +124,75 @@ public class UserMainActivity extends AppCompatActivity {
                 notificationHandler.postDelayed(this, checkFrequencyMillis);
             }
         }, initialDelayMillis);
+    }
+    private void checkBinCollectedNotifications() {
+        //delay and frequency of checking
+        long initialDelayMillis = 1000; // Initial delay in milliseconds
+        long checkFrequencyMillis = 10000; // Check every 10 seconds
+
+        notificationHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkAndBinCollected();
+                checkAndScheduleNotifications();
+                notificationHandler.postDelayed(this, checkFrequencyMillis);
+            }
+        }, initialDelayMillis);
+    }
+
+    private void checkAndBinCollected() {
+        int year = AdminReportFragment.getYear();
+        int month = AdminReportFragment.getMonth();
+        int date = AdminReportFragment.getDate();
+
+        reference = database.getReference();
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                DataSnapshot binsSnapshot = snapshot.child("Barangay").child(barname).child("Bins");
+
+                for (DataSnapshot binSnapshot : binsSnapshot.getChildren()){
+                    String binName = binSnapshot.getKey();
+
+                    if (binSnapshot.exists()) {
+                        ///path = Barangay/Looc/Bins/bin1/2024/1/10/FillLevel
+                        Boolean isCOllected = binSnapshot.child(String.valueOf(year)).child(String.valueOf(month)).child(String.valueOf(date)).child("isCollected").getValue(Boolean.class);
+                        if(isCOllected == null){
+                            isCOllected = false;
+                        }
+                        else if (isCOllected == true) {
+                            // Send notification for the full bin
+                            Log.d("TAG", "fill level: "+isCOllected);
+                            sendNotification(binName);
+                        }
+                        else{
+                            Log.d("TAG", "status: "+isCOllected);
+                        }
+                    } else {
+                        // Handle the case where the binSnapshot doesn't exist
+                        Log.e("TAG", "Bin " + binName + " does not exist!");
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void sendNotification(String binName) {
+        // Implement your notification logic here
+        // You can use NotificationCompat or any other notification mechanism
+        // to show a notification to the user.
+        // For simplicity, you can log the message for now.
+        Log.d("TAG", "Notification: " + binName);
+
+        String notificationTitle = "Bin Collected Alert!";
+        String notificationMessage = "Bin " + binName + " collected...";
+        notificationManager.showNotification(notificationTitle, notificationMessage);
     }
 
     private void checkAndScheduleNotifications() {
